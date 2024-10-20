@@ -48,17 +48,12 @@ public class DriverControl extends OpMode {
     DcMotorEx rightFrontMotor;
     DcMotorEx leftBackMotor;
     DcMotorEx rightBackMotor;
-    DcMotor intake;
-    DcMotor liftMotor;
+    Servo linkage1;
+    Servo linkage2;
+    Servo bucket;
+    CRServo intakeRollers;
 
-    CRServo tapeMeasureServo;
-    Servo planeLauncherServo;
-    CRServo outtakeWheelServo;
-    DcMotorEx slideMotor1;
-    DcMotorEx slideMotor2;
-    Servo elbowServo;
-    Servo wristServo;
-    Servo outtakeDoorServo;
+    Robot robot = new Robot();
 
 
 
@@ -120,7 +115,6 @@ public class DriverControl extends OpMode {
 //        telemetry.update();
 
         //drivetrain
-
 
 
         // 57.29577951 = 1 radian = 180/pi

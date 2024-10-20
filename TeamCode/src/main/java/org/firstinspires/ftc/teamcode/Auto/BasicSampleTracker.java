@@ -33,10 +33,6 @@ public class BasicSampleTracker extends LinearOpMode {
     private static final int CAMERA_WIDTH = 640; // width  of wanted camera resolution
     private static final int CAMERA_HEIGHT = 360; // height of wanted camera resolution
 
-    // Calculate the distance using the formula
-    public static final double objectWidthInRealWorldUnits = 3.75;  // Replace with the actual width of the object in real-world units
-    //public static final double focalLength = 728;
-
     @Override
     public void runOpMode(){
         initOpenCV();
@@ -72,7 +68,7 @@ public class BasicSampleTracker extends LinearOpMode {
             Mat hierarchy = new Mat();
             Imgproc.findContours(yellowMask, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 
-            double focalLength = 379; // Approximate focal length in pixels for Logitech C920
+            double focalLength = 395.921; // Approximate focal length in pixels for Logitech C920
             double realWidth = 8.9; // Real width of the sample in cm
             double realHeight = 3.8; //Real height of the sample in cm
 
