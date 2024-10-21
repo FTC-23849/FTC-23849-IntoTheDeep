@@ -53,8 +53,6 @@ public class DriverControl extends OpMode {
     Servo bucket;
     CRServo intakeRollers;
 
-    Robot robot = new Robot();
-
 
 
     ElapsedTime mStateTime = new ElapsedTime();
@@ -75,26 +73,19 @@ public class DriverControl extends OpMode {
         rightBackMotor = hardwareMap.get(DcMotorEx.class,"RB");
         leftFrontMotor.setDirection(DcMotorEx.Direction.REVERSE);
         leftBackMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        intakeRollers  = hardwareMap.get(CRServo.class,"intakeRollers");
+        bucket = hardwareMap.get(Servo.class, "bucket");
+        linkage1 = hardwareMap.get(Servo.class,"linkage1");
+        linkage2 = hardwareMap.get(Servo.class,"linkage2");
 
         leftFrontMotor.setZeroPowerBehavior(BRAKE);
         leftBackMotor.setZeroPowerBehavior(BRAKE);
         rightFrontMotor.setZeroPowerBehavior(BRAKE);
         rightBackMotor.setZeroPowerBehavior(BRAKE);
-    }
 
+        Robot.intake.fullExtend(linkage1, linkage2);
+        Robot.intake.dropBucket(bucket);
 
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
-    @Override
-    public void init_loop() {
-    }
-
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
-    @Override
-    public void start() {
     }
 
     /*
@@ -115,6 +106,8 @@ public class DriverControl extends OpMode {
 //        telemetry.update();
 
         //drivetrain
+
+
 
 
         // 57.29577951 = 1 radian = 180/pi
