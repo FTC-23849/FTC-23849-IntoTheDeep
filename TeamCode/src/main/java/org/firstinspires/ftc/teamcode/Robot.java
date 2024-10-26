@@ -5,30 +5,29 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Robot {
     //Constants for intake
-    public static double LINKAGE1_EXTEND = 0.3;
-    public static double LINKAGE2_EXTEND = 0.7;
+    public static double LINKAGE1_EXTEND = 0.28;
+    public static double LINKAGE2_EXTEND = 0.72;
 
     public static double LINKAGE1_TRANSFER = 0.015;
     public static double LINKAGE2_TRANSFER = 0.975;
 
-    public static double BUCKET_INTAKE_ANGLE = 0.60;
-    public static double BUCKET_TRANSFER_ANGLE = 0.0;
+    public static double BUCKET_INTAKE_ANGLE = 0.54;
+    public static double BUCKET_TRANSFER_ANGLE = 0.08;
 
     public static double INTAKE_SPEED = 1.0;
 
     //Constants for outtake
-    public static double OPEN_CLAW = 0.0;
-    public static double CLOSE_CLAW = 0.0;
+    public static double OPEN_CLAW = 0.1;
+    public static double CLOSE_CLAW = 0.8;
     public static double SPECIMEN_SCORE_ORIENTATION = 0.0;
     public static double SPECIMEN_RECEIVE_ORIENTATION = 0.0;
-    public static double SAMPLE_RECEIVE_ORIENTATION = 0.0;
+    public static double SAMPLE_RECEIVE_ORIENTATION = 0.38;
 
 
-    public static double ARM_SAMPLE = 0.0;
-    public static double ELBOW_SAMPLE = 0.0;
-
-    public static double ARM_SPECIMEN = 0.0;
-    public static double ELBOW_SPECIMEN = 0.0;
+    public static double ARM_SAMPLE_RECEIVE = 0.2;
+    public static double ELBOW_SAMPLE_RECEIVE = 0.97;
+    public static double ARM_SAMPLE_SCORE = 0.6;
+    public static double ELBOW_SAMPLE_SCORE = 0.25;
 
 
     public static class intake {
@@ -39,6 +38,10 @@ public class Robot {
 
         public static void dropBucket(Servo bucket){
             bucket.setPosition(BUCKET_INTAKE_ANGLE);
+        }
+
+        public static void bucketUp(Servo bucket){
+            bucket.setPosition(BUCKET_TRANSFER_ANGLE);
         }
 
         public static void transfer(Servo linkage1, Servo linkage2, Servo bucket){
@@ -66,14 +69,20 @@ public class Robot {
         }
 
         public static void sampleReceivePosition(Servo outtakeClaw, Servo outtakeArm, Servo outtakeElbow, Servo outtakeWrist){
-
+            outtakeClaw.setPosition(OPEN_CLAW);
+            outtakeArm.setPosition(ARM_SAMPLE_RECEIVE);
+            outtakeElbow.setPosition(ELBOW_SAMPLE_RECEIVE);
+            outtakeWrist.setPosition(SAMPLE_RECEIVE_ORIENTATION);
         }
 
         public static void specimenReceivePosition (Servo outtakeClaw){
 
         }
 
-        public static void scoreSample(Servo outtakeClaw){
+        public static void scoreSample(Servo outtakeArm, Servo outtakeElbow){
+
+            outtakeArm.setPosition(ARM_SAMPLE_SCORE);
+            outtakeElbow.setPosition(ELBOW_SAMPLE_SCORE);
 
         }
 

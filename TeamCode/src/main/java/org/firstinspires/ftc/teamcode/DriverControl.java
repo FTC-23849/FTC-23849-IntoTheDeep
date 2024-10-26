@@ -20,6 +20,8 @@ package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 
+import static org.firstinspires.ftc.robotcore.external.navigation.VoltageUnit.VOLTS;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -28,6 +30,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 
 /**
@@ -51,21 +54,24 @@ public class DriverControl extends OpMode {
     Servo linkage1;
     Servo linkage2;
     Servo bucket;
+    Servo outtakeClaw;
+    Servo outtakeWrist;
+    Servo outtakeElbow;
+    Servo outtakeArm;
     CRServo intakeRollers;
 
 
 
     ElapsedTime mStateTime = new ElapsedTime();
     boolean outtakeArmUp = false;
+    boolean intakeExtended = false;
+    boolean rightBumberPressed = false;
 
 
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
-
-
 
         leftFrontMotor  = hardwareMap.get(DcMotorEx.class,"LF");
         rightFrontMotor = hardwareMap.get(DcMotorEx.class, "RF");
@@ -78,19 +84,29 @@ public class DriverControl extends OpMode {
         linkage1 = hardwareMap.get(Servo.class,"linkage1");
         linkage2 = hardwareMap.get(Servo.class,"linkage2");
 
+        outtakeClaw = hardwareMap.get(Servo.class,"outtakeClaw");
+        outtakeWrist = hardwareMap.get(Servo.class,"outtakeWrist");
+        outtakeElbow = hardwareMap.get(Servo.class,"outtakeElbow");
+        outtakeArm = hardwareMap.get(Servo.class,"outtakeArm");
+
+
         leftFrontMotor.setZeroPowerBehavior(BRAKE);
         leftBackMotor.setZeroPowerBehavior(BRAKE);
         rightFrontMotor.setZeroPowerBehavior(BRAKE);
         rightBackMotor.setZeroPowerBehavior(BRAKE);
 
-        Robot.intake.fullExtend(linkage1, linkage2);
-        Robot.intake.dropBucket(bucket);
+        Robot.intake.transfer(linkage1, linkage2, bucket);
+        Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeElbow, outtakeWrist);
+
+
 
     }
 
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
+    int rightBumperTimes = 0;
+    boolean rightBumperPressed = false;
     @Override
     public void loop() {
         double xDistance = 0;
@@ -99,16 +115,125 @@ public class DriverControl extends OpMode {
         double direction = 0;
         int preciseSpeedDivider = 3;
         boolean preciseDriving;
+
 //        telemetry.addData("voltage-leftFrontMotor", leftFrontMotor.getCurrent(CurrentUnit.AMPS));
 //        telemetry.addData("voltage-leftBackMotor", leftBackMotor.getCurrent(CurrentUnit.AMPS));
 //        telemetry.addData("voltage-rightFrontMotor", rightFrontMotor.getCurrent(CurrentUnit.AMPS));
 //        telemetry.addData("voltage-rightBackMotor", rightBackMotor.getCurrent(CurrentUnit.AMPS));
 //        telemetry.update();
 
+        telemetry.addData("LF", leftFrontMotor.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("LB", leftBackMotor.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("RF", rightFrontMotor.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("RB", rightBackMotor.getCurrent(CurrentUnit.AMPS));
+
+
+//        if (gamepad1.right_bumper) {
+//            Robot.intake.runIntake(intakeRollers);
+//        } else if (gamepad1.left_bumper) {
+//            Robot.intake.reverseIntake(intakeRollers);
+//        } else {
+//            intakeRollers.setPower(0.0);
+//        }
+//
+//        if (gamepad1.right_trigger > 0.2) {
+//            Robot.intake.fullExtend(linkage1, linkage2);
+//        } else if (gamepad1.left_trigger > 0.2) {
+//            Robot.intake.transfer(linkage1, linkage2, bucket);
+//        }
+//
+//        if (gamepad1.a) {
+//            Robot.intake.dropBucket(bucket);
+//        }
+
+        if (gamepad1.right_bumper) {
+            if(rightBumperPressed == false){
+                rightBumperTimes = rightBumperTimes + 1;
+            }
+             rightBumperPressed = true;
+
+
+
+
+
+            if (rightBumperTimes == 1) {
+                Robot.intake.dropBucket(bucket);
+            }
+
+            if (rightBumperTimes == 2) {
+                Robot.intake.runIntake(intakeRollers);
+            }
+
+        } else if (gamepad1.left_bumper) {
+            Robot.intake.reverseIntake(intakeRollers);
+
+        }else if (gamepad1.a){
+            intakeRollers.setPower(0.0);
+        }
+
+
+        else{
+        rightBumperPressed = false;
+        }
+
+        telemetry.addData("rightBumper", rightBumperTimes);
+        telemetry.update();
+
+
+        if (gamepad1.right_trigger > 0.2) {
+            Robot.intake.fullExtend(linkage1, linkage2);
+            intakeExtended = true;
+        } else if (gamepad1.left_trigger > 0.2) {
+            Robot.intake.transfer(linkage1, linkage2, bucket);
+            intakeExtended = false;
+            rightBumperTimes = 0;
+            intakeRollers.setPower(0);
+        }
+        if (gamepad1.b){
+            Robot.intake.bucketUp(bucket);
+            rightBumperTimes = 0;
+        }
+
+
+        if (gamepad2.right_bumper) {
+            outtakeClaw.setPosition(Robot.CLOSE_CLAW);
+        }
+        if (gamepad2.left_bumper) {
+            outtakeClaw.setPosition(Robot.OPEN_CLAW);
+        }
+
+        if (gamepad2.a) {
+            Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeElbow, outtakeWrist);
+        }
+
+        if (gamepad2.b) {
+            Robot.outtake.scoreSample(outtakeArm, outtakeElbow);
+        }
+
+
         //drivetrain
+        if (gamepad1.left_stick_x < 0){
+            xDistance = -gamepad1.left_stick_x;
+        }
+        else {
+            xDistance = gamepad1.left_stick_x;
+        }
 
+        if (gamepad1.left_stick_y < 0) {
+            yDistance = -gamepad1.left_stick_y;
+        }
+        else {
+            yDistance = gamepad1.left_stick_y;
+        }
 
-
+        if (gamepad1.right_trigger > 0) {
+            speed = (xDistance + yDistance) / preciseSpeedDivider;
+            preciseDriving = true;
+        }
+        else {
+            speed = xDistance + yDistance;
+            preciseDriving = false;
+        }
 
         // 57.29577951 = 1 radian = 180/pi
         if ((Math.atan2(gamepad1.left_stick_x, -gamepad1.left_stick_y) * 57.29577951) < 0){
@@ -132,7 +257,8 @@ public class DriverControl extends OpMode {
 
 
 
-        //Set the power of the slide motors to the value of the right stick on gamepad2
+
+        telemetry.update();
 
 
 
@@ -229,14 +355,17 @@ public class DriverControl extends OpMode {
 
 
 
-            leftFrontMotor.setPower(lf);
-            leftBackMotor.setPower(lb);
-            rightFrontMotor.setPower(rf);
-            rightBackMotor.setPower(rb);
+            leftFrontMotor.setPower(lf*0.75);
+            leftBackMotor.setPower(lb*0.75);
+            rightFrontMotor.setPower(rf*0.75);
+            rightBackMotor.setPower(rb*0.75);
 
 
     }
     public void turn ( double speed){
+        if (intakeExtended == true){
+            speed = speed*0.5;
+        }
 
         leftFrontMotor  = hardwareMap.get(DcMotorEx.class,"LF");
         rightFrontMotor = hardwareMap.get(DcMotorEx.class, "RF");
