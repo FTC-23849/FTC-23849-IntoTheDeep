@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Robot {
@@ -21,13 +22,15 @@ public class Robot {
     public static double CLOSE_CLAW = 0.8;
     public static double SPECIMEN_SCORE_ORIENTATION = 0.0;
     public static double SPECIMEN_RECEIVE_ORIENTATION = 0.0;
-    public static double SAMPLE_RECEIVE_ORIENTATION = 0.38;
+    public static double SAMPLE_RECEIVE_ORIENTATION = 0.41;
 
 
     public static double ARM_SAMPLE_RECEIVE = 0.2;
-    public static double ELBOW_SAMPLE_RECEIVE = 0.97;
+    public static double ELBOW_SAMPLE_RECEIVE = 0.95;
     public static double ARM_SAMPLE_SCORE = 0.6;
-    public static double ELBOW_SAMPLE_SCORE = 0.25;
+    public static double ELBOW_SAMPLE_SCORE = 0.2;
+
+    public static double SLIDE_SPEED = 0.75;
 
 
     public static class intake {
@@ -60,6 +63,17 @@ public class Robot {
     }
 
     public static class outtake {
+
+        public static void runSlides(DcMotorEx slideMotor_left, DcMotorEx slideMotor_right){
+            slideMotor_left.setPower(SLIDE_SPEED);
+            slideMotor_right.setPower(-SLIDE_SPEED);
+        }
+
+        public static void reverseSlides(DcMotorEx slideMotor_left, DcMotorEx slideMotor_right){
+            slideMotor_left.setPower(-SLIDE_SPEED);
+            slideMotor_right.setPower(SLIDE_SPEED);
+        }
+
         public static void openClaw(Servo outtakeClaw){
             outtakeClaw.setPosition(OPEN_CLAW);
         }

@@ -27,6 +27,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -51,6 +52,8 @@ public class DriverControl extends OpMode {
     DcMotorEx rightFrontMotor;
     DcMotorEx leftBackMotor;
     DcMotorEx rightBackMotor;
+    DcMotorEx slideMotor_left;
+    DcMotorEx slideMotor_right;
     Servo linkage1;
     Servo linkage2;
     Servo bucket;
@@ -88,6 +91,10 @@ public class DriverControl extends OpMode {
         outtakeWrist = hardwareMap.get(Servo.class,"outtakeWrist");
         outtakeElbow = hardwareMap.get(Servo.class,"outtakeElbow");
         outtakeArm = hardwareMap.get(Servo.class,"outtakeArm");
+
+        slideMotor_left = hardwareMap.get(DcMotorEx.class,"slideMotor_left");
+        slideMotor_right = hardwareMap.get(DcMotorEx.class,"slideMotor_right");
+        slideMotor_right.setDirection(DcMotorEx.Direction.REVERSE);
 
 
         leftFrontMotor.setZeroPowerBehavior(BRAKE);
@@ -166,6 +173,7 @@ public class DriverControl extends OpMode {
 
         } else if (gamepad1.left_bumper) {
             Robot.intake.reverseIntake(intakeRollers);
+            rightBumperTimes = 1;
 
         }else if (gamepad1.a){
             intakeRollers.setPower(0.0);
@@ -194,6 +202,16 @@ public class DriverControl extends OpMode {
             rightBumperTimes = 0;
         }
 
+        if (gamepad2.right_stick_y != 0) {
+            slideMotor_left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            slideMotor_right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            slideMotor_left.setPower(gamepad2.right_stick_y);
+            slideMotor_right.setPower(gamepad2.right_stick_y);
+        } else {
+            slideMotor_left.setPower(0.0);
+            slideMotor_right.setPower(0.0);
+        }
+
 
         if (gamepad2.right_bumper) {
             outtakeClaw.setPosition(Robot.CLOSE_CLAW);
@@ -202,11 +220,11 @@ public class DriverControl extends OpMode {
             outtakeClaw.setPosition(Robot.OPEN_CLAW);
         }
 
-        if (gamepad2.a) {
+        if (gamepad2.dpad_down) {
             Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeElbow, outtakeWrist);
         }
 
-        if (gamepad2.b) {
+        if (gamepad2.dpad_up) {
             Robot.outtake.scoreSample(outtakeArm, outtakeElbow);
         }
 
