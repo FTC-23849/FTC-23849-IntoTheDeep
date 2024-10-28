@@ -69,7 +69,9 @@ public class DriverControl extends OpMode {
     boolean outtakeArmUp = false;
     boolean intakeExtended = false;
     boolean rightBumberPressed = false;
-
+    double linkage1Position = 0.015;
+    double linkage2Position = 0.975;
+    double lastServoExtend = 0;
 
     @Override
     public void init() {
@@ -104,6 +106,7 @@ public class DriverControl extends OpMode {
 
         Robot.intake.transfer(linkage1, linkage2, bucket);
         Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeElbow, outtakeWrist);
+
 
 
 
@@ -185,17 +188,35 @@ public class DriverControl extends OpMode {
         }
 
         telemetry.addData("rightBumper", rightBumperTimes);
+
+        telemetry.addData("lastServoExtend", lastServoExtend);
+        telemetry.addData("time", mStateTime.milliseconds());
         telemetry.update();
-
-
         if (gamepad1.right_trigger > 0.2) {
-            Robot.intake.fullExtend(linkage1, linkage2);
-            intakeExtended = true;
+            /*Robot.intake.fullExtend(linkage1, linkage2);
+            intakeExtended = true;*/
+            if (mStateTime.milliseconds() - lastServoExtend > 10){
+                linkage1.setPosition(linkage1Position+0.002);
+                linkage2.setPosition(linkage2Position-0.002);
+                linkage1Position = linkage1Position+0.002;
+                linkage2Position = linkage2Position-0.002;
+                lastServoExtend = mStateTime.milliseconds() ;
+            }
+            if(linkage1Position> 0.28){
+                linkage1.setPosition (0.28);
+                linkage2.setPosition (0.72);
+                linkage1Position = 0.28;
+                linkage2Position = 0.72;
+            }
+
         } else if (gamepad1.left_trigger > 0.2) {
             Robot.intake.transfer(linkage1, linkage2, bucket);
             intakeExtended = false;
             rightBumperTimes = 0;
             intakeRollers.setPower(0);
+            lastServoExtend = mStateTime.milliseconds() ;
+            linkage1Position = 0.015;
+            linkage2Position = 0.975;
         }
         if (gamepad1.b){
             Robot.intake.bucketUp(bucket);
