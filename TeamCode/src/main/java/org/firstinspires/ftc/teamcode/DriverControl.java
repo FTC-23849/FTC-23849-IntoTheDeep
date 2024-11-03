@@ -195,11 +195,12 @@ public class DriverControl extends OpMode {
         if (gamepad1.right_trigger > 0.2) {
             /*Robot.intake.fullExtend(linkage1, linkage2);
             intakeExtended = true;*/
-            if (mStateTime.milliseconds() - lastServoExtend > 10){
-                linkage1.setPosition(linkage1Position+0.002);
-                linkage2.setPosition(linkage2Position-0.002);
-                linkage1Position = linkage1Position+0.002;
-                linkage2Position = linkage2Position-0.002;
+
+            if (mStateTime.milliseconds() - lastServoExtend > 15){
+                linkage1.setPosition(linkage1Position+0.05);
+                linkage2.setPosition(linkage2Position-0.005);
+                linkage1Position = linkage1Position+0.005;
+                linkage2Position = linkage2Position-0.005;
                 lastServoExtend = mStateTime.milliseconds() ;
             }
             if(linkage1Position> 0.28){
@@ -241,8 +242,50 @@ public class DriverControl extends OpMode {
             outtakeClaw.setPosition(Robot.OPEN_CLAW);
         }
 
-        if (gamepad2.dpad_down) {
-            Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeElbow, outtakeWrist);
+        if (gamepad2.dpad_right && gamepad2.x) {
+            slideMotor_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            slideMotor_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            slideMotor_right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            slideMotor_left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+
+        //Code to set outtake arm to rest position
+        if(gamepad2.dpad_down) {
+
+            slideMotor_right.setTargetPosition(0);
+//            slideMotor2.setTargetPosition(0);
+
+            slideMotor_right.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//            slideMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+
+            slideMotor_right.setPower(1.0);
+            slideMotor_left.setPower(1.0);
+
+            mStateTime.reset();
+            while (mStateTime.time() < 0.2){
+
+            }
+
+            mStateTime.reset();
+
+            while ((slideMotor_right.isBusy() && slideMotor_right.getVelocity() > 0) && mStateTime.time() < 2/*&& slideMotor2.isBusy()*/){
+                telemetry.addData("Slides going down", "");
+                telemetry.addData("slideMotor_right", slideMotor_right.getCurrentPosition());
+                telemetry.addData("slideMotor_left", slideMotor_left.getCurrentPosition());
+                telemetry.update();
+                mStateTime.reset();
+            }
+
+            telemetry.addData("slides all the way down", "");
+            telemetry.addData("slideMotor_right end position", slideMotor_right.getCurrentPosition());
+//            telemetry.addData("slideMotor2 end position", slideMotor2.getCurrentPosition());
+            telemetry.update();
+
+            // set motor power to zero to turn off motors
+
+            slideMotor_right.setPower(0.0);
+            slideMotor_left.setPower(0.0);
+
         }
 
         if (gamepad2.dpad_up) {
