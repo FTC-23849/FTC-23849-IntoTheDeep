@@ -168,6 +168,7 @@ public class DriverControl extends OpMode {
 
             if (rightBumperTimes == 1) {
                 Robot.intake.dropBucket(bucket);
+                intakeRollers.setPower(0);
             }
 
             if (rightBumperTimes == 2) {
@@ -214,7 +215,7 @@ public class DriverControl extends OpMode {
             Robot.intake.transfer(linkage1, linkage2, bucket);
             intakeExtended = false;
             rightBumperTimes = 0;
-            intakeRollers.setPower(0);
+            //intakeRollers.setPower(0);
             lastServoExtend = mStateTime.milliseconds() ;
             linkage1Position = 0.015;
             linkage2Position = 0.975;
