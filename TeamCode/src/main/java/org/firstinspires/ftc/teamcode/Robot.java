@@ -13,7 +13,7 @@ public class Robot {
     public static double LINKAGE2_TRANSFER = 0.975;
 
     public static double BUCKET_INTAKE_ANGLE = 0.54;
-    public static double BUCKET_TRANSFER_ANGLE = 0.08;
+    public static double BUCKET_TRANSFER_ANGLE = 0.0;
 
     public static double INTAKE_SPEED = 1.0;
 
@@ -25,10 +25,11 @@ public class Robot {
     public static double SAMPLE_RECEIVE_ORIENTATION = 0.41;
 
 
-    public static double ARM_SAMPLE_RECEIVE = 0.2;
-    public static double ELBOW_SAMPLE_RECEIVE = 0.95;
-    public static double ARM_SAMPLE_SCORE = 0.6;
-    public static double ELBOW_SAMPLE_SCORE = 0.2;
+    public static double ARM_SAMPLE_RECEIVE = 0.99;
+    public static double ARM_SAMPLE_SCORE = 0.0;
+    public static double ARM_SPECIMEN_RECEIVE = 0.0;
+    public static double ARM_SPECIMEN_SCORE = 0.0;
+
 
     public static double SLIDE_SPEED = 0.75;
 
@@ -82,10 +83,9 @@ public class Robot {
             outtakeClaw.setPosition(CLOSE_CLAW);
         }
 
-        public static void sampleReceivePosition(Servo outtakeClaw, Servo outtakeArm, Servo outtakeElbow, Servo outtakeWrist){
+        public static void sampleReceivePosition(Servo outtakeClaw, Servo outtakeArm, Servo outtakeWrist){
             outtakeClaw.setPosition(OPEN_CLAW);
             outtakeArm.setPosition(ARM_SAMPLE_RECEIVE);
-            outtakeElbow.setPosition(ELBOW_SAMPLE_RECEIVE);
             outtakeWrist.setPosition(SAMPLE_RECEIVE_ORIENTATION);
         }
 
@@ -93,10 +93,10 @@ public class Robot {
 
         }
 
-        public static void scoreSample(Servo outtakeArm, Servo outtakeElbow){
+        public static void scoreSample(Servo outtakeArm){
 
             outtakeArm.setPosition(ARM_SAMPLE_SCORE);
-            outtakeElbow.setPosition(ELBOW_SAMPLE_SCORE);
+
 
         }
 
