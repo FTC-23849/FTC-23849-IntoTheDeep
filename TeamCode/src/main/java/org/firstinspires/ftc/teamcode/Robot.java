@@ -65,7 +65,7 @@ public class Robot {
 
     public static class outtake {
 
-        public static void runSlides(DcMotorEx slideMotor_left, DcMotorEx slideMotor_right){
+        public static void runSlides(DcMotorEx slideMotor_left, DcMotorEx slideMotor_right, double ticks){
             slideMotor_left.setPower(SLIDE_SPEED);
             slideMotor_right.setPower(-SLIDE_SPEED);
         }

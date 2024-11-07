@@ -73,7 +73,7 @@ public class DriverControl extends OpMode {
     double linkage1Position = 0.015;
     double linkage2Position = 0.975;
     double lastServoExtend = 0;
-    double slideMaxPosition = -2930.0;
+    int slideMaxPosition = -2980;
 
     @Override
     public void init() {
@@ -305,7 +305,7 @@ public class DriverControl extends OpMode {
                 telemetry.addData("slideMotor_right", slideMotor_right.getCurrentPosition());
                 telemetry.addData("slideMotor_left", slideMotor_left.getCurrentPosition());
                 telemetry.update();
-                mStateTime.reset();
+                outtakeTimer.reset();
             }
 
 
