@@ -139,8 +139,8 @@ public class LeftAuto extends LinearOpMode {
 
         drive.followTrajectorySequence(collectSample1);
 
-        linkage1.setPosition(0.17);
-        linkage2.setPosition(0.972);
+        linkage1.setPosition(0.02);
+        linkage2.setPosition(0.98);
         Robot.intake.dropBucket(bucket);
         Robot.intake.runIntake(intakeRollers);
         sleep(500);
@@ -202,6 +202,7 @@ public class LeftAuto extends LinearOpMode {
         drive.followTrajectorySequence(Park);
 
         Robot.outtake.scoreSample(outtakeArm);
+        Robot.outtake.closeClaw(outtakeClaw);
         drive.followTrajectorySequence(Ascent);
 
         sleep(4000);

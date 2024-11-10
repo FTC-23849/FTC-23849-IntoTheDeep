@@ -9,8 +9,8 @@ public class Robot {
     public static double LINKAGE1_EXTEND = 0.28;
     public static double LINKAGE2_EXTEND = 0.72;
 
-    public static double LINKAGE1_TRANSFER = 0.015;
-    public static double LINKAGE2_TRANSFER = 0.975;
+    public static double LINKAGE1_TRANSFER = 0.0;
+    public static double LINKAGE2_TRANSFER = 1.0;
 
     public static double BUCKET_INTAKE_ANGLE = 0.54;
     public static double BUCKET_TRANSFER_ANGLE = 0.0;
@@ -18,20 +18,18 @@ public class Robot {
     public static double INTAKE_SPEED = 1.0;
 
     //Constants for outtake
-    public static double OPEN_CLAW = 0.1;
-    public static double CLOSE_CLAW = 0.8;
-    public static double SPECIMEN_SCORE_ORIENTATION = 0.0;
-    public static double SPECIMEN_RECEIVE_ORIENTATION = 0.0;
-    public static double SAMPLE_RECEIVE_ORIENTATION = 0.41;
+    public static double OPEN_CLAW = 0.5;
+    public static double CLOSE_CLAW = 0.0;
+    public static double SPECIMEN_RECEIVE_ORIENTATION = 0.1;
+    public static double SAMPLE_RECEIVE_ORIENTATION = 0.43;
 
 
     public static double ARM_SAMPLE_RECEIVE = 0.99;
-    public static double ARM_SAMPLE_SCORE = 0.0;
-    public static double ARM_SPECIMEN_RECEIVE = 0.0;
-    public static double ARM_SPECIMEN_SCORE = 0.0;
+    public static double ARM_SAMPLE_SCORE = 0.5;
+    public static double ARM_SPECIMEN_RECEIVE = 0.3;
 
 
-    public static double SLIDE_SPEED = 0.75;
+    public static double SLIDE_SPEED = 1.0;
 
 
     public static class intake {
@@ -89,20 +87,22 @@ public class Robot {
             outtakeWrist.setPosition(SAMPLE_RECEIVE_ORIENTATION);
         }
 
-        public static void specimenReceivePosition (Servo outtakeClaw){
-
+        public static void specimenReceivePosition (Servo outtakeClaw, Servo outtakeWrist, Servo outtakeArm){
+            outtakeArm.setPosition(ARM_SPECIMEN_RECEIVE);
+            outtakeClaw.setPosition(OPEN_CLAW);
+            outtakeWrist.setPosition(SPECIMEN_RECEIVE_ORIENTATION);
         }
 
         public static void scoreSample(Servo outtakeArm){
-
             outtakeArm.setPosition(ARM_SAMPLE_SCORE);
-
-
         }
 
-        public static void scoreSpecimen(Servo outtakeClaw){
-
+        public static void scoreSpecimen(Servo outtakeArm, Servo outtakeWrist, Servo outtakeClaw){
+            outtakeArm.setPosition(ARM_SPECIMEN_RECEIVE);
+            outtakeWrist.setPosition(SPECIMEN_RECEIVE_ORIENTATION);
+            outtakeClaw.setPosition(CLOSE_CLAW);
         }
+
     }
 
 

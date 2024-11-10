@@ -73,7 +73,8 @@ public class DriverControl extends OpMode {
     double linkage1Position = 0.015;
     double linkage2Position = 0.975;
     double lastServoExtend = 0;
-    int slideMaxPosition = -2980;
+    int slideMaxPosition = -3230;
+    boolean outtakeGoingDown = false;
 
     @Override
     public void init() {
@@ -208,11 +209,11 @@ public class DriverControl extends OpMode {
                 linkage2Position = linkage2Position-0.005;
                 lastServoExtend = mStateTime.milliseconds() ;
             }
-            if(linkage1Position> 0.28){
-                linkage1.setPosition (0.28);
-                linkage2.setPosition (0.72);
-                linkage1Position = 0.28;
-                linkage2Position = 0.72;
+            if(linkage1Position> 0.22){
+                linkage1.setPosition (0.22);
+                linkage2.setPosition (0.78);
+                linkage1Position = 0.22;
+                linkage2Position = 0.78;
             }
 
         } else if (gamepad1.left_trigger > 0.2) {
@@ -221,8 +222,8 @@ public class DriverControl extends OpMode {
             rightBumperTimes = 0;
             //intakeRollers.setPower(0);
             lastServoExtend = mStateTime.milliseconds() ;
-            linkage1Position = 0.015;
-            linkage2Position = 0.975;
+            linkage1Position = 0.0;
+            linkage2Position = 1;
         }
         if (gamepad1.b){
             Robot.intake.bucketUp(bucket);
@@ -275,12 +276,13 @@ public class DriverControl extends OpMode {
             slideMaxPosition = slideMotor_right.getCurrentPosition();
         }
 
-        if (gamepad2.y) {
-            telemetry.addData("Slide Encoder Position", slideMotor_right.getCurrentPosition());
+        if (gamepad2.x) {
+            Robot.outtake.specimenReceivePosition(outtakeClaw, outtakeWrist, outtakeArm);
         }
 
         //Code to set outtake arm to rest position
         if(gamepad2.dpad_down) {
+
 
             Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeWrist);
 
@@ -293,13 +295,14 @@ public class DriverControl extends OpMode {
             slideMotor_right.setPower(1.0);
             slideMotor_left.setPower(1.0);
 
+//            outtakeTimer.reset();
+//            while (outtakeTimer.time() < 0.2){
+//
+//            }
+
             outtakeTimer.reset();
-            while (outtakeTimer.time() < 0.2){
-
-            }
-
-            outtakeTimer.reset();
-
+            //outtakeGoingDown = true;
+//
             while ((slideMotor_right.isBusy() && slideMotor_right.getVelocity() > 0) && outtakeTimer.time() < 2/*&& slideMotor2.isBusy()*/){
                 telemetry.addData("Slides going down", "");
                 telemetry.addData("slideMotor_right", slideMotor_right.getCurrentPosition());
@@ -314,14 +317,18 @@ public class DriverControl extends OpMode {
 //            telemetry.addData("slideMotor2 end position", slideMotor2.getCurrentPosition());
             telemetry.update();
 
-            //Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeWrist);
-
             // set motor power to zero to turn off motors
 
             slideMotor_right.setPower(0.0);
             slideMotor_left.setPower(0.0);
 
         }
+        /*if(outtakeGoingDown && !(slideMotor_right.getCurrentPosition() >= 2 && outtakeTimer.time() < 2)){
+            slideMotor_right.setPower(0.0);
+            slideMotor_left.setPower(0.0);
+            outtakeGoingDown = false;
+
+        }*/
 
         if (gamepad2.dpad_up) {
             Robot.outtake.scoreSample(outtakeArm);
@@ -472,10 +479,10 @@ public class DriverControl extends OpMode {
 
 
 
-            leftFrontMotor.setPower(lf*0.75);
-            leftBackMotor.setPower(lb*0.75);
-            rightFrontMotor.setPower(rf*0.75);
-            rightBackMotor.setPower(rb*0.75);
+            leftFrontMotor.setPower(lf);
+            leftBackMotor.setPower(lb);
+            rightFrontMotor.setPower(rf);
+            rightBackMotor.setPower(rb);
 
 
     }
