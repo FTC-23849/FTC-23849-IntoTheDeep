@@ -27,6 +27,11 @@ public class RightAuto extends LinearOpMode {
 
         DcMotorEx slideMotor_left;
         DcMotorEx slideMotor_right;
+        Servo intakeDiffyLeft;
+        Servo intakeDiffyRight;
+        Servo intakeArmLeft;
+        Servo intakeArmRight;
+        Servo intakeClaw;
 
         linkage1 = hardwareMap.get(Servo.class, "linkage1");
         linkage2 = hardwareMap.get(Servo.class, "linkage2");
@@ -39,9 +44,14 @@ public class RightAuto extends LinearOpMode {
 
         slideMotor_left = hardwareMap.get(DcMotorEx.class,"slideMotor_left");
         slideMotor_right = hardwareMap.get(DcMotorEx.class,"slideMotor_right");
+        intakeArmLeft = hardwareMap.get(Servo.class, "intakeArmLeft");
+        intakeArmRight = hardwareMap.get(Servo.class, "intakeArmRight");
+        intakeDiffyLeft = hardwareMap.get(Servo.class, "intakeDiffyLeft");
+        intakeDiffyRight = hardwareMap.get(Servo.class, "intakeDiffyRight");
+        intakeClaw = hardwareMap.get(Servo.class, "intakeClaw");
         slideMotor_right.setDirection(DcMotorEx.Direction.REVERSE);
 
-        Robot.intake.transfer(linkage1, linkage2, bucket);
+        Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
         Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeWrist);
 
         // Create Roadrunner Trajectories

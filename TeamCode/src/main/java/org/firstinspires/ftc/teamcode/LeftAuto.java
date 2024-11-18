@@ -41,10 +41,15 @@ public class LeftAuto extends LinearOpMode {
 
         DcMotorEx slideMotor_left;
         DcMotorEx slideMotor_right;
+        Servo intakeDiffyLeft;
+        Servo intakeDiffyRight;
+        Servo intakeArmLeft;
+        Servo intakeArmRight;
+        Servo intakeClaw;
 
         linkage1 = hardwareMap.get(Servo.class, "linkage1");
         linkage2 = hardwareMap.get(Servo.class, "linkage2");
-        bucket = hardwareMap.get(Servo.class, "bucket");
+        //bucket = hardwareMap.get(Servo.class, "bucket");
         intakeRollers = hardwareMap.get(CRServo.class, "intakeRollers");
 
         outtakeClaw = hardwareMap.get(Servo.class,"outtakeClaw");
@@ -54,9 +59,14 @@ public class LeftAuto extends LinearOpMode {
         slideMotor_left = hardwareMap.get(DcMotorEx.class,"slideMotor_left");
         slideMotor_right = hardwareMap.get(DcMotorEx.class,"slideMotor_right");
         slideMotor_right.setDirection(DcMotorEx.Direction.REVERSE);
+        intakeArmLeft = hardwareMap.get(Servo.class, "intakeArmLeft");
+        intakeArmRight = hardwareMap.get(Servo.class, "intakeArmRight");
+        intakeDiffyLeft = hardwareMap.get(Servo.class, "intakeDiffyLeft");
+        intakeDiffyRight = hardwareMap.get(Servo.class, "intakeDiffyRight");
+        intakeClaw = hardwareMap.get(Servo.class, "intakeClaw");
 
         Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeWrist);
-        Robot.intake.transfer(linkage1, linkage2, bucket);
+        Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
 
         ElapsedTime outtakeTimer = new ElapsedTime();
 
@@ -141,15 +151,15 @@ public class LeftAuto extends LinearOpMode {
 
         linkage1.setPosition(0.02);
         linkage2.setPosition(0.98);
-        Robot.intake.dropBucket(bucket);
-        Robot.intake.runIntake(intakeRollers);
+        //Robot.intake.dropBucket(bucket);
+        //Robot.intake.runIntake(intakeRollers);
         sleep(500);
 
         linkage1.setPosition(0.197);
         linkage2.setPosition(0.92);
         sleep(1500);
 
-        Robot.intake.transfer(linkage1, linkage2, bucket);
+        Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
         sleep(1000);
         intakeRollers.setPower(0.0);
         Robot.outtake.closeClaw(outtakeClaw);

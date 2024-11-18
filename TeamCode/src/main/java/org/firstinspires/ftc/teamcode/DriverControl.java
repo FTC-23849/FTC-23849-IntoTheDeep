@@ -60,7 +60,12 @@ public class DriverControl extends OpMode {
     Servo outtakeClaw;
     Servo outtakeWrist;
     Servo outtakeArm;
-    CRServo intakeRollers;
+    //CRServo intakeRollers;
+    Servo intakeDiffyLeft;
+    Servo intakeDiffyRight;
+    Servo intakeArmLeft;
+    Servo intakeArmRight;
+    Servo intakeClaw;
 
 
 
@@ -87,8 +92,14 @@ public class DriverControl extends OpMode {
         rightBackMotor = hardwareMap.get(DcMotorEx.class,"RB");
         leftFrontMotor.setDirection(DcMotorEx.Direction.REVERSE);
         leftBackMotor.setDirection(DcMotorEx.Direction.REVERSE);
-        intakeRollers  = hardwareMap.get(CRServo.class,"intakeRollers");
-        bucket = hardwareMap.get(Servo.class, "bucket");
+
+        intakeArmLeft = hardwareMap.get(Servo.class, "intakeArmLeft");
+        intakeArmRight = hardwareMap.get(Servo.class, "intakeArmRight");
+        intakeDiffyLeft = hardwareMap.get(Servo.class, "intakeDiffyLeft");
+        intakeDiffyRight = hardwareMap.get(Servo.class, "intakeDiffyRight");
+        intakeClaw = hardwareMap.get(Servo.class, "intakeClaw");
+        //intakeRollers  = hardwareMap.get(CRServo.class,"intakeRollers");
+        //bucket = hardwareMap.get(Servo.class, "bucket");
         linkage1 = hardwareMap.get(Servo.class,"linkage1");
         linkage2 = hardwareMap.get(Servo.class,"linkage2");
 
@@ -106,12 +117,13 @@ public class DriverControl extends OpMode {
         rightFrontMotor.setZeroPowerBehavior(BRAKE);
         rightBackMotor.setZeroPowerBehavior(BRAKE);
 
-        Robot.intake.transfer(linkage1, linkage2, bucket);
+        //Robot.intake.transfer(linkage1, linkage2, bucket);
         Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeWrist);
 
         slideMotor_right.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         slideMotor_left.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-
+        intakeDiffyLeft.setPosition(1);
+        intakeDiffyRight.setPosition(0);
 
 
 
@@ -122,6 +134,8 @@ public class DriverControl extends OpMode {
      */
     int rightBumperTimes = 0;
     boolean rightBumperPressed = false;
+    int leftBumperTimes = 0;
+    boolean leftBumperPressed = false;
     @Override
     public void loop() {
         double xDistance = 0;
@@ -160,32 +174,56 @@ public class DriverControl extends OpMode {
 //        if (gamepad1.a) {
 //            Robot.intake.dropBucket(bucket);
 //        }
+        if (gamepad1.left_bumper) {
+            if(leftBumperPressed == false){
+                leftBumperTimes = leftBumperTimes + 1;
+            }
 
+            leftBumperPressed = true;
+            if(leftBumperTimes == 1){
+
+                intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP_VERTICAL);
+                intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP_VERTICAL);
+
+            }
+            if(leftBumperTimes == 2){
+                leftBumperTimes = 0;
+                intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP);
+                intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP);
+            }
+        }
+        else{
+            leftBumperPressed = false;
+        }
         if (gamepad1.right_bumper) {
             if(rightBumperPressed == false){
                 rightBumperTimes = rightBumperTimes + 1;
             }
              rightBumperPressed = true;
-
-
-
-
-
             if (rightBumperTimes == 1) {
-                Robot.intake.dropBucket(bucket);
-                intakeRollers.setPower(0);
+                /*Robot.intake.dropBucket(bucket);
+                intakeRollers.setPower(0);*/
+                intakeArmLeft.setPosition(Robot.INTAKE_ARM_LEFT_EXTEND);
+                intakeArmRight.setPosition(Robot.INTAKE_ARM_RIGHT_EXTEND);
+
+
+
             }
 
             if (rightBumperTimes == 2) {
-                Robot.intake.runIntake(intakeRollers);
+                intakeClaw.setPosition(Robot.INTAKE_CLAW_CLOSE);
+                //Robot.intake.runIntake(intakeRollers);
+            }
+            if (rightBumperTimes == 3){
+                intakeClaw.setPosition(Robot.INTAKE_CLAW_OPEN);
+                rightBumperTimes = 1;
             }
 
         } else if (gamepad1.left_bumper) {
-            Robot.intake.reverseIntake(intakeRollers);
-            rightBumperTimes = 1;
+            //Robot.intake.reverseIntake(intakeRollers);
 
         }else if (gamepad1.a){
-            intakeRollers.setPower(0.0);
+            //intakeRollers.setPower(0.0);
         }
 
 
@@ -194,15 +232,29 @@ public class DriverControl extends OpMode {
         }
 
         telemetry.addData("rightBumper", rightBumperTimes);
+        telemetry.addData("left bumper", leftBumperTimes);
 
         telemetry.addData("lastServoExtend", lastServoExtend);
         telemetry.addData("time", mStateTime.milliseconds());
         telemetry.update();
+        if (gamepad1.right_trigger > 0.2){
+            intakeArmLeft.setPosition(Robot.INTAKE_ARM_LEFT_EXTEND_READY);
+            intakeArmRight.setPosition(Robot.INTAKE_ARM_RIGHT_EXTEND_READY);
+            intakeClaw.setPosition(Robot.INTAKE_CLAW_OPEN);
+            intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP);
+            intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP);
+            rightBumperTimes = 0;
+
+        }
         if (gamepad1.right_trigger > 0.2) {
             /*Robot.intake.fullExtend(linkage1, linkage2);
             intakeExtended = true;*/
 
+
+
             if (mStateTime.milliseconds() - lastServoExtend > 15){
+                //intakeArmLeft.setPosition(Robot.INTAKE_ARM_LEFT_EXTEND_READY);
+                //intakeArmRight.setPosition(Robot.INTAKE_ARM_RIGHT_EXTEND_READY);
                 linkage1.setPosition(linkage1Position+0.05);
                 linkage2.setPosition(linkage2Position-0.005);
                 linkage1Position = linkage1Position+0.005;
@@ -217,16 +269,17 @@ public class DriverControl extends OpMode {
             }
 
         } else if (gamepad1.left_trigger > 0.2) {
-            Robot.intake.transfer(linkage1, linkage2, bucket);
+            Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
             intakeExtended = false;
             rightBumperTimes = 0;
+            leftBumperTimes = 0;
             //intakeRollers.setPower(0);
             lastServoExtend = mStateTime.milliseconds() ;
             linkage1Position = 0.0;
             linkage2Position = 1;
         }
         if (gamepad1.b){
-            Robot.intake.bucketUp(bucket);
+            //Robot.intake.bucketUp(bucket);
             rightBumperTimes = 0;
         }
 
@@ -249,7 +302,7 @@ public class DriverControl extends OpMode {
 
         if (gamepad2.right_bumper) {
             outtakeClaw.setPosition(Robot.CLOSE_CLAW);
-            intakeRollers.setPower(0);
+            //intakeRollers.setPower(0);
         }
         if (gamepad2.left_bumper) {
             outtakeClaw.setPosition(Robot.OPEN_CLAW);

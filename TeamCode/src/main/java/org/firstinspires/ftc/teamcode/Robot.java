@@ -6,14 +6,30 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Robot {
     //Constants for intake
+    public static double INTAKE_CLAW_OPEN = 0.75;
+    public static double INTAKE_CLAW_CLOSE = 0.1;
+    public static double INTAKE_LEFT_DIFFY_PICK_UP_READY = 0.49;
+    public static double INTAKE_RIGHT_DIFFY_PICK_UP_READY = 0.51;
+    public static double INTAKE_LEFT_DIFFY_PICK_UP_VERTICAL = 0.3;
+    public static double INTAKE_RIGHT_DIFFY_PICK_UP_VERTICAL = 0.32;
+    public static double INTAKE_LEFT_DIFFY_PICK_UP = 0.47;
+    public static double INTAKE_RIGHT_DIFFY_PICK_UP = 0.53;
+    public static double INTAKE_LEFT_DIFFY_TRANSFER = 0.75;
+    public static double INTAKE_RIGHT_DIFFY_TRANSFER = 0.25;
+    public static double INTAKE_ARM_LEFT_EXTEND = 0.0;
+    public static double INTAKE_ARM_RIGHT_EXTEND = 1;
+    public static double INTAKE_ARM_LEFT_TRANSFER = 0.60;
+    public static double INTAKE_ARM_RIGHT_TRANSFER = 0.40;
+    public static double INTAKE_ARM_LEFT_EXTEND_READY = 0.075;
+    public static double INTAKE_ARM_RIGHT_EXTEND_READY= 0.925;
     public static double LINKAGE1_EXTEND = 0.28;
     public static double LINKAGE2_EXTEND = 0.72;
 
     public static double LINKAGE1_TRANSFER = 0.0;
     public static double LINKAGE2_TRANSFER = 1.0;
 
-    public static double BUCKET_INTAKE_ANGLE = 0.54;
-    public static double BUCKET_TRANSFER_ANGLE = 0.0;
+    //public static double BUCKET_INTAKE_ANGLE = 0.54;
+    //public static double BUCKET_TRANSFER_ANGLE = 0.0;
 
     public static double INTAKE_SPEED = 1.0;
 
@@ -38,26 +54,32 @@ public class Robot {
             linkage2.setPosition(LINKAGE2_EXTEND);
         }
 
-        public static void dropBucket(Servo bucket){
-            bucket.setPosition(BUCKET_INTAKE_ANGLE);
+        public static void dropBucket(/*Servo bucket*/) {
+            //bucket.setPosition(BUCKET_INTAKE_ANGLE);
         }
 
-        public static void bucketUp(Servo bucket){
-            bucket.setPosition(BUCKET_TRANSFER_ANGLE);
+        public static void bucketUp(/*Servo bucket*/){
+            //bucket.setPosition(BUCKET_TRANSFER_ANGLE);
         }
 
-        public static void transfer(Servo linkage1, Servo linkage2, Servo bucket){
+        public static void transfer(Servo linkage1, Servo linkage2, Servo intakeArmLeft, Servo intakeArmRight, Servo intakeDiffyLeft, Servo intakeDiffyRight, Servo intakeClaw){
             linkage1.setPosition(LINKAGE1_TRANSFER);
             linkage2.setPosition(LINKAGE2_TRANSFER);
-            bucket.setPosition(BUCKET_TRANSFER_ANGLE);
+            intakeArmLeft.setPosition(Robot.INTAKE_ARM_LEFT_TRANSFER);
+            intakeArmRight.setPosition(Robot.INTAKE_ARM_RIGHT_TRANSFER);
+            intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_TRANSFER);
+            intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_TRANSFER);
+
+
+            //bucket.setPosition(BUCKET_TRANSFER_ANGLE);
         }
 
-        public static void runIntake(CRServo intakeRollers){
-            intakeRollers.setPower(INTAKE_SPEED);
+        public static void runIntake(/*CRServo intakeRollers*/){
+            //intakeRollers.setPower(INTAKE_SPEED);
         }
 
-        public static void reverseIntake(CRServo intakeRollers){
-            intakeRollers.setPower(INTAKE_SPEED * -1);
+        public static void reverseIntake(/*CRServo intakeRollers*/){
+            //intakeRollers.setPower(INTAKE_SPEED * -1);
         }
     }
 
