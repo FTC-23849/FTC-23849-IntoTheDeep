@@ -31,7 +31,7 @@ public class BasicSampleTracker extends LinearOpMode {
 
     private OpenCvCamera controlHubCam;  // Use OpenCvCamera class from FTC SDK
     private static final int CAMERA_WIDTH = 640; // width  of wanted camera resolution
-    private static final int CAMERA_HEIGHT = 360; // height of wanted camera resolution
+    private static final int CAMERA_HEIGHT = 480; // height of wanted camera resolution
 
     @Override
     public void runOpMode(){

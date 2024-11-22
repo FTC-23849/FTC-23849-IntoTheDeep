@@ -6,20 +6,20 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Robot {
     //Constants for intake
-    public static double INTAKE_CLAW_OPEN = 0.75;
+    public static double INTAKE_CLAW_OPEN = 0.50;
     public static double INTAKE_CLAW_CLOSE = 0.1;
     public static double INTAKE_LEFT_DIFFY_PICK_UP_READY = 0.49;
     public static double INTAKE_RIGHT_DIFFY_PICK_UP_READY = 0.51;
-    public static double INTAKE_LEFT_DIFFY_PICK_UP_VERTICAL = 0.3;
-    public static double INTAKE_RIGHT_DIFFY_PICK_UP_VERTICAL = 0.32;
-    public static double INTAKE_LEFT_DIFFY_PICK_UP = 0.47;
-    public static double INTAKE_RIGHT_DIFFY_PICK_UP = 0.53;
-    public static double INTAKE_LEFT_DIFFY_TRANSFER = 0.75;
-    public static double INTAKE_RIGHT_DIFFY_TRANSFER = 0.25;
+    public static double INTAKE_LEFT_DIFFY_PICK_UP_VERTICAL = 0.23;
+    public static double INTAKE_RIGHT_DIFFY_PICK_UP_VERTICAL = 0.35;//lowered this one 33-35, 35-31
+    public static double INTAKE_LEFT_DIFFY_PICK_UP = 0.42;
+    public static double INTAKE_RIGHT_DIFFY_PICK_UP = 0.58;
+    public static double INTAKE_LEFT_DIFFY_TRANSFER = 0.83;
+    public static double INTAKE_RIGHT_DIFFY_TRANSFER = 0.18;
     public static double INTAKE_ARM_LEFT_EXTEND = 0.0;
     public static double INTAKE_ARM_RIGHT_EXTEND = 1;
-    public static double INTAKE_ARM_LEFT_TRANSFER = 0.60;
-    public static double INTAKE_ARM_RIGHT_TRANSFER = 0.40;
+    public static double INTAKE_ARM_LEFT_TRANSFER = 0.70;
+    public static double INTAKE_ARM_RIGHT_TRANSFER = 0.30;
     public static double INTAKE_ARM_LEFT_EXTEND_READY = 0.075;
     public static double INTAKE_ARM_RIGHT_EXTEND_READY= 0.925;
     public static double LINKAGE1_EXTEND = 0.28;
@@ -37,18 +37,24 @@ public class Robot {
     public static double OPEN_CLAW = 0.5;
     public static double CLOSE_CLAW = 0.0;
     public static double SPECIMEN_RECEIVE_ORIENTATION = 0.1;
-    public static double SAMPLE_RECEIVE_ORIENTATION = 0.43;
+    public static double SAMPLE_RECEIVE_ORIENTATION = 0.1;
 
 
     public static double ARM_SAMPLE_RECEIVE = 0.99;
     public static double ARM_SAMPLE_SCORE = 0.5;
-    public static double ARM_SPECIMEN_RECEIVE = 0.3;
+    public static double ARM_SPECIMEN_RECEIVE = 0.325;
 
 
     public static double SLIDE_SPEED = 1.0;
 
 
     public static class intake {
+        public static void retractIntake(Servo linkage1, Servo linkage2, Servo intakeArmLeft, Servo intakeArmRight){
+            linkage1.setPosition(Robot.LINKAGE1_TRANSFER);
+            linkage2.setPosition(Robot.LINKAGE2_TRANSFER);
+            intakeArmLeft.setPosition(Robot.INTAKE_ARM_LEFT_TRANSFER);
+            intakeArmRight.setPosition(Robot.INTAKE_ARM_RIGHT_TRANSFER);
+        }
         public static void fullExtend(Servo linkage1, Servo linkage2){
             linkage1.setPosition(LINKAGE1_EXTEND);
             linkage2.setPosition(LINKAGE2_EXTEND);
@@ -63,12 +69,13 @@ public class Robot {
         }
 
         public static void transfer(Servo linkage1, Servo linkage2, Servo intakeArmLeft, Servo intakeArmRight, Servo intakeDiffyLeft, Servo intakeDiffyRight, Servo intakeClaw){
+            intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_TRANSFER);
+            intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_TRANSFER);
             linkage1.setPosition(LINKAGE1_TRANSFER);
             linkage2.setPosition(LINKAGE2_TRANSFER);
             intakeArmLeft.setPosition(Robot.INTAKE_ARM_LEFT_TRANSFER);
             intakeArmRight.setPosition(Robot.INTAKE_ARM_RIGHT_TRANSFER);
-            intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_TRANSFER);
-            intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_TRANSFER);
+
 
 
             //bucket.setPosition(BUCKET_TRANSFER_ANGLE);
