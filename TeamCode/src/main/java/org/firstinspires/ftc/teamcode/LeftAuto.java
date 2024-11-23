@@ -32,8 +32,6 @@ public class LeftAuto extends LinearOpMode {
 
         Servo linkage1;
         Servo linkage2;
-        Servo bucket;
-        CRServo intakeRollers;
 
         Servo outtakeClaw;
         Servo outtakeWrist;
@@ -49,8 +47,6 @@ public class LeftAuto extends LinearOpMode {
 
         linkage1 = hardwareMap.get(Servo.class, "linkage1");
         linkage2 = hardwareMap.get(Servo.class, "linkage2");
-        //bucket = hardwareMap.get(Servo.class, "bucket");
-        intakeRollers = hardwareMap.get(CRServo.class, "intakeRollers");
 
         outtakeClaw = hardwareMap.get(Servo.class,"outtakeClaw");
         outtakeWrist = hardwareMap.get(Servo.class,"outtakeWrist");
@@ -65,8 +61,10 @@ public class LeftAuto extends LinearOpMode {
         intakeDiffyRight = hardwareMap.get(Servo.class, "intakeDiffyRight");
         intakeClaw = hardwareMap.get(Servo.class, "intakeClaw");
 
-        Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeWrist);
         Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
+        Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeWrist);
+        Robot.outtake.closeClaw(outtakeClaw);
+        intakeClaw.setPosition(Robot.INTAKE_CLAW_OPEN);
 
         ElapsedTime outtakeTimer = new ElapsedTime();
 
@@ -81,7 +79,7 @@ public class LeftAuto extends LinearOpMode {
                 .build();
 
         TrajectorySequence collectSample1 = drive.trajectorySequenceBuilder(startPose)
-                .splineToLinearHeading(new Pose2d(-35, -25, Math.toRadians(180)), Math.toRadians(70))
+                .lineToLinearHeading(new Pose2d(-57, -50, Math.toRadians(71)))
                 .build();
 
         TrajectorySequence Park = drive.trajectorySequenceBuilder(startPose)
@@ -92,140 +90,37 @@ public class LeftAuto extends LinearOpMode {
                 .back(10)
                 .build();
 
+        Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
+        Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeWrist);
+        Robot.outtake.closeClaw(outtakeClaw);
+        intakeClaw.setPosition(Robot.INTAKE_CLAW_OPEN);
+
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
         sleep(4);
 
-        Robot.outtake.closeClaw(outtakeClaw);
-
         drive.setPoseEstimate(startPose);
 
         drive.followTrajectorySequence(scoreSample);
-
-        slideMotor_right.setTargetPosition(-2980);
-//            slideMotor2.setTargetPosition(0);
-
-        slideMotor_right.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-//            slideMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-
-        slideMotor_right.setPower(-1.0);
-        slideMotor_left.setPower(-1.0);
-
-
-        while (slideMotor_right.isBusy()){
-            telemetry.addData("slides going up", "");
-            telemetry.update();
-        }
-
-        slideMotor_right.setPower(0.0);
-        slideMotor_left.setPower(0.0);
-
-        Robot.outtake.scoreSample(outtakeArm);
-        sleep(800);
-        Robot.outtake.openClaw(outtakeClaw);
-        sleep(500);
-
-        Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeWrist);
-
-        slideMotor_right.setTargetPosition(0);
-//            slideMotor2.setTargetPosition(0);
-
-        slideMotor_right.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-//            slideMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-
-        slideMotor_right.setPower(1.0);
-        slideMotor_left.setPower(1.0);
-
-
-        while (slideMotor_right.isBusy()){
-            telemetry.addData("slides going down", "");
-            telemetry.update();
-        }
-
-        slideMotor_right.setPower(0.0);
-        slideMotor_left.setPower(0.0);
-
         drive.followTrajectorySequence(collectSample1);
 
-        linkage1.setPosition(0.02);
-        linkage2.setPosition(0.98);
-        //Robot.intake.dropBucket(bucket);
-        //Robot.intake.runIntake(intakeRollers);
-        sleep(500);
+        linkage1.setPosition(0.14);
+        linkage2.setPosition(0.86);
 
-        linkage1.setPosition(0.197);
-        linkage2.setPosition(0.92);
-        sleep(1500);
+        sleep(600);
 
-        Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
+        intakeArmLeft.setPosition(Robot.INTAKE_ARM_LEFT_EXTEND);
+        intakeArmRight.setPosition(Robot.INTAKE_ARM_RIGHT_EXTEND);
+        intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP);
+        intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP);
+
         sleep(1000);
-        intakeRollers.setPower(0.0);
-        Robot.outtake.closeClaw(outtakeClaw);
 
-        drive.followTrajectorySequence(scoreSample);
-
-        slideMotor_right.setTargetPosition(-2980);
-//            slideMotor2.setTargetPosition(0);
-
-        slideMotor_right.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-//            slideMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-
-        slideMotor_right.setPower(-1.0);
-        slideMotor_left.setPower(-1.0);
-
-
-        while (slideMotor_right.isBusy()){
-            telemetry.addData("slides going up", "");
-            telemetry.update();
-        }
-
-        slideMotor_right.setPower(0.0);
-        slideMotor_left.setPower(0.0);
-
-        Robot.outtake.scoreSample(outtakeArm);
-        sleep(800);
-        Robot.outtake.openClaw(outtakeClaw);
-        sleep(500);
-
-        Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeWrist);
-
-        slideMotor_right.setTargetPosition(0);
-//            slideMotor2.setTargetPosition(0);
-
-        slideMotor_right.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-//            slideMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-
-        slideMotor_right.setPower(1.0);
-        slideMotor_left.setPower(1.0);
-
-
-        while (slideMotor_right.isBusy()){
-            telemetry.addData("slides going down", "");
-            telemetry.update();
-        }
-
-        slideMotor_right.setPower(0.0);
-        slideMotor_left.setPower(0.0);
-
-        drive.followTrajectorySequence(Park);
-
-        Robot.outtake.scoreSample(outtakeArm);
-        Robot.outtake.closeClaw(outtakeClaw);
-        drive.followTrajectorySequence(Ascent);
+        intakeClaw.setPosition(Robot.INTAKE_CLAW_CLOSE);
 
         sleep(4000);
-
-//        Robot.intake.fullExtend(linkage1, linkage2);
-//        sleep(1000);
-//        Robot.intake.dropBucket(bucket);
-//        sleep(500);
-//        Robot.intake.reverseIntake(intakeRollers);
-//        sleep(1500);
-//        Robot.intake.transfer(linkage1, linkage2, bucket);
-//        sleep(1000);
-//        drive.followTrajectorySequence(park);
 
         stop();
 
