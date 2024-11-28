@@ -14,8 +14,8 @@ public class Robot {
     public static double INTAKE_RIGHT_DIFFY_PICK_UP_VERTICAL = 0.35;//lowered this one 33-35, 35-31
     public static double INTAKE_LEFT_DIFFY_PICK_UP = 0.42;
     public static double INTAKE_RIGHT_DIFFY_PICK_UP = 0.58;
-    public static double INTAKE_LEFT_DIFFY_TRANSFER = 0.83;
-    public static double INTAKE_RIGHT_DIFFY_TRANSFER = 0.18;
+    public static double INTAKE_LEFT_DIFFY_TRANSFER = 0.78;
+    public static double INTAKE_RIGHT_DIFFY_TRANSFER = 0.21;
     public static double INTAKE_ARM_LEFT_EXTEND = 0.0;
     public static double INTAKE_ARM_RIGHT_EXTEND = 1;
     public static double INTAKE_ARM_LEFT_TRANSFER = 0.70;
@@ -25,8 +25,8 @@ public class Robot {
     public static double LINKAGE1_EXTEND = 0.28;
     public static double LINKAGE2_EXTEND = 0.72;
 
-    public static double LINKAGE1_TRANSFER = 0.0;
-    public static double LINKAGE2_TRANSFER = 1.0;
+    public static double LINKAGE1_TRANSFER = 0.02;
+    public static double LINKAGE2_TRANSFER = 0.98;
 
     //public static double BUCKET_INTAKE_ANGLE = 0.54;
     //public static double BUCKET_TRANSFER_ANGLE = 0.0;

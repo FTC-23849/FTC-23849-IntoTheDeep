@@ -254,20 +254,20 @@ public class DriverControl extends OpMode {
 
 
 
-            if (mStateTime.milliseconds() - lastServoExtend > 15){
+            if (mStateTime.milliseconds() - lastServoExtend > 10){
                 //intakeArmLeft.setPosition(Robot.INTAKE_ARM_LEFT_EXTEND_READY);
                 //intakeArmRight.setPosition(Robot.INTAKE_ARM_RIGHT_EXTEND_READY);
-                linkage1.setPosition(linkage1Position+0.05);
+                linkage1.setPosition(linkage1Position+0.005);
                 linkage2.setPosition(linkage2Position-0.005);
                 linkage1Position = linkage1Position+0.005;
                 linkage2Position = linkage2Position-0.005;
                 lastServoExtend = mStateTime.milliseconds() ;
             }
-            if(linkage1Position> 0.18){
-                linkage1.setPosition (0.18);
-                linkage2.setPosition (0.82);
-                linkage1Position = 0.18;
-                linkage2Position = 0.82;
+            if(linkage1Position> 0.45){
+                linkage1.setPosition (0.45);
+                linkage2.setPosition (0.55);
+                linkage1Position = 0.45;
+                linkage2Position = 0.55;
             }
 
         } else if (gamepad1.left_trigger > 0.2) {
@@ -278,8 +278,8 @@ public class DriverControl extends OpMode {
             leftBumperTimes = 0;
             //intakeRollers.setPower(0);
             lastServoExtend = mStateTime.milliseconds() ;
-            linkage1Position = 0.0;
-            linkage2Position = 1;
+            linkage1Position = Robot.LINKAGE1_TRANSFER;
+            linkage2Position = Robot.LINKAGE2_TRANSFER;
         }
         if(gamepad1.dpad_down){
             intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_TRANSFER);
