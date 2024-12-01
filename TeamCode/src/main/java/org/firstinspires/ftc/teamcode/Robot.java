@@ -14,14 +14,14 @@ public class Robot {
     public static double INTAKE_RIGHT_DIFFY_PICK_UP_VERTICAL = 0.35;//lowered this one 33-35, 35-31
     public static double INTAKE_LEFT_DIFFY_PICK_UP = 0.42;
     public static double INTAKE_RIGHT_DIFFY_PICK_UP = 0.58;
-    public static double INTAKE_LEFT_DIFFY_TRANSFER = 0.78;
-    public static double INTAKE_RIGHT_DIFFY_TRANSFER = 0.21;
-    public static double INTAKE_ARM_LEFT_EXTEND = 0.0;
+    public static double INTAKE_LEFT_DIFFY_TRANSFER = 0.80;
+    public static double INTAKE_RIGHT_DIFFY_TRANSFER = 0.20;
+    public static double INTAKE_ARM_LEFT_EXTEND = 0;
     public static double INTAKE_ARM_RIGHT_EXTEND = 1;
     public static double INTAKE_ARM_LEFT_TRANSFER = 0.70;
     public static double INTAKE_ARM_RIGHT_TRANSFER = 0.30;
-    public static double INTAKE_ARM_LEFT_EXTEND_READY = 0.075;
-    public static double INTAKE_ARM_RIGHT_EXTEND_READY= 0.925;
+    public static double INTAKE_ARM_LEFT_EXTEND_READY = 0.1;
+    public static double INTAKE_ARM_RIGHT_EXTEND_READY= 0.9;
     public static double LINKAGE1_EXTEND = 0.28;
     public static double LINKAGE2_EXTEND = 0.72;
 
@@ -42,7 +42,7 @@ public class Robot {
 
     public static double ARM_SAMPLE_RECEIVE = 0.99;
     public static double ARM_SAMPLE_SCORE = 0.5;
-    public static double ARM_SPECIMEN_RECEIVE = 0.325;
+    public static double ARM_SPECIMEN_RECEIVE = 0.43;
 
 
     public static double SLIDE_SPEED = 1.0;

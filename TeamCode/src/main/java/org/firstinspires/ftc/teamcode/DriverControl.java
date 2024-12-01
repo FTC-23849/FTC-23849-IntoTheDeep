@@ -79,7 +79,7 @@ public class DriverControl extends OpMode {
     double linkage1Position = 0.015;
     double linkage2Position = 0.975;
     double lastServoExtend = 0;
-    int slideMaxPosition = -2500;
+    int slideMaxPosition = -3200;
     boolean outtakeGoingDown = false;
 
     @Override
@@ -138,6 +138,7 @@ public class DriverControl extends OpMode {
     boolean leftBumperPressed = false;
     boolean intakeClawOpened = true;
     boolean outtakeClawDropped = true;
+    boolean intakeSmallExtend = false;
     @Override
     public void loop() {
         double xDistance = 0;
@@ -263,11 +264,11 @@ public class DriverControl extends OpMode {
                 linkage2Position = linkage2Position-0.005;
                 lastServoExtend = mStateTime.milliseconds() ;
             }
-            if(linkage1Position> 0.45){
-                linkage1.setPosition (0.45);
-                linkage2.setPosition (0.55);
-                linkage1Position = 0.45;
-                linkage2Position = 0.55;
+            if(linkage1Position> 0.30){
+                linkage1.setPosition (0.30);
+                linkage2.setPosition (0.70);
+                linkage1Position = 0.30;
+                linkage2Position = 0.70;
             }
 
         } else if (gamepad1.left_trigger > 0.2) {
@@ -399,9 +400,19 @@ public class DriverControl extends OpMode {
         }*/
 
         if (gamepad2.dpad_up) {
+//            linkage1.setPosition(0.05);
+//            linkage2.setPosition(0.95);
             Robot.outtake.scoreSample(outtakeArm);
+//            outtakeTimer.reset();
+//            intakeSmallExtend = true;
         }
 
+//        if(intakeSmallExtend == true && transferTimer.milliseconds() > 200) {
+//            linkage1.setPosition(0);
+//            linkage2.setPosition(1.0);
+//            intakeSmallExtend = false;
+//
+//        }
 
         //drivetrain
         if (gamepad1.left_stick_x < 0){
