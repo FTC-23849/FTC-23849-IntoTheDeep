@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Robot {
     //Constants for intake
-    public static double INTAKE_CLAW_OPEN = 0.50;
-    public static double INTAKE_CLAW_CLOSE = 0.1;
+    public static double INTAKE_CLAW_OPEN = 0.65;
+    public static double INTAKE_CLAW_CLOSE = 0.0;
     public static double INTAKE_LEFT_DIFFY_PICK_UP_READY = 0.49;
     public static double INTAKE_RIGHT_DIFFY_PICK_UP_READY = 0.51;
     public static double INTAKE_LEFT_DIFFY_PICK_UP_VERTICAL = 0.23;
@@ -15,13 +15,13 @@ public class Robot {
     public static double INTAKE_LEFT_DIFFY_PICK_UP = 0.42;
     public static double INTAKE_RIGHT_DIFFY_PICK_UP = 0.58;
     public static double INTAKE_LEFT_DIFFY_TRANSFER = 0.80;
-    public static double INTAKE_RIGHT_DIFFY_TRANSFER = 0.20;
-    public static double INTAKE_ARM_LEFT_EXTEND = 0;
-    public static double INTAKE_ARM_RIGHT_EXTEND = 1;
+    public static double INTAKE_RIGHT_DIFFY_TRANSFER = 0.22;
+    public static double INTAKE_ARM_LEFT_EXTEND = 0.025;
+    public static double INTAKE_ARM_RIGHT_EXTEND = .975;
     public static double INTAKE_ARM_LEFT_TRANSFER = 0.70;
     public static double INTAKE_ARM_RIGHT_TRANSFER = 0.30;
-    public static double INTAKE_ARM_LEFT_EXTEND_READY = 0.1;
-    public static double INTAKE_ARM_RIGHT_EXTEND_READY= 0.9;
+    public static double INTAKE_ARM_LEFT_EXTEND_READY = 0.15;
+    public static double INTAKE_ARM_RIGHT_EXTEND_READY= 0.85;
     public static double LINKAGE1_EXTEND = 0.28;
     public static double LINKAGE2_EXTEND = 0.72;
 
@@ -40,7 +40,7 @@ public class Robot {
     public static double SAMPLE_RECEIVE_ORIENTATION = 0.1;
 
 
-    public static double ARM_SAMPLE_RECEIVE = 0.99;
+    public static double ARM_SAMPLE_RECEIVE = 0.97;
     public static double ARM_SAMPLE_SCORE = 0.5;
     public static double ARM_SPECIMEN_RECEIVE = 0.43;
 

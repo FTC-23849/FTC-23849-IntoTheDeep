@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
+import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.VoltageUnit.VOLTS;
 
@@ -80,7 +81,7 @@ public class DriverControl extends OpMode {
     double linkage2Position = 0.975;
     double lastServoExtend = 0;
     int slideMaxPosition = -3200;
-    boolean outtakeGoingDown = false;
+    boolean goingDown = false;
 
     @Override
     public void init() {
@@ -264,11 +265,11 @@ public class DriverControl extends OpMode {
                 linkage2Position = linkage2Position-0.005;
                 lastServoExtend = mStateTime.milliseconds() ;
             }
-            if(linkage1Position> 0.30){
-                linkage1.setPosition (0.30);
-                linkage2.setPosition (0.70);
-                linkage1Position = 0.30;
-                linkage2Position = 0.70;
+            if(linkage1Position> 0.17){
+                linkage1.setPosition (0.17);
+                linkage2.setPosition (0.83);
+                linkage1Position = 0.17;
+                linkage2Position = 0.83;
             }
 
         } else if (gamepad1.left_trigger > 0.2) {
@@ -321,16 +322,6 @@ public class DriverControl extends OpMode {
         }
         if (gamepad2.left_bumper) {
             outtakeClaw.setPosition(Robot.OPEN_CLAW);
-            clawTimer.reset();
-            outtakeClawDropped = false;
-        }
-        if(outtakeClawDropped == false && clawTimer.milliseconds() > 500){
-            outtakeClaw.setPosition(Robot.CLOSE_CLAW);
-            outtakeClawDropped = true;
-        }
-
-        if (gamepad2.a){
-            outtakeClaw.setPosition(Robot.OPEN_CLAW);
         }
 
 
@@ -356,22 +347,16 @@ public class DriverControl extends OpMode {
             Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeWrist);
 
             slideMotor_right.setTargetPosition(0);
-//            slideMotor2.setTargetPosition(0);
 
             slideMotor_right.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-//            slideMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
             slideMotor_right.setPower(1.0);
             slideMotor_left.setPower(1.0);
 
-//            outtakeTimer.reset();
-//            while (outtakeTimer.time() < 0.2){
-//
-//            }
-
             outtakeTimer.reset();
-            //outtakeGoingDown = true;
-//
+
+            goingDown = true;
+
             while ((slideMotor_right.isBusy() && slideMotor_right.getVelocity() > 0) && outtakeTimer.time() < 2/*&& slideMotor2.isBusy()*/){
                 telemetry.addData("Slides going down", "");
                 telemetry.addData("slideMotor_right", slideMotor_right.getCurrentPosition());
@@ -392,12 +377,16 @@ public class DriverControl extends OpMode {
             slideMotor_left.setPower(0.0);
 
         }
-        /*if(outtakeGoingDown && !(slideMotor_right.getCurrentPosition() >= 2 && outtakeTimer.time() < 2)){
-            slideMotor_right.setPower(0.0);
-            slideMotor_left.setPower(0.0);
-            outtakeGoingDown = false;
 
-        }*/
+//        if (goingDown){
+//            if (slideMotor_right.getCurrentPosition() != 0) {
+//
+//            } else {
+//                slideMotor_right.setPower(0);
+//                slideMotor_left.setPower(0);
+//                goingDown = false;
+//            }
+//        }
 
         if (gamepad2.dpad_up) {
 //            linkage1.setPosition(0.05);
