@@ -241,7 +241,7 @@ public class DriverControl extends OpMode {
         telemetry.addData("lastServoExtend", lastServoExtend);
         telemetry.addData("time", mStateTime.milliseconds());
         telemetry.update();
-        if (gamepad1.right_trigger > 0.2){
+        if (gamepad1.right_trigger > 0.2|| gamepad1.a){
             intakeArmLeft.setPosition(Robot.INTAKE_ARM_LEFT_EXTEND_READY);
             intakeArmRight.setPosition(Robot.INTAKE_ARM_RIGHT_EXTEND_READY);
             intakeClaw.setPosition(Robot.INTAKE_CLAW_OPEN);

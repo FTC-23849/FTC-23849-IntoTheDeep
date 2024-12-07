@@ -6,14 +6,16 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Robot {
     //Constants for intake
-    public static double INTAKE_CLAW_OPEN = 0.65;
-    public static double INTAKE_CLAW_CLOSE = 0.0;
+    public static double INTAKE_CLAW_OPEN = 0.7;
+    public static double INTAKE_CLAW_CLOSE = 0.15;
     public static double INTAKE_LEFT_DIFFY_PICK_UP_READY = 0.49;
     public static double INTAKE_RIGHT_DIFFY_PICK_UP_READY = 0.51;
     public static double INTAKE_LEFT_DIFFY_PICK_UP_VERTICAL = 0.23;
     public static double INTAKE_RIGHT_DIFFY_PICK_UP_VERTICAL = 0.35;//lowered this one 33-35, 35-31
     public static double INTAKE_LEFT_DIFFY_PICK_UP = 0.42;
     public static double INTAKE_RIGHT_DIFFY_PICK_UP = 0.58;
+    public static double INTAKE_LEFT_DIFFY_PICK_UP_WALL_SAMPLE = 0.325;
+    public static double INTAKE_RIGHT_DIFFY_PICK_UP_WALL_SAMPLE = 0.465;
     public static double INTAKE_LEFT_DIFFY_TRANSFER = 0.80;
     public static double INTAKE_RIGHT_DIFFY_TRANSFER = 0.22;
     public static double INTAKE_ARM_LEFT_EXTEND = 0.025;
