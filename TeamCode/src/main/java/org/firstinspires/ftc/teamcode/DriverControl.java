@@ -142,6 +142,7 @@ public class DriverControl extends OpMode {
     boolean outtakeClawDropped = true;
     boolean intakeSmallExtend = false;
     boolean slowRelease = false;
+    boolean hanging = false;
     @Override
     public void loop() {
         double xDistance = 0;
@@ -383,8 +384,50 @@ public class DriverControl extends OpMode {
 
         }
 
-//        if (gamepad2.a && gamepad2.dpad_down) {
+//        if (gamepad2.a && gamepad2.right_bumper) {
 //
+//            hanging = true;
+//
+//            slideMotor_right.setTargetPosition(slideMotor_right.getCurrentPosition()-200);
+//
+//            slideMotor_right.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//
+//            slideMotor_right.setPower(1.0);
+//            slideMotor_left.setPower(1.0);
+//
+//            outtakeTimer.reset();
+//
+//            goingDown = true;
+//
+//            while ((slideMotor_right.isBusy() && slideMotor_right.getVelocity() > 0) && outtakeTimer.time() < 2/*&& slideMotor2.isBusy()*/){
+//                telemetry.addData("Slides going down", "");
+//                telemetry.addData("slideMotor_right", slideMotor_right.getCurrentPosition());
+//                telemetry.addData("slideMotor_left", slideMotor_left.getCurrentPosition());
+//                telemetry.update();
+//                outtakeTimer.reset();
+//            }
+//
+//
+//            telemetry.addData("slides all the way down", "");
+//            telemetry.addData("slideMotor_right end position", slideMotor_right.getCurrentPosition());
+////            telemetry.addData("slideMotor2 end position", slideMotor2.getCurrentPosition());
+//            telemetry.update();
+//
+//            // set motor power to zero to turn off motors
+//
+//
+//            while (hanging) {
+//                slideMotor_right.setPower(0.3);
+//                slideMotor_left.setPower(0.3);
+//            }
+//
+//
+//        }
+
+//        if (gamepad2.y) {
+//            hanging = false;
+//            slideMotor_left.setPower(0.0);
+//            slideMotor_right.setPower(0.0);
 //        }
 
 //        if (goingDown){
