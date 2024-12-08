@@ -20,6 +20,8 @@ public class Robot {
     public static double INTAKE_RIGHT_DIFFY_TRANSFER = 0.22;
     public static double INTAKE_ARM_LEFT_EXTEND = 0.025;
     public static double INTAKE_ARM_RIGHT_EXTEND = .975;
+    public static double INTAKE_ARM_LEFT_EXTEND_TELEOP = 0.01;
+    public static double INTAKE_ARM_RIGHT_EXTEND_TELEOP = .99;
     public static double INTAKE_ARM_LEFT_TRANSFER = 0.70;
     public static double INTAKE_ARM_RIGHT_TRANSFER = 0.30;
     public static double INTAKE_ARM_LEFT_EXTEND_READY = 0.15;
@@ -130,6 +132,12 @@ public class Robot {
 
         public static void scoreSpecimen(Servo outtakeArm, Servo outtakeWrist, Servo outtakeClaw){
             outtakeArm.setPosition(ARM_SPECIMEN_RECEIVE);
+            outtakeWrist.setPosition(SPECIMEN_RECEIVE_ORIENTATION);
+            outtakeClaw.setPosition(CLOSE_CLAW);
+        }
+
+        public static void drivingScoreSpecimen(Servo outtakeArm, Servo outtakeWrist, Servo outtakeClaw){
+            outtakeArm.setPosition(0.65);
             outtakeWrist.setPosition(SPECIMEN_RECEIVE_ORIENTATION);
             outtakeClaw.setPosition(CLOSE_CLAW);
         }

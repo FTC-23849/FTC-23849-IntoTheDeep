@@ -83,6 +83,7 @@ public class DriverControl extends OpMode {
     int slideMaxPosition = -3200;
     boolean goingDown = false;
 
+
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
@@ -140,6 +141,7 @@ public class DriverControl extends OpMode {
     boolean intakeClawOpened = true;
     boolean outtakeClawDropped = true;
     boolean intakeSmallExtend = false;
+    boolean slowRelease = false;
     @Override
     public void loop() {
         double xDistance = 0;
@@ -207,8 +209,8 @@ public class DriverControl extends OpMode {
             if (rightBumperTimes == 1) {
                 /*Robot.intake.dropBucket(bucket);
                 intakeRollers.setPower(0);*/
-                intakeArmLeft.setPosition(Robot.INTAKE_ARM_LEFT_EXTEND);
-                intakeArmRight.setPosition(Robot.INTAKE_ARM_RIGHT_EXTEND);
+                intakeArmLeft.setPosition(Robot.INTAKE_ARM_LEFT_EXTEND_TELEOP);
+                intakeArmRight.setPosition(Robot.INTAKE_ARM_RIGHT_EXTEND_TELEOP);
 
 
 
@@ -304,9 +306,12 @@ public class DriverControl extends OpMode {
                 slideMotor_left.setPower(gamepad2.right_stick_y);
                 slideMotor_right.setPower(gamepad2.right_stick_y);
         } else {
-            slideMotor_left.setPower(0.0);
-            slideMotor_right.setPower(0.0);
+            if(slowRelease ==  false) {
+                slideMotor_left.setPower(0.0);
+                slideMotor_right.setPower(0.0);
+            }
         }
+
 
 
         if (gamepad2.right_bumper) {
@@ -402,6 +407,15 @@ public class DriverControl extends OpMode {
 //            intakeSmallExtend = false;
 //
 //        }
+        /*if(gamepad2.y){
+            slideMotor_left.setPower(0.8);
+            slideMotor_right.setPower(0.8);
+            slowRelease = true;
+        }
+        if(gamepad2.b){
+
+            slowRelease = false;
+        }*/
 
         //drivetrain
         if (gamepad1.left_stick_x < 0){
