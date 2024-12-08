@@ -106,7 +106,7 @@ public class RightAuto extends LinearOpMode {
 
         TrajectoryActionBuilder scoreSpecimen2 = drive.actionBuilder(new Pose2d(47, -58, Math.toRadians(90)))
                 .setTangent(0)
-                .splineToLinearHeading(new Pose2d(-5, -33, Math.toRadians(270)), Math.toRadians(90));
+                .splineToLinearHeading(new Pose2d(-5, -32, Math.toRadians(270)), Math.toRadians(90));
 
         TrajectoryActionBuilder park = drive.actionBuilder(new Pose2d(-5, -33, Math.toRadians(90)))
                 .splineToLinearHeading(new Pose2d(50, -55, Math.toRadians(90)), Math.toRadians(90));

@@ -383,6 +383,10 @@ public class DriverControl extends OpMode {
 
         }
 
+//        if (gamepad2.a && gamepad2.dpad_down) {
+//
+//        }
+
 //        if (goingDown){
 //            if (slideMotor_right.getCurrentPosition() != 0) {
 //
