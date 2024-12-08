@@ -74,6 +74,7 @@ public class DriverControl extends OpMode {
     ElapsedTime outtakeTimer = new ElapsedTime();
     ElapsedTime clawTimer = new ElapsedTime();
     ElapsedTime transferTimer = new ElapsedTime();
+    ElapsedTime hanging = new ElapsedTime();
 
     boolean outtakeArmUp = false;
     boolean intakeExtended = false;
@@ -142,7 +143,6 @@ public class DriverControl extends OpMode {
     boolean outtakeClawDropped = true;
     boolean intakeSmallExtend = false;
     boolean slowRelease = false;
-    boolean hanging = false;
     @Override
     public void loop() {
         double xDistance = 0;
@@ -439,6 +439,24 @@ public class DriverControl extends OpMode {
 //                goingDown = false;
 //            }
 //        }
+
+        if (gamepad2.dpad_right && gamepad2.left_bumper) {
+            hanging.reset();
+
+//            for (hanging.milliseconds() < 10000) {
+//
+//            }
+
+            while (hanging.milliseconds() < 7000) {
+                slideMotor_right.setPower(0.7);
+                slideMotor_right.setPower(0.7);
+            }
+
+            while (hanging.milliseconds() > 7000 && hanging.milliseconds() < 13000 ) {
+                slideMotor_right.setPower(0.17);
+                slideMotor_left.setPower(0.17);
+            }
+        }
 
         if (gamepad2.dpad_up) {
 //            linkage1.setPosition(0.05);
