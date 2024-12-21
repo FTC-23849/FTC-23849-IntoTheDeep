@@ -310,7 +310,7 @@ public class DriverControl extends OpMode {
                 slideMotor_left.setPower(gamepad2.right_stick_y);
                 slideMotor_right.setPower(gamepad2.right_stick_y);
         } else {
-            if(goingDown == false && goingToSpecimen == false) {
+            if(goingDown == false && goingToSpecimen == false && goingToSpecimenPickup == false) {
                 slideMotor_left.setPower(0.0);
                 slideMotor_right.setPower(0.0);
             }
@@ -385,11 +385,11 @@ public class DriverControl extends OpMode {
 
             Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeWrist);
 
-            slideMotor_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            slideMotor_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
             slideMotor_right.setTargetPosition(0);
             slideMotor_left.setTargetPosition(0);
+
+            slideMotor_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slideMotor_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             slideMotor_right.setPower(1.0);
             slideMotor_left.setPower(1.0);
@@ -403,11 +403,11 @@ public class DriverControl extends OpMode {
 
         if (gamepad2.y) {
 
-            slideMotor_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            slideMotor_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
             slideMotor_right.setTargetPosition(-1540);
             slideMotor_left.setTargetPosition(-1540);
+
+            slideMotor_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slideMotor_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             slideMotor_right.setPower(-1.0);
             slideMotor_left.setPower(-1.0);
@@ -419,11 +419,11 @@ public class DriverControl extends OpMode {
 
             Robot.outtake.specimenReceivePosition(outtakeClaw, outtakeWrist, outtakeArm);
 
-            slideMotor_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            slideMotor_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
             slideMotor_right.setTargetPosition(0);
             slideMotor_left.setTargetPosition(0);
+
+            slideMotor_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slideMotor_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             slideMotor_right.setPower(1.0);
             slideMotor_left.setPower(1.0);
