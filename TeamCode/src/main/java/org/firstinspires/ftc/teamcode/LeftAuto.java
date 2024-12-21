@@ -82,13 +82,13 @@ public class LeftAuto extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(-53, -53, Math.toRadians(45)), Math.toRadians(200));
 
         TrajectoryActionBuilder collectSample1 = drive.actionBuilder(new Pose2d(-57, -57, Math.toRadians(45)))
-                .splineToLinearHeading(new Pose2d(-55.5, -48.5, Math.toRadians(72.5)), Math.toRadians(250));
+                .splineToLinearHeading(new Pose2d(-55.5, -48, Math.toRadians(73.5)), Math.toRadians(250));
 
         TrajectoryActionBuilder scoreSample1 = drive.actionBuilder(new Pose2d(-57, -57, Math.toRadians(45)))
                 .splineToLinearHeading(new Pose2d(-53, -53, Math.toRadians(45)), Math.toRadians(90));
 
         TrajectoryActionBuilder collectSample2 = drive.actionBuilder(new Pose2d(-53, -53, Math.toRadians(45)))
-                .splineToLinearHeading(new Pose2d(-57, -50, Math.toRadians(100)), Math.toRadians(90));
+                .splineToLinearHeading(new Pose2d(-57, -48.7, Math.toRadians(98)), Math.toRadians(90));
 
         TrajectoryActionBuilder scoreSample2 = drive.actionBuilder(new Pose2d(-57, -50, Math.toRadians(100)))
                 .splineToLinearHeading(new Pose2d(-53, -53, Math.toRadians(45)), Math.toRadians(90));
@@ -97,10 +97,10 @@ public class LeftAuto extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(-50, -43, Math.toRadians(140)), Math.toRadians(90));
 
         TrajectoryActionBuilder scoreSample3 = drive.actionBuilder(new Pose2d(-50, -43, Math.toRadians(140)))
-                .splineToLinearHeading(new Pose2d(-53, -53, Math.toRadians(45)), Math.toRadians(90));
+                .splineToLinearHeading(new Pose2d(-52, -52, Math.toRadians(45)), Math.toRadians(90));
 
-        TrajectoryActionBuilder park = drive.actionBuilder(new Pose2d(-53, -53, Math.toRadians(45)))
-                .splineToLinearHeading(new Pose2d(-17, -10, Math.toRadians(180)), Math.toRadians(-10));
+        TrajectoryActionBuilder park = drive.actionBuilder(new Pose2d(-52, -52, Math.toRadians(45)))
+                .splineToLinearHeading(new Pose2d(-17, -5, Math.toRadians(180)), Math.toRadians(-10));
 
         Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
         Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeWrist);
@@ -136,8 +136,8 @@ public class LeftAuto extends LinearOpMode {
                 ));
 
         intakeClaw.setPosition(Robot.INTAKE_CLAW_OPEN);
-        linkage1.setPosition(0.16);
-        linkage2.setPosition(0.84);
+        linkage1.setPosition(0.17);
+        linkage2.setPosition(0.83);
         intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP);
         intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP);
         sleep(500);
@@ -147,7 +147,7 @@ public class LeftAuto extends LinearOpMode {
         intakeClaw.setPosition(Robot.INTAKE_CLAW_CLOSE);
         sleep(650);
         Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
-        sleep(500);
+        sleep(800);
         Robot.outtake.closeClaw(outtakeClaw);
         sleep(100);
         intakeClaw.setPosition(Robot.OPEN_CLAW);
@@ -169,8 +169,8 @@ public class LeftAuto extends LinearOpMode {
                 ));
 
         intakeClaw.setPosition(Robot.INTAKE_CLAW_OPEN);
-        linkage1.setPosition(0.165);
-        linkage2.setPosition(0.835);
+        linkage1.setPosition(0.17);
+        linkage2.setPosition(0.83);
         intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP);
         intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP);
         sleep(500);
@@ -180,7 +180,7 @@ public class LeftAuto extends LinearOpMode {
         intakeClaw.setPosition(Robot.INTAKE_CLAW_CLOSE);
         sleep(650);
         Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
-        sleep(500);
+        sleep(800);
         Robot.outtake.closeClaw(outtakeClaw);
         sleep(100);
         intakeClaw.setPosition(Robot.OPEN_CLAW);
@@ -202,8 +202,8 @@ public class LeftAuto extends LinearOpMode {
         ));
 
         intakeClaw.setPosition(Robot.INTAKE_CLAW_OPEN);
-        linkage1.setPosition(0.1525);
-        linkage2.setPosition(0.8475);
+        linkage1.setPosition(0.17);
+        linkage2.setPosition(0.83);
         intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP_WALL_SAMPLE);
         intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP_WALL_SAMPLE);
         sleep(500);
@@ -213,7 +213,7 @@ public class LeftAuto extends LinearOpMode {
         intakeClaw.setPosition(Robot.INTAKE_CLAW_CLOSE);
         sleep(650);
         Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
-        sleep(500);
+        sleep(800);
         Robot.outtake.closeClaw(outtakeClaw);
         sleep(100);
         intakeClaw.setPosition(Robot.OPEN_CLAW);

@@ -83,6 +83,8 @@ public class DriverControl extends OpMode {
     double lastServoExtend = 0;
     int slideMaxPosition = -3200;
     boolean goingDown = false;
+    boolean goingToSpecimen = false;
+    boolean goingToSpecimenPickup = false;
 
 
     @Override
@@ -295,6 +297,7 @@ public class DriverControl extends OpMode {
             rightBumperTimes = 0;
         }
 
+        //Control the outtake slides with the joystick
         if (gamepad2.right_stick_y < 0 && slideMotor_right.getCurrentPosition() > slideMaxPosition) {
             slideMotor_left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             slideMotor_right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -307,11 +310,14 @@ public class DriverControl extends OpMode {
                 slideMotor_left.setPower(gamepad2.right_stick_y);
                 slideMotor_right.setPower(gamepad2.right_stick_y);
         } else {
-            if(slowRelease ==  false) {
+            if(goingDown == false && goingToSpecimen == false) {
                 slideMotor_left.setPower(0.0);
                 slideMotor_right.setPower(0.0);
             }
         }
+
+        telemetry.addData("GoingDown =", goingDown);
+        telemetry.update();
 
 
 
@@ -347,41 +353,86 @@ public class DriverControl extends OpMode {
         }
 
         //Code to set outtake arm to rest position
-        if(gamepad2.dpad_down) {
+//        if(gamepad2.dpad_down) {
+//
+//
+//            Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeWrist);
+//
+//            slideMotor_right.setTargetPosition(0);
+//
+//            slideMotor_right.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//
+//            slideMotor_right.setPower(1.0);
+//            slideMotor_left.setPower(1.0);
+//
+//            outtakeTimer.reset();
+//
+//            goingDown = true;
+//
+//            while ((slideMotor_right.isBusy() && slideMotor_right.getVelocity() > 0) && outtakeTimer.time() < 2/*&& slideMotor2.isBusy()*/){
+//
+//                outtakeTimer.reset();
+//            }
+//
+//            // set motor power to zero to turn off motors
+//
+//            slideMotor_right.setPower(0.0);
+//            slideMotor_left.setPower(0.0);
+//
+//        }
 
+        if (gamepad2.dpad_down) {
 
             Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeWrist);
 
-            slideMotor_right.setTargetPosition(0);
+            slideMotor_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slideMotor_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            slideMotor_right.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            slideMotor_right.setTargetPosition(0);
+            slideMotor_left.setTargetPosition(0);
 
             slideMotor_right.setPower(1.0);
             slideMotor_left.setPower(1.0);
 
-            outtakeTimer.reset();
-
             goingDown = true;
+        }
 
-            while ((slideMotor_right.isBusy() && slideMotor_right.getVelocity() > 0) && outtakeTimer.time() < 2/*&& slideMotor2.isBusy()*/){
-                telemetry.addData("Slides going down", "");
-                telemetry.addData("slideMotor_right", slideMotor_right.getCurrentPosition());
-                telemetry.addData("slideMotor_left", slideMotor_left.getCurrentPosition());
-                telemetry.update();
-                outtakeTimer.reset();
-            }
+        if (goingDown && slideMotor_right.getCurrentPosition() == 0 || slideMotor_left.getCurrentPosition() == 0){
+            goingDown = false;
+        }
 
+        if (gamepad2.y) {
 
-            telemetry.addData("slides all the way down", "");
-            telemetry.addData("slideMotor_right end position", slideMotor_right.getCurrentPosition());
-//            telemetry.addData("slideMotor2 end position", slideMotor2.getCurrentPosition());
-            telemetry.update();
+            slideMotor_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slideMotor_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            // set motor power to zero to turn off motors
+            slideMotor_right.setTargetPosition(-1540);
+            slideMotor_left.setTargetPosition(-1540);
 
-            slideMotor_right.setPower(0.0);
-            slideMotor_left.setPower(0.0);
+            slideMotor_right.setPower(-1.0);
+            slideMotor_left.setPower(-1.0);
 
+            goingToSpecimen = true;
+        }
+
+        if (gamepad2.b) {
+
+            Robot.outtake.specimenReceivePosition(outtakeClaw, outtakeWrist, outtakeArm);
+
+            slideMotor_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slideMotor_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            slideMotor_right.setTargetPosition(0);
+            slideMotor_left.setTargetPosition(0);
+
+            slideMotor_right.setPower(1.0);
+            slideMotor_left.setPower(1.0);
+
+            goingToSpecimenPickup = true;
+        }
+
+        if (goingDown && (slideMotor_right.getCurrentPosition() == 0 || slideMotor_left.getCurrentPosition() == 0)){
+            goingToSpecimenPickup = false;
         }
 
 //        if (gamepad2.a && gamepad2.right_bumper) {
@@ -424,28 +475,10 @@ public class DriverControl extends OpMode {
 //
 //        }
 
-//        if (gamepad2.y) {
-//            hanging = false;
-//            slideMotor_left.setPower(0.0);
-//            slideMotor_right.setPower(0.0);
-//        }
-
-//        if (goingDown){
-//            if (slideMotor_right.getCurrentPosition() != 0) {
-//
-//            } else {
-//                slideMotor_right.setPower(0);
-//                slideMotor_left.setPower(0);
-//                goingDown = false;
-//            }
-//        }
 
         if (gamepad2.dpad_right && gamepad2.left_bumper) {
             hanging.reset();
 
-//            for (hanging.milliseconds() < 10000) {
-//
-//            }
 
             while (hanging.milliseconds() < 7000) {
                 slideMotor_right.setPower(0.7);

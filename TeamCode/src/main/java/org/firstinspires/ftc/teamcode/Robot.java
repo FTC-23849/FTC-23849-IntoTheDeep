@@ -6,24 +6,26 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Robot {
     //Constants for intake
-    public static double INTAKE_CLAW_OPEN = 0.7;
-    public static double INTAKE_CLAW_CLOSE = 0.15;
+    //skibidi toilet
+    //ducky duckis >>>>>>>> drood forke
+    public static double INTAKE_CLAW_OPEN = 0.4;
+    public static double INTAKE_CLAW_CLOSE = 0.02;
     public static double INTAKE_LEFT_DIFFY_PICK_UP_READY = 0.49;
     public static double INTAKE_RIGHT_DIFFY_PICK_UP_READY = 0.51;
     public static double INTAKE_LEFT_DIFFY_PICK_UP_VERTICAL = 0.23;
     public static double INTAKE_RIGHT_DIFFY_PICK_UP_VERTICAL = 0.35;//lowered this one 33-35, 35-31
-    public static double INTAKE_LEFT_DIFFY_PICK_UP = 0.42;
+    public static double INTAKE_LEFT_DIFFY_PICK_UP =  0.42;
     public static double INTAKE_RIGHT_DIFFY_PICK_UP = 0.58;
     public static double INTAKE_LEFT_DIFFY_PICK_UP_WALL_SAMPLE = 0.325;
     public static double INTAKE_RIGHT_DIFFY_PICK_UP_WALL_SAMPLE = 0.465;
-    public static double INTAKE_LEFT_DIFFY_TRANSFER = 0.80;
-    public static double INTAKE_RIGHT_DIFFY_TRANSFER = 0.22;
-    public static double INTAKE_ARM_LEFT_EXTEND = 0.025;
-    public static double INTAKE_ARM_RIGHT_EXTEND = .975;
-    public static double INTAKE_ARM_LEFT_EXTEND_TELEOP = 0.01;
-    public static double INTAKE_ARM_RIGHT_EXTEND_TELEOP = .99;
-    public static double INTAKE_ARM_LEFT_TRANSFER = 0.70;
-    public static double INTAKE_ARM_RIGHT_TRANSFER = 0.30;
+    public static double INTAKE_LEFT_DIFFY_TRANSFER = 0.82;
+    public static double INTAKE_RIGHT_DIFFY_TRANSFER = 0.20;
+    public static double INTAKE_ARM_LEFT_EXTEND = 0.07;
+    public static double INTAKE_ARM_RIGHT_EXTEND = 0.93;
+    public static double INTAKE_ARM_LEFT_EXTEND_TELEOP = 0.07;
+    public static double INTAKE_ARM_RIGHT_EXTEND_TELEOP = 0.93;
+    public static double INTAKE_ARM_LEFT_TRANSFER = 0.725;
+    public static double INTAKE_ARM_RIGHT_TRANSFER = 0.275;
     public static double INTAKE_ARM_LEFT_EXTEND_READY = 0.15;
     public static double INTAKE_ARM_RIGHT_EXTEND_READY= 0.85;
     public static double LINKAGE1_EXTEND = 0.28;
@@ -44,9 +46,9 @@ public class Robot {
     public static double SAMPLE_RECEIVE_ORIENTATION = 0.1;
 
 
-    public static double ARM_SAMPLE_RECEIVE = 0.97;
+    public static double ARM_SAMPLE_RECEIVE = 1.0;
     public static double ARM_SAMPLE_SCORE = 0.5;
-    public static double ARM_SPECIMEN_RECEIVE = 0.43;
+    public static double ARM_SPECIMEN_RECEIVE = 0.39;
 
 
     public static double SLIDE_SPEED = 1.0;
