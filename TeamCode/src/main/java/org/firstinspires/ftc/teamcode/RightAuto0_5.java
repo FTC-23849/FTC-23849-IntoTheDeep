@@ -100,7 +100,7 @@ public class RightAuto0_5 extends LinearOpMode {
 
         TrajectoryActionBuilder scoreSpecimen1 = drive.actionBuilder(new Pose2d(47, -59, Math.toRadians(90)))
                 .setTangent(15)
-                .splineToLinearHeading(new Pose2d(5, -32, Math.toRadians(270)), Math.toRadians(90), new TranslationalVelConstraint(50), new ProfileAccelConstraint(-30, 50));
+                .splineToLinearHeading(new Pose2d(3, -32, Math.toRadians(270)), Math.toRadians(90), new TranslationalVelConstraint(50), new ProfileAccelConstraint(-30, 50));
 
         TrajectoryActionBuilder collectSpecimen2 = drive.actionBuilder(new Pose2d(0, -32, Math.toRadians(270)))
                 .splineToLinearHeading(new Pose2d(47, -52, Math.toRadians(90)), Math.toRadians(0), new TranslationalVelConstraint(60), new ProfileAccelConstraint(-40, 40))
@@ -109,14 +109,14 @@ public class RightAuto0_5 extends LinearOpMode {
 
         TrajectoryActionBuilder scoreSpecimen2 = drive.actionBuilder(new Pose2d(47, -58, Math.toRadians(90)))
                 .setTangent(15)
-                .splineToLinearHeading(new Pose2d(3, -31, Math.toRadians(271)), Math.toRadians(90), new TranslationalVelConstraint(50), new ProfileAccelConstraint(-30, 50));
+                .splineToLinearHeading(new Pose2d(2, -31, Math.toRadians(271)), Math.toRadians(90), new TranslationalVelConstraint(50), new ProfileAccelConstraint(-30, 50));
 
         TrajectoryActionBuilder collectSpecimen3 = drive.actionBuilder(new Pose2d(-2, -31, Math.toRadians(270)))
                 .splineToLinearHeading(new Pose2d(47, -52, Math.toRadians(90)), Math.toRadians(0), new TranslationalVelConstraint(60), new ProfileAccelConstraint(-40, 40))
                 .setTangent(Math.toRadians(90))
-                .lineToY(-60);
+                .lineToY(-62);
 
-        TrajectoryActionBuilder scoreSpecimen3 = drive.actionBuilder(new Pose2d(47, -60, Math.toRadians(90)))
+        TrajectoryActionBuilder scoreSpecimen3 = drive.actionBuilder(new Pose2d(47, -61, Math.toRadians(90)))
                 .setTangent(15)
                 .splineToLinearHeading(new Pose2d(0, -29, Math.toRadians(271)), Math.toRadians(90), new TranslationalVelConstraint(50), new ProfileAccelConstraint(-30, 50));
 
