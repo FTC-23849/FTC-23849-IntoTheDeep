@@ -42,16 +42,16 @@ public class Robot {
     //Constants for outtake
     public static double OPEN_CLAW = 0.5;
     public static double CLOSE_CLAW = 0.0;
-    public static double SPECIMEN_RECEIVE_ORIENTATION = 0.4;
+    public static double SPECIMEN_RECEIVE_ORIENTATION = 0.5;
     public static double SPECIMEN_SCORE_ORIENTATION = 1;
-    public static double SAMPLE_RECEIVE_ORIENTATION = 0.4;
-    public static double SAMPLE_SCORE_ORIENTATION = 0.4;
+    public static double SAMPLE_RECEIVE_ORIENTATION = 0.5;
+    public static double SAMPLE_SCORE_ORIENTATION = 0.5;
 
 
     public static double ARM_SAMPLE_RECEIVE = 0.32;
     public static double ARM_SAMPLE_SCORE = 0.9;
     public static double ARM_SPECIMEN_RECEIVE = 0.9;
-    public static double ARM_SPECIMEN_SCORE = 0.35;
+    public static double ARM_SPECIMEN_SCORE = 0.30;
 
 
     public static double SLIDE_SPEED = 1.0;
