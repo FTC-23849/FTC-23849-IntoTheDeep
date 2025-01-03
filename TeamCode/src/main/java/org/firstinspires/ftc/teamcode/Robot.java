@@ -42,13 +42,16 @@ public class Robot {
     //Constants for outtake
     public static double OPEN_CLAW = 0.5;
     public static double CLOSE_CLAW = 0.0;
-    public static double SPECIMEN_RECEIVE_ORIENTATION = 0.1;
-    public static double SAMPLE_RECEIVE_ORIENTATION = 0.1;
+    public static double SPECIMEN_RECEIVE_ORIENTATION = 0.64;
+    public static double SPECIMEN_SCORE_ORIENTATION = 1;
+    public static double SAMPLE_RECEIVE_ORIENTATION = 0.64;
+    public static double SAMPLE_SCORE_ORIENTATION = 0.64;
 
 
-    public static double ARM_SAMPLE_RECEIVE = 1.0;
-    public static double ARM_SAMPLE_SCORE = 0.5;
-    public static double ARM_SPECIMEN_RECEIVE = 0.39;
+    public static double ARM_SAMPLE_RECEIVE = 0.9;
+    public static double ARM_SAMPLE_SCORE = 0.32;
+    public static double ARM_SPECIMEN_RECEIVE = 0.35;
+    public static double ARM_SPECIMEN_SCORE = 0.8;
 
 
     public static double SLIDE_SPEED = 1.0;
@@ -133,8 +136,8 @@ public class Robot {
         }
 
         public static void scoreSpecimen(Servo outtakeArm, Servo outtakeWrist, Servo outtakeClaw){
-            outtakeArm.setPosition(ARM_SPECIMEN_RECEIVE);
-            outtakeWrist.setPosition(SPECIMEN_RECEIVE_ORIENTATION);
+            outtakeArm.setPosition(ARM_SPECIMEN_SCORE);
+            outtakeWrist.setPosition(SPECIMEN_SCORE_ORIENTATION);
             outtakeClaw.setPosition(CLOSE_CLAW);
         }
 

@@ -55,6 +55,8 @@ public class DriverControl extends OpMode {
     DcMotorEx rightBackMotor;
     DcMotorEx slideMotor_left;
     DcMotorEx slideMotor_right;
+    DcMotorEx slideMotor_up;
+    DcMotorEx slideMotor_down;
     Servo linkage1;
     Servo linkage2;
     Servo bucket;
@@ -116,7 +118,9 @@ public class DriverControl extends OpMode {
         slideMotor_left = hardwareMap.get(DcMotorEx.class,"slideMotor_left");
         slideMotor_right = hardwareMap.get(DcMotorEx.class,"slideMotor_right");
         slideMotor_right.setDirection(DcMotorEx.Direction.REVERSE);
-
+        slideMotor_up = hardwareMap.get(DcMotorEx.class, "slideMotor_up");
+        slideMotor_down = hardwareMap.get(DcMotorEx.class, "slideMotor_down");
+        slideMotor_down.setDirection(DcMotorEx.Direction.REVERSE);
 
         leftFrontMotor.setZeroPowerBehavior(BRAKE);
         leftBackMotor.setZeroPowerBehavior(BRAKE);
@@ -303,16 +307,21 @@ public class DriverControl extends OpMode {
             slideMotor_right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             slideMotor_left.setPower(gamepad2.right_stick_y);
             slideMotor_right.setPower(gamepad2.right_stick_y);
-
+            slideMotor_up.setPower(gamepad2.right_stick_y);
+            slideMotor_down.setPower(gamepad2.right_stick_y);
         } else if (gamepad2.right_stick_y > 0) {
                 slideMotor_left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 slideMotor_right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 slideMotor_left.setPower(gamepad2.right_stick_y);
                 slideMotor_right.setPower(gamepad2.right_stick_y);
+                slideMotor_up.setPower(gamepad2.right_stick_y);
+                slideMotor_down.setPower(gamepad2.right_stick_y);
         } else {
             if(goingDown == false && goingToSpecimen == false && goingToSpecimenPickup == false) {
                 slideMotor_left.setPower(0.0);
                 slideMotor_right.setPower(0.0);
+                slideMotor_up.setPower(0.0);
+                slideMotor_down.setPower(0.0);
             }
         }
 
@@ -351,6 +360,7 @@ public class DriverControl extends OpMode {
         if (gamepad2.x) {
             Robot.outtake.specimenReceivePosition(outtakeClaw, outtakeWrist, outtakeArm);
         }
+
 
         //Code to set outtake arm to rest position
 //        if(gamepad2.dpad_down) {
@@ -403,7 +413,7 @@ public class DriverControl extends OpMode {
 
         if (gamepad2.y) {
 
-            slideMotor_right.setTargetPosition(-1540);
+            /*slideMotor_right.setTargetPosition(-1540);
             slideMotor_left.setTargetPosition(-1540);
 
             slideMotor_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -412,7 +422,8 @@ public class DriverControl extends OpMode {
             slideMotor_right.setPower(-1.0);
             slideMotor_left.setPower(-1.0);
 
-            goingToSpecimen = true;
+            goingToSpecimen = true;*/
+            Robot.outtake.scoreSpecimen(outtakeArm,outtakeWrist, outtakeClaw);
         }
 
         if (gamepad2.b) {
