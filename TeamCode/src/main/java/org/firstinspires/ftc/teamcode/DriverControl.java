@@ -295,6 +295,8 @@ public class DriverControl extends OpMode {
         if(gamepad1.dpad_down){
             intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_TRANSFER);
             intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_TRANSFER);
+            linkage1.setPosition(Robot.LINKAGE1_TRANSFER);
+            linkage2.setPosition(Robot.LINKAGE2_TRANSFER);
         }
         if (gamepad1.b){
             //Robot.intake.bucketUp(bucket);

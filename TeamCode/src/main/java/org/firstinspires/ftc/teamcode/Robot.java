@@ -9,7 +9,7 @@ public class Robot {
     //skibidi toilet
     //ducky duckis >>>>>>>> drood forke
     public static double INTAKE_CLAW_OPEN = 0.4;
-    public static double INTAKE_CLAW_CLOSE = 0.02;
+    public static double INTAKE_CLAW_CLOSE = 0.01;
     public static double INTAKE_LEFT_DIFFY_PICK_UP_READY = 0.49;
     public static double INTAKE_RIGHT_DIFFY_PICK_UP_READY = 0.51;
     public static double INTAKE_LEFT_DIFFY_PICK_UP_VERTICAL = 0.23;
@@ -18,14 +18,14 @@ public class Robot {
     public static double INTAKE_RIGHT_DIFFY_PICK_UP = 0.58;
     public static double INTAKE_LEFT_DIFFY_PICK_UP_WALL_SAMPLE = 0.325;
     public static double INTAKE_RIGHT_DIFFY_PICK_UP_WALL_SAMPLE = 0.465;
-    public static double INTAKE_LEFT_DIFFY_TRANSFER = 0.82;
-    public static double INTAKE_RIGHT_DIFFY_TRANSFER = 0.20;
+    public static double INTAKE_LEFT_DIFFY_TRANSFER = 0.85;
+    public static double INTAKE_RIGHT_DIFFY_TRANSFER = 0.17;
     public static double INTAKE_ARM_LEFT_EXTEND = 0.07;
     public static double INTAKE_ARM_RIGHT_EXTEND = 0.93;
     public static double INTAKE_ARM_LEFT_EXTEND_TELEOP = 0.07;
     public static double INTAKE_ARM_RIGHT_EXTEND_TELEOP = 0.93;
-    public static double INTAKE_ARM_LEFT_TRANSFER = 0.725;
-    public static double INTAKE_ARM_RIGHT_TRANSFER = 0.275;
+    public static double INTAKE_ARM_LEFT_TRANSFER = 0.61;
+    public static double INTAKE_ARM_RIGHT_TRANSFER = 0.39;
     public static double INTAKE_ARM_LEFT_EXTEND_READY = 0.15;
     public static double INTAKE_ARM_RIGHT_EXTEND_READY= 0.85;
     public static double LINKAGE1_EXTEND = 0.28;
@@ -48,8 +48,8 @@ public class Robot {
     public static double SAMPLE_SCORE_ORIENTATION = 0.5;
 
 
-    public static double ARM_SAMPLE_RECEIVE = 0.32;
-    public static double ARM_SAMPLE_SCORE = 0.9;
+    public static double ARM_SAMPLE_RECEIVE = 0.285;
+    public static double ARM_SAMPLE_SCORE = 0.8;
     public static double ARM_SPECIMEN_RECEIVE = 0.9;
     public static double ARM_SPECIMEN_SCORE = 0.30;
 
