@@ -63,12 +63,14 @@ public class DriverControl extends OpMode {
     Servo outtakeClaw;
     Servo outtakeWrist;
     Servo outtakeArm;
+    Servo outtakeArm2;
     //CRServo intakeRollers;
     Servo intakeDiffyLeft;
     Servo intakeDiffyRight;
     Servo intakeArmLeft;
     Servo intakeArmRight;
     Servo intakeClaw;
+    Servo outtakeSupport;
 
 
 
@@ -77,6 +79,8 @@ public class DriverControl extends OpMode {
     ElapsedTime clawTimer = new ElapsedTime();
     ElapsedTime transferTimer = new ElapsedTime();
     ElapsedTime hanging = new ElapsedTime();
+    ElapsedTime supportUp = new ElapsedTime();
+    ElapsedTime supportDown = new ElapsedTime();
 
     boolean outtakeArmUp = false;
     boolean intakeExtended = false;
@@ -87,12 +91,13 @@ public class DriverControl extends OpMode {
     boolean goingDown = false;
     boolean goingToSpecimen = false;
     boolean goingToSpecimenPickup = false;
+    boolean goingToSpecimenScore = false;
+    boolean raiseSupport = false;
+    boolean armDown = false;
 
 
     @Override
     public void init() {
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
 
         leftFrontMotor  = hardwareMap.get(DcMotorEx.class,"LF");
         rightFrontMotor = hardwareMap.get(DcMotorEx.class, "RF");
@@ -114,6 +119,8 @@ public class DriverControl extends OpMode {
         outtakeClaw = hardwareMap.get(Servo.class,"outtakeClaw");
         outtakeWrist = hardwareMap.get(Servo.class,"outtakeWrist");
         outtakeArm = hardwareMap.get(Servo.class,"outtakeArm");
+        outtakeArm2 = hardwareMap.get(Servo.class,"outtakeArm2");
+        outtakeSupport = hardwareMap.get(Servo.class,"outtakeSupport");
 
         slideMotor_left = hardwareMap.get(DcMotorEx.class,"slideMotor_left");
         slideMotor_right = hardwareMap.get(DcMotorEx.class,"slideMotor_right");
@@ -128,10 +135,13 @@ public class DriverControl extends OpMode {
         rightBackMotor.setZeroPowerBehavior(BRAKE);
 
         //Robot.intake.transfer(linkage1, linkage2, bucket);
-        Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeWrist);
+        Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeArm2, outtakeWrist);
+        Robot.outtake.retractSupport(outtakeSupport);
 
         slideMotor_right.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         slideMotor_left.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        slideMotor_up.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        slideMotor_down.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
 
 
@@ -164,10 +174,10 @@ public class DriverControl extends OpMode {
 //        telemetry.addData("voltage-rightBackMotor", rightBackMotor.getCurrent(CurrentUnit.AMPS));
 //        telemetry.update();
 
-        telemetry.addData("LF", leftFrontMotor.getCurrent(CurrentUnit.AMPS));
-        telemetry.addData("LB", leftBackMotor.getCurrent(CurrentUnit.AMPS));
-        telemetry.addData("RF", rightFrontMotor.getCurrent(CurrentUnit.AMPS));
-        telemetry.addData("RB", rightBackMotor.getCurrent(CurrentUnit.AMPS));
+//        telemetry.addData("LF", leftFrontMotor.getCurrent(CurrentUnit.AMPS));
+//        telemetry.addData("LB", leftBackMotor.getCurrent(CurrentUnit.AMPS));
+//        telemetry.addData("RF", rightFrontMotor.getCurrent(CurrentUnit.AMPS));
+//        telemetry.addData("RB", rightBackMotor.getCurrent(CurrentUnit.AMPS));
 
 
 //        if (gamepad1.right_bumper) {
@@ -244,12 +254,12 @@ public class DriverControl extends OpMode {
         rightBumperPressed = false;
         }
 
-        telemetry.addData("rightBumper", rightBumperTimes);
-        telemetry.addData("left bumper", leftBumperTimes);
-
-        telemetry.addData("lastServoExtend", lastServoExtend);
-        telemetry.addData("time", mStateTime.milliseconds());
-        telemetry.update();
+//        telemetry.addData("rightBumper", rightBumperTimes);
+//        telemetry.addData("left bumper", leftBumperTimes);
+//
+//        telemetry.addData("lastServoExtend", lastServoExtend);
+//        telemetry.addData("time", mStateTime.milliseconds());
+//        telemetry.update();
         if (gamepad1.right_trigger > 0.2|| gamepad1.a){
             intakeArmLeft.setPosition(Robot.INTAKE_ARM_LEFT_EXTEND_READY);
             intakeArmRight.setPosition(Robot.INTAKE_ARM_RIGHT_EXTEND_READY);
@@ -305,30 +315,50 @@ public class DriverControl extends OpMode {
 
         //Control the outtake slides with the joystick
         if (gamepad2.right_stick_y < 0 && slideMotor_right.getCurrentPosition() > slideMaxPosition) {
+
+            goingDown = false;
+            goingToSpecimen = false;
+            goingToSpecimenPickup = false;
+            goingToSpecimenScore = false;
+
             slideMotor_left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             slideMotor_right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            slideMotor_up.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            slideMotor_down.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             slideMotor_left.setPower(gamepad2.right_stick_y);
             slideMotor_right.setPower(gamepad2.right_stick_y);
             slideMotor_up.setPower(gamepad2.right_stick_y);
             slideMotor_down.setPower(gamepad2.right_stick_y);
+
         } else if (gamepad2.right_stick_y > 0) {
-                slideMotor_left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                slideMotor_right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                slideMotor_left.setPower(gamepad2.right_stick_y);
-                slideMotor_right.setPower(gamepad2.right_stick_y);
-                slideMotor_up.setPower(gamepad2.right_stick_y);
-                slideMotor_down.setPower(gamepad2.right_stick_y);
+
+            goingDown = false;
+            goingToSpecimen = false;
+            goingToSpecimenPickup = false;
+            slideMotor_left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            slideMotor_right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            slideMotor_up.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            slideMotor_down.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            slideMotor_left.setPower(gamepad2.right_stick_y);
+            slideMotor_right.setPower(gamepad2.right_stick_y);
+            slideMotor_up.setPower(gamepad2.right_stick_y);
+            slideMotor_down.setPower(gamepad2.right_stick_y);
+
         } else {
-            if(goingDown == false && goingToSpecimen == false && goingToSpecimenPickup == false) {
+
+            if(goingDown == false && goingToSpecimen == false && goingToSpecimenPickup == false && goingToSpecimenScore == false) {
                 slideMotor_left.setPower(0.0);
                 slideMotor_right.setPower(0.0);
                 slideMotor_up.setPower(0.0);
                 slideMotor_down.setPower(0.0);
             }
+
         }
 
-        telemetry.addData("GoingDown =", goingDown);
-        telemetry.update();
+//        telemetry.addData("GoingDown =", goingDown);
+//        telemetry.update();
+
+
 
 
 
@@ -353,6 +383,10 @@ public class DriverControl extends OpMode {
             slideMotor_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             slideMotor_right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             slideMotor_left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            slideMotor_up.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            slideMotor_down.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            slideMotor_up.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            slideMotor_down.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
         if (gamepad2.dpad_left && gamepad2.b) {
@@ -360,7 +394,9 @@ public class DriverControl extends OpMode {
         }
 
         if (gamepad2.x) {
-            Robot.outtake.specimenReceivePosition(outtakeClaw, outtakeWrist, outtakeArm);
+
+            raiseSupport = false;
+            Robot.outtake.specimenReceivePosition(outtakeClaw, outtakeWrist, outtakeArm, outtakeArm2);
         }
 
 
@@ -395,58 +431,130 @@ public class DriverControl extends OpMode {
 
         if (gamepad2.dpad_down) {
 
-            Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeWrist);
+            raiseSupport = false;
+
+            Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeArm2, outtakeWrist);
 
             slideMotor_right.setTargetPosition(0);
             slideMotor_left.setTargetPosition(0);
+            slideMotor_up.setTargetPosition(0);
 
             slideMotor_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slideMotor_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slideMotor_up.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             slideMotor_right.setPower(1.0);
             slideMotor_left.setPower(1.0);
+            slideMotor_up.setPower(1.0);
 
             goingDown = true;
         }
 
-        if (goingDown && slideMotor_right.getCurrentPosition() == 0 || slideMotor_left.getCurrentPosition() == 0){
+        if (goingDown && slideMotor_right.getCurrentPosition() == 0 || slideMotor_left.getCurrentPosition() == 0 || slideMotor_up.getCurrentPosition() == 0){
             goingDown = false;
         }
 
         if (gamepad2.y) {
 
-            /*slideMotor_right.setTargetPosition(-1540);
-            slideMotor_left.setTargetPosition(-1540);
+            slideMotor_right.setTargetPosition(-1400);
+            slideMotor_left.setTargetPosition(-1400);
+            slideMotor_up.setTargetPosition(-1400);
 
             slideMotor_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slideMotor_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slideMotor_up.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             slideMotor_right.setPower(-1.0);
             slideMotor_left.setPower(-1.0);
+            slideMotor_up.setPower(-1.0);
 
-            goingToSpecimen = true;*/
-            Robot.outtake.scoreSpecimen(outtakeArm,outtakeWrist, outtakeClaw);
+            goingToSpecimen = true;
+            Robot.outtake.scoreSpecimen(outtakeArm, outtakeArm2, outtakeWrist, outtakeClaw);
+
+            supportUp.reset();
+            raiseSupport = true;
+
+        }
+
+        telemetry.addData("slideMotor_right", slideMotor_right.getCurrentPosition());
+        telemetry.addData("slideMotor_left", slideMotor_left.getCurrentPosition());
+        telemetry.addData("slideMotor_up", slideMotor_up.getCurrentPosition());
+
+        if (supportUp.milliseconds() > 800 && raiseSupport == true) {
+
+            Robot.outtake.extendSupport(outtakeSupport);
+
+        } else {
+            Robot.outtake.retractSupport(outtakeSupport);
+        }
+
+        if (gamepad2.a) {
+
+            slideMotor_right.setTargetPosition(-800);
+            slideMotor_left.setTargetPosition(-800);
+            slideMotor_up.setTargetPosition(-800);
+
+            slideMotor_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slideMotor_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slideMotor_up.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            slideMotor_right.setPower(-1.0);
+            slideMotor_left.setPower(-1.0);
+            slideMotor_up.setPower(-1.0);
+
+            goingToSpecimenScore = true;
+
+
+        }
+
+        if (goingToSpecimenScore && (slideMotor_right.getCurrentPosition() == -800 || slideMotor_left.getCurrentPosition() == -800 || slideMotor_up.getCurrentPosition() == -800)){
+            goingToSpecimenScore = false;
         }
 
         if (gamepad2.b) {
 
-            Robot.outtake.specimenReceivePosition(outtakeClaw, outtakeWrist, outtakeArm);
+            Robot.outtake.specimenReceivePosition(outtakeClaw, outtakeWrist, outtakeArm, outtakeArm2);
 
             slideMotor_right.setTargetPosition(0);
             slideMotor_left.setTargetPosition(0);
+            slideMotor_up.setTargetPosition(0);
 
             slideMotor_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slideMotor_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slideMotor_up.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             slideMotor_right.setPower(1.0);
             slideMotor_left.setPower(1.0);
+            slideMotor_up.setPower(1.0);
 
             goingToSpecimenPickup = true;
+            raiseSupport = false;
+
+            Robot.outtake.retractSupport(outtakeSupport);
+
+            supportDown.reset();
+            armDown = true;
+
         }
 
-        if (goingDown && (slideMotor_right.getCurrentPosition() == 0 || slideMotor_left.getCurrentPosition() == 0)){
+        if (supportDown.milliseconds() > 600 && armDown == true) {
+            Robot.outtake.specimenReceivePosition(outtakeClaw, outtakeArm, outtakeArm2, outtakeWrist);
+            armDown = false;
+        }
+
+
+
+
+
+
+        if (goingDown && (slideMotor_right.getCurrentPosition() == 0 || slideMotor_left.getCurrentPosition() == 0 || slideMotor_up.getCurrentPosition() == 0)){
             goingToSpecimenPickup = false;
         }
+
+
+
+
+
 
 //        if (gamepad2.a && gamepad2.right_bumper) {
 //
@@ -505,12 +613,19 @@ public class DriverControl extends OpMode {
         }
 
         if (gamepad2.dpad_up) {
+            raiseSupport = false;
 //            linkage1.setPosition(0.05);
 //            linkage2.setPosition(0.95);
-            Robot.outtake.scoreSample(outtakeArm);
+            Robot.outtake.scoreSample(outtakeArm, outtakeArm2, outtakeWrist);
 //            outtakeTimer.reset();
 //            intakeSmallExtend = true;
         }
+//        if(gamepad2.a){
+//            outtakeSupport.setPosition(Robot.SUPPORT_SUPPORT);
+//        }
+//        if(gamepad2.b){
+//            outtakeSupport.setPosition(Robot.SUPPORT_RETRACT);
+//        }
 
 //        if(intakeSmallExtend == true && transferTimer.milliseconds() > 200) {
 //            linkage1.setPosition(0);
@@ -570,12 +685,9 @@ public class DriverControl extends OpMode {
             turn(turningSpeed);
         }
 
-
-
-
-
-
         telemetry.update();
+
+
 
 
 

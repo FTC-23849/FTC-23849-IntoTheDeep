@@ -20,7 +20,7 @@ public class MeepMeepTesting {
                 .build();
 
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(9, -61, Math.toRadians(270)))
-                    .lineToY(-33)
+                .lineToY(-31)
                 .setTangent(Math.toRadians(0))
                 .splineToLinearHeading(new Pose2d(31, -40, Math.toRadians(90)), Math.toRadians(10), new TranslationalVelConstraint(70), new ProfileAccelConstraint(-70, 70))
                 .splineToConstantHeading(new Vector2d(50, -10), Math.toRadians(10), new TranslationalVelConstraint(70), new ProfileAccelConstraint(-70, 70))
@@ -32,10 +32,16 @@ public class MeepMeepTesting {
                 .lineToX(59, new TranslationalVelConstraint(100), new ProfileAccelConstraint(-100, 100))
                 .setTangent(Math.toRadians(270))
                 .lineToY(-53, new TranslationalVelConstraint(100), new ProfileAccelConstraint(-100, 100))
-                .lineToY(-59, new TranslationalVelConstraint(15), new ProfileAccelConstraint(-15, 15))
-                .setTangent(15)
-                .splineToLinearHeading(new Pose2d(0, -27, Math.toRadians(270)), Math.toRadians(90), new TranslationalVelConstraint(60), new ProfileAccelConstraint(-20, 20))
-                    .build());
+                .setTangent(Math.toRadians(271))
+                .lineToY(-10, new TranslationalVelConstraint(100), new ProfileAccelConstraint(-100, 100))
+                .setTangent(Math.toRadians(0))
+                .lineToX(65, new TranslationalVelConstraint(100), new ProfileAccelConstraint(-100, 100))
+                .setTangent(Math.toRadians(270))
+                .lineToY(-53, new TranslationalVelConstraint(100), new ProfileAccelConstraint(-100, 100))
+                .lineToY(-62, new TranslationalVelConstraint(15), new ProfileAccelConstraint(-15, 15))
+                .setTangent(Math.toRadians(151))
+                .lineToY(-27)
+                .build());
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_JUICE_DARK)
                 .setDarkMode(true)

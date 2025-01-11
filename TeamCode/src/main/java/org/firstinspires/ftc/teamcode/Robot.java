@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Robot {
     //Constants for intake
-    //skibidi toilet
-    //ducky duckis >>>>>>>> drood forke
     public static double INTAKE_CLAW_OPEN = 0.4;
     public static double INTAKE_CLAW_CLOSE = 0.01;
     public static double INTAKE_LEFT_DIFFY_PICK_UP_READY = 0.49;
@@ -18,14 +16,14 @@ public class Robot {
     public static double INTAKE_RIGHT_DIFFY_PICK_UP = 0.58;
     public static double INTAKE_LEFT_DIFFY_PICK_UP_WALL_SAMPLE = 0.325;
     public static double INTAKE_RIGHT_DIFFY_PICK_UP_WALL_SAMPLE = 0.465;
-    public static double INTAKE_LEFT_DIFFY_TRANSFER = 0.85;
-    public static double INTAKE_RIGHT_DIFFY_TRANSFER = 0.17;
+    public static double INTAKE_LEFT_DIFFY_TRANSFER = 0.84;
+    public static double INTAKE_RIGHT_DIFFY_TRANSFER = 0.18;
     public static double INTAKE_ARM_LEFT_EXTEND = 0.07;
     public static double INTAKE_ARM_RIGHT_EXTEND = 0.93;
     public static double INTAKE_ARM_LEFT_EXTEND_TELEOP = 0.07;
     public static double INTAKE_ARM_RIGHT_EXTEND_TELEOP = 0.93;
-    public static double INTAKE_ARM_LEFT_TRANSFER = 0.61;
-    public static double INTAKE_ARM_RIGHT_TRANSFER = 0.39;
+    public static double INTAKE_ARM_LEFT_TRANSFER = 0.63;
+    public static double INTAKE_ARM_RIGHT_TRANSFER = 0.37;
     public static double INTAKE_ARM_LEFT_EXTEND_READY = 0.15;
     public static double INTAKE_ARM_RIGHT_EXTEND_READY= 0.85;
     public static double LINKAGE1_EXTEND = 0.28;
@@ -42,16 +40,18 @@ public class Robot {
     //Constants for outtake
     public static double OPEN_CLAW = 0.5;
     public static double CLOSE_CLAW = 0.0;
-    public static double SPECIMEN_RECEIVE_ORIENTATION = 0.5;
+    public static double SPECIMEN_RECEIVE_ORIENTATION = 0.6;
     public static double SPECIMEN_SCORE_ORIENTATION = 1;
-    public static double SAMPLE_RECEIVE_ORIENTATION = 0.5;
-    public static double SAMPLE_SCORE_ORIENTATION = 0.5;
+    public static double SAMPLE_RECEIVE_ORIENTATION = 0.6;
+    public static double SAMPLE_SCORE_ORIENTATION = 0.75;
 
+    public static double ARM_SAMPLE_RECEIVE = 0.86;
+    public static double ARM_SAMPLE_SCORE = 0.18;
+    public static double ARM_SPECIMEN_RECEIVE = 0.1;
+    public static double ARM_SPECIMEN_SCORE = 0.82;
 
-    public static double ARM_SAMPLE_RECEIVE = 0.285;
-    public static double ARM_SAMPLE_SCORE = 0.8;
-    public static double ARM_SPECIMEN_RECEIVE = 0.9;
-    public static double ARM_SPECIMEN_SCORE = 0.30;
+    public static double SUPPORT_SUPPORT = .66;
+    public static double SUPPORT_RETRACT = 1.0;
 
 
     public static double SLIDE_SPEED = 1.0;
@@ -119,24 +119,35 @@ public class Robot {
             outtakeClaw.setPosition(CLOSE_CLAW);
         }
 
-        public static void sampleReceivePosition(Servo outtakeClaw, Servo outtakeArm, Servo outtakeWrist){
+        public static void sampleReceivePosition(Servo outtakeClaw, Servo outtakeArm, Servo outtakeArm2, Servo outtakeWrist){
             outtakeClaw.setPosition(OPEN_CLAW);
             outtakeArm.setPosition(ARM_SAMPLE_RECEIVE);
+            outtakeArm2.setPosition(ARM_SAMPLE_RECEIVE);
             outtakeWrist.setPosition(SAMPLE_RECEIVE_ORIENTATION);
         }
 
-        public static void specimenReceivePosition (Servo outtakeClaw, Servo outtakeWrist, Servo outtakeArm){
+        public static void specimenReceivePositionPlain (Servo outtakeWrist, Servo outtakeArm, Servo outtakeArm2){
             outtakeArm.setPosition(ARM_SPECIMEN_RECEIVE);
+            outtakeArm2.setPosition(ARM_SPECIMEN_RECEIVE);
+            outtakeWrist.setPosition(SPECIMEN_RECEIVE_ORIENTATION);
+        }
+
+        public static void specimenReceivePosition (Servo outtakeClaw, Servo outtakeWrist, Servo outtakeArm, Servo outtakeArm2){
+            outtakeArm.setPosition(ARM_SPECIMEN_RECEIVE);
+            outtakeArm2.setPosition(ARM_SPECIMEN_RECEIVE);
             outtakeClaw.setPosition(OPEN_CLAW);
             outtakeWrist.setPosition(SPECIMEN_RECEIVE_ORIENTATION);
         }
 
-        public static void scoreSample(Servo outtakeArm){
+        public static void scoreSample(Servo outtakeArm, Servo outtakeArm2, Servo outtakeWrist){
             outtakeArm.setPosition(ARM_SAMPLE_SCORE);
+            outtakeArm2.setPosition(ARM_SAMPLE_SCORE);
+            outtakeWrist.setPosition(SAMPLE_SCORE_ORIENTATION);
         }
 
-        public static void scoreSpecimen(Servo outtakeArm, Servo outtakeWrist, Servo outtakeClaw){
+        public static void scoreSpecimen(Servo outtakeArm, Servo outtakeArm2, Servo outtakeWrist, Servo outtakeClaw){
             outtakeArm.setPosition(ARM_SPECIMEN_SCORE);
+            outtakeArm2.setPosition(ARM_SPECIMEN_SCORE);
             outtakeWrist.setPosition(SPECIMEN_SCORE_ORIENTATION);
             outtakeClaw.setPosition(CLOSE_CLAW);
         }
@@ -145,6 +156,14 @@ public class Robot {
             outtakeArm.setPosition(0.65);
             outtakeWrist.setPosition(SPECIMEN_RECEIVE_ORIENTATION);
             outtakeClaw.setPosition(CLOSE_CLAW);
+        }
+
+        public static void retractSupport(Servo outtakeSupport){
+            outtakeSupport.setPosition(SUPPORT_RETRACT);
+        }
+
+        public static void extendSupport(Servo outtakeSupport){
+            outtakeSupport.setPosition(SUPPORT_SUPPORT);
         }
 
     }

@@ -26,7 +26,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-@Disabled
+
 @Autonomous
 public class BasicSampleTracker extends LinearOpMode {
 
@@ -144,7 +144,7 @@ public class BasicSampleTracker extends LinearOpMode {
 
         // Use OpenCvCameraFactory class from FTC SDK to create camera instance
         controlHubCam = OpenCvCameraFactory.getInstance().createWebcam(
-                hardwareMap.get(WebcamName.class, "webcam1"), cameraMonitorViewId);
+                hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
         //controlHubCam.setPipeline(new ObjectTrackingCustom.YellowBlobDetectionPipeline());
 

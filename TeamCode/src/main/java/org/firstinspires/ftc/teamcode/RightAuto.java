@@ -10,13 +10,14 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
-//@Disabled
+@Disabled
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
 public class RightAuto extends LinearOpMode {
 
@@ -29,6 +30,7 @@ public class RightAuto extends LinearOpMode {
         Servo outtakeClaw;
         Servo outtakeWrist;
         Servo outtakeArm;
+        Servo outtakeArm2;
 //
         DcMotorEx slideMotor_back;
         DcMotorEx slideMotor_front;
@@ -44,6 +46,7 @@ public class RightAuto extends LinearOpMode {
         outtakeClaw = hardwareMap.get(Servo.class, "outtakeClaw");
         outtakeWrist = hardwareMap.get(Servo.class, "outtakeWrist");
         outtakeArm = hardwareMap.get(Servo.class, "outtakeArm");
+        outtakeArm2 = hardwareMap.get(Servo.class,"outtakeArm2");
 
 //
         slideMotor_back = hardwareMap.get(DcMotorEx.class, "slideMotor_left");
@@ -66,7 +69,7 @@ public class RightAuto extends LinearOpMode {
         intakeClaw = hardwareMap.get(Servo.class, "intakeClaw");
 
         Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
-        Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeWrist);
+        Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeArm2, outtakeWrist);
         Robot.outtake.closeClaw(outtakeClaw);
         intakeClaw.setPosition(Robot.INTAKE_CLAW_OPEN);
 //
@@ -111,7 +114,7 @@ public class RightAuto extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(50, -55, Math.toRadians(90)), Math.toRadians(90));
 
         Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
-        Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeWrist);
+        Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeArm2, outtakeWrist);
         Robot.outtake.closeClaw(outtakeClaw);
         intakeClaw.setPosition(Robot.INTAKE_CLAW_OPEN);
         intakeDiffyLeft.setPosition(0.62);
@@ -125,7 +128,7 @@ public class RightAuto extends LinearOpMode {
 
         Actions.runBlocking(new ParallelAction(
                 new intakeOpenClose(linkage1, linkage2),
-                new scoreSpecimen(outtakeArm, outtakeWrist, outtakeClaw),
+                new scoreSpecimen(outtakeArm, outtakeArm2, outtakeWrist, outtakeClaw),
                 new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, 1450, 1.0),
                 scorePreload.build()
         ));
@@ -142,7 +145,7 @@ public class RightAuto extends LinearOpMode {
 
         Actions.runBlocking(new SequentialAction(
                 new ParallelAction(
-                    new receiveSpecimen(outtakeClaw, outtakeWrist, outtakeArm),
+                    new receiveSpecimen(outtakeClaw, outtakeWrist, outtakeArm, outtakeArm2),
                     collectSpecimen1.build()),
                 new closeClaw(outtakeClaw),
                 new ParallelAction(
@@ -251,11 +254,13 @@ public class RightAuto extends LinearOpMode {
     public class scoreSpecimen implements Action{
 
         Servo outtakeArm;
+        Servo outtakeArm2;
         Servo outtakeWrist;
         Servo outtakeClaw;
 
-        public scoreSpecimen(Servo outtakeArm, Servo outtakeWrist, Servo outtakeClaw){
+        public scoreSpecimen(Servo outtakeArm, Servo outtakeArm2, Servo outtakeWrist, Servo outtakeClaw){
             this.outtakeArm = outtakeArm;
+            this.outtakeArm2 = outtakeArm2;
             this.outtakeWrist = outtakeWrist;
             this.outtakeClaw = outtakeClaw;
         }
@@ -263,7 +268,7 @@ public class RightAuto extends LinearOpMode {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
-            Robot.outtake.scoreSpecimen(outtakeArm, outtakeWrist, outtakeClaw);
+            Robot.outtake.scoreSpecimen(outtakeArm, outtakeArm2, outtakeWrist, outtakeClaw);
 
             return false;
         }
@@ -272,11 +277,13 @@ public class RightAuto extends LinearOpMode {
     public class receiveSpecimen implements Action{
 
         Servo outtakeArm;
+        Servo outtakeArm2;
         Servo outtakeWrist;
         Servo outtakeClaw;
 
-        public receiveSpecimen(Servo outtakeClaw, Servo outtakeWrist, Servo outtakeArm){
+        public receiveSpecimen(Servo outtakeClaw, Servo outtakeWrist, Servo outtakeArm, Servo outtakeArm2){
             this.outtakeArm = outtakeArm;
+            this.outtakeArm2 = outtakeArm2;
             this.outtakeWrist = outtakeWrist;
             this.outtakeClaw = outtakeClaw;
         }
@@ -284,7 +291,7 @@ public class RightAuto extends LinearOpMode {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
-            Robot.outtake.specimenReceivePosition(outtakeClaw, outtakeWrist, outtakeArm);
+            Robot.outtake.specimenReceivePosition(outtakeClaw, outtakeWrist, outtakeArm, outtakeArm2);
 
             return false;
         }
