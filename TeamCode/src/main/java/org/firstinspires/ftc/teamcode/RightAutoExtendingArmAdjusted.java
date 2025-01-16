@@ -21,7 +21,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
-public class RightAutoExtendingArmBackUp extends LinearOpMode {
+public class RightAutoExtendingArmAdjusted extends LinearOpMode {
 
     @Override
     public void runOpMode() {
@@ -115,9 +115,9 @@ public class RightAutoExtendingArmBackUp extends LinearOpMode {
 
         TrajectoryActionBuilder scoreSpecimen1 = drive.actionBuilder(new Pose2d(47, -62, Math.toRadians(90)))
                 .setTangent(15)
-                .splineToConstantHeading(new Vector2d(3, -28), Math.toRadians(90), new TranslationalVelConstraint(50), new ProfileAccelConstraint(-30, 50));
+                .splineToConstantHeading(new Vector2d(3, -27.75), Math.toRadians(90), new TranslationalVelConstraint(50), new ProfileAccelConstraint(-30, 50));
 
-        TrajectoryActionBuilder collectSpecimen2 = drive.actionBuilder(new Pose2d(0, -28, Math.toRadians(90)))
+        TrajectoryActionBuilder collectSpecimen2 = drive.actionBuilder(new Pose2d(0, -27.75, Math.toRadians(90)))
                 .setTangent(Math.toRadians(90))
                 .lineToY(-32)
                 .splineToConstantHeading(new Vector2d(47, -50), Math.toRadians(0), new TranslationalVelConstraint(60), new ProfileAccelConstraint(-40, 40))
@@ -126,9 +126,9 @@ public class RightAutoExtendingArmBackUp extends LinearOpMode {
 
         TrajectoryActionBuilder scoreSpecimen2 = drive.actionBuilder(new Pose2d(47, -60, Math.toRadians(90)))
                 .setTangent(15)
-                .splineToConstantHeading(new Vector2d(-1, -27), Math.toRadians(90), new TranslationalVelConstraint(50), new ProfileAccelConstraint(-30, 50));
+                .splineToConstantHeading(new Vector2d(-1, -26.5), Math.toRadians(90), new TranslationalVelConstraint(50), new ProfileAccelConstraint(-30, 50));
 
-        TrajectoryActionBuilder collectSpecimen3 = drive.actionBuilder(new Pose2d(-2, -28, Math.toRadians(90)))
+        TrajectoryActionBuilder collectSpecimen3 = drive.actionBuilder(new Pose2d(-2, -27.75, Math.toRadians(90)))
                 .setTangent(Math.toRadians(90))
                 .lineToY(-32)
                 .splineToConstantHeading(new Vector2d(47, -52), Math.toRadians(0), new TranslationalVelConstraint(60), new ProfileAccelConstraint(-40, 40))
@@ -137,9 +137,9 @@ public class RightAutoExtendingArmBackUp extends LinearOpMode {
 
         TrajectoryActionBuilder scoreSpecimen3 = drive.actionBuilder(new Pose2d(47, -59, Math.toRadians(90)))
                 .setTangent(15)
-                .splineToConstantHeading(new Vector2d(-3, -27), Math.toRadians(90), new TranslationalVelConstraint(50), new ProfileAccelConstraint(-30, 50));
+                .splineToConstantHeading(new Vector2d(-5, -26.75), Math.toRadians(90), new TranslationalVelConstraint(50), new ProfileAccelConstraint(-30, 50));
 
-        TrajectoryActionBuilder park = drive.actionBuilder(new Pose2d(-5, -29, Math.toRadians(90)))
+        TrajectoryActionBuilder park = drive.actionBuilder(new Pose2d(-5, -28.75, Math.toRadians(90)))
                 .splineToLinearHeading(new Pose2d(50, -55, Math.toRadians(90)), Math.toRadians(90), new TranslationalVelConstraint(70), new ProfileAccelConstraint(-70, 70));
 
         Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
@@ -199,7 +199,7 @@ public class RightAutoExtendingArmBackUp extends LinearOpMode {
         Actions.runBlocking(new SequentialAction(
                 new closeClaw(outtakeClaw),
                 new ParallelAction(
-                        new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 1550, 1.0),
+                        new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 1600, 1.0),
                         new scoreSpecimen(outtakeArm, outtakeArm2, outtakeWrist, outtakeClaw),
                         scoreSpecimen2.build()
                 ),
@@ -229,8 +229,9 @@ public class RightAutoExtendingArmBackUp extends LinearOpMode {
 
         Actions.runBlocking(new SequentialAction(
                 new dropSupport(outtakeSupport),
-                new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 760, 1.0),
+                new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 770, 1.0),
                 new ParallelAction(
+                        new restArm(outtakeClaw, outtakeArm, outtakeArm2, outtakeWrist),
                         new openClaw(outtakeClaw),
                         new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 0, 1.0)
                 )

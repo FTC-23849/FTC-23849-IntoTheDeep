@@ -26,11 +26,11 @@ public class Robot {
     public static double INTAKE_ARM_RIGHT_TRANSFER = 0.37;
     public static double INTAKE_ARM_LEFT_EXTEND_READY = 0.15;
     public static double INTAKE_ARM_RIGHT_EXTEND_READY= 0.85;
-    public static double LINKAGE1_EXTEND = 0.28;
-    public static double LINKAGE2_EXTEND = 0.72;
+    public static double LINKAGE1_EXTEND = 0.20;
+    public static double LINKAGE2_EXTEND = 0.80;
 
-    public static double LINKAGE1_TRANSFER = 0.02;
-    public static double LINKAGE2_TRANSFER = 0.98;
+    public static double LINKAGE1_TRANSFER = 0.04;
+    public static double LINKAGE2_TRANSFER = 0.96;
 
     //public static double BUCKET_INTAKE_ANGLE = 0.54;
     //public static double BUCKET_TRANSFER_ANGLE = 0.0;

@@ -211,8 +211,8 @@ public class LeftAuto extends LinearOpMode {
         ));
 
         intakeClaw.setPosition(Robot.INTAKE_CLAW_OPEN);
-        linkage1.setPosition(0.16);
-        linkage2.setPosition(0.84);
+        linkage1.setPosition(0.15);
+        linkage2.setPosition(0.85);
         intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP_WALL_SAMPLE);
         intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP_WALL_SAMPLE);
         sleep(500);

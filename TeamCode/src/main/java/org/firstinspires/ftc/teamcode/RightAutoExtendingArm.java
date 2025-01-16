@@ -19,6 +19,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
+
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
 public class RightAutoExtendingArm extends LinearOpMode {
 
@@ -136,12 +137,10 @@ public class RightAutoExtendingArm extends LinearOpMode {
 
         TrajectoryActionBuilder scoreSpecimen3 = drive.actionBuilder(new Pose2d(47, -59, Math.toRadians(90)))
                 .setTangent(15)
-                .splineToConstantHeading(new Vector2d(-3, -27), Math.toRadians(90), new TranslationalVelConstraint(50), new ProfileAccelConstraint(-30, 50));
+                .splineToConstantHeading(new Vector2d(-5, -27), Math.toRadians(90), new TranslationalVelConstraint(50), new ProfileAccelConstraint(-30, 50));
 
         TrajectoryActionBuilder park = drive.actionBuilder(new Pose2d(-5, -29, Math.toRadians(90)))
-                .setTangent(Math.toRadians(90))
-                .lineToY(-32, new TranslationalVelConstraint(170), new ProfileAccelConstraint(-170, 170))
-                .splineToLinearHeading(new Pose2d(50, -55, Math.toRadians(90)), Math.toRadians(90), new TranslationalVelConstraint(170), new ProfileAccelConstraint(-170, 170));
+                .splineToLinearHeading(new Pose2d(50, -55, Math.toRadians(90)), Math.toRadians(90), new TranslationalVelConstraint(70), new ProfileAccelConstraint(-70, 70));
 
         Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
         Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeArm2, outtakeWrist);
@@ -230,8 +229,9 @@ public class RightAutoExtendingArm extends LinearOpMode {
 
         Actions.runBlocking(new SequentialAction(
                 new dropSupport(outtakeSupport),
-                new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 760, 1.0),
+                new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 770, 1.0),
                 new ParallelAction(
+                        new restArm(outtakeClaw, outtakeArm, outtakeArm2, outtakeWrist),
                         new openClaw(outtakeClaw),
                         new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 0, 1.0)
                 )

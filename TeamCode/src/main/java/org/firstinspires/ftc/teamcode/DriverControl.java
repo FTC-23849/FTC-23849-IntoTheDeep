@@ -284,11 +284,11 @@ public class DriverControl extends OpMode {
                 linkage2Position = linkage2Position-0.005;
                 lastServoExtend = mStateTime.milliseconds() ;
             }
-            if(linkage1Position> 0.17){
-                linkage1.setPosition (0.17);
-                linkage2.setPosition (0.83);
-                linkage1Position = 0.17;
-                linkage2Position = 0.83;
+            if(linkage1Position> Robot.LINKAGE1_EXTEND){
+                linkage1.setPosition (/*0.17*/Robot.LINKAGE1_EXTEND);
+                linkage2.setPosition (/*0.83*/Robot.LINKAGE2_EXTEND);
+                linkage1Position = Robot.LINKAGE1_EXTEND;
+                linkage2Position = Robot.LINKAGE2_EXTEND;
             }
 
         } else if (gamepad1.left_trigger > 0.2) {
