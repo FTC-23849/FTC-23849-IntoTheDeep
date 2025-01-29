@@ -1,8 +1,9 @@
-package org.firstinspires.ftc.teamcode.Auto;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.teamcode.SampleAlignmentPipeline2;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -54,8 +55,8 @@ public class SampleAlignmentTeleOp2 extends OpMode {
         // Control the servo angle using the camera pipeline, but only when gamepad1.a is pressed
         if (gamepad1.a && isCameraActive) {
 //            // Map the sample angle (0-180 degrees) to the servo position (0-300 degrees physical)
-//            trueServoPosition = angle / 300.0; // Normalize to 0-1 based on servo's 300-degree range
-//            trueServoPosition = Math.min(1.0, Math.max(0.0, trueServoPosition)); // Clamp to [0, 1]
+            trueServoPosition = angle / 300.0; // Normalize to 0-1 based on servo's 300-degree range
+            trueServoPosition = Math.min(1.0, Math.max(0.0, trueServoPosition)); // Clamp to [0, 1]
 //            clawServo.setPosition(trueServoPosition);
         }
 

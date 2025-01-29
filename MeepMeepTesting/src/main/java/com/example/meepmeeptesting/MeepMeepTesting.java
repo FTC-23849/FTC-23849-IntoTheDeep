@@ -10,8 +10,10 @@ import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 public class MeepMeepTesting {
+
+    public static final int PUSHING_VEL_ACC = 120;
     public static void main(String[] args) {
-        MeepMeep meepMeep = new MeepMeep(600);
+        MeepMeep meepMeep = new MeepMeep(650);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
@@ -19,28 +21,42 @@ public class MeepMeepTesting {
                 .setDimensions(14, 14)
                 .build();
 
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(9, -61, Math.toRadians(270)))
-                .lineToY(-31)
-                .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(31, -40, Math.toRadians(90)), Math.toRadians(10), new TranslationalVelConstraint(70), new ProfileAccelConstraint(-70, 70))
-                .splineToConstantHeading(new Vector2d(50, -10), Math.toRadians(10), new TranslationalVelConstraint(70), new ProfileAccelConstraint(-70, 70))
-                .setTangent(Math.toRadians(270))
-                .lineToY(-53, new TranslationalVelConstraint(100), new ProfileAccelConstraint(-100, 100))
-                .setTangent(Math.toRadians(270))
-                .lineToY(-10, new TranslationalVelConstraint(100), new ProfileAccelConstraint(-100, 100))
-                .setTangent(Math.toRadians(0))
-                .lineToX(59, new TranslationalVelConstraint(100), new ProfileAccelConstraint(-100, 100))
-                .setTangent(Math.toRadians(270))
-                .lineToY(-53, new TranslationalVelConstraint(100), new ProfileAccelConstraint(-100, 100))
-                .setTangent(Math.toRadians(271))
-                .lineToY(-10, new TranslationalVelConstraint(100), new ProfileAccelConstraint(-100, 100))
-                .setTangent(Math.toRadians(0))
-                .lineToX(65, new TranslationalVelConstraint(100), new ProfileAccelConstraint(-100, 100))
-                .setTangent(Math.toRadians(270))
-                .lineToY(-53, new TranslationalVelConstraint(100), new ProfileAccelConstraint(-100, 100))
-                .lineToY(-62, new TranslationalVelConstraint(15), new ProfileAccelConstraint(-15, 15))
-                .setTangent(Math.toRadians(151))
-                .lineToY(-27)
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(35, -60, Math.toRadians(270)))
+                .strafeTo(new Vector2d(0, -35), new TranslationalVelConstraint(70), new ProfileAccelConstraint(-70, 70))
+//                .setTangent(159.6)
+                .strafeTo(new Vector2d(35, -60), new TranslationalVelConstraint(70), new ProfileAccelConstraint(-70, 70))
+
+//                .setTangent(159.62)
+                .strafeTo(new Vector2d(-2, -35), new TranslationalVelConstraint(70), new ProfileAccelConstraint(-70, 70))
+//                .setTangent(159.62)
+                .strafeTo(new Vector2d(35, -60), new TranslationalVelConstraint(70), new ProfileAccelConstraint(-70, 70))
+//                .setTangent(15)
+//                .splineToConstantHeading(new Vector2d(3, -30), Math.toRadians(90), new TranslationalVelConstraint(50), new ProfileAccelConstraint(-30, 50))
+
+//                .setTangent(159.6)
+//                .lineToY(-35)
+//                .setTangent(159.6)
+//                .lineToY(-60)
+//
+//                .setTangent(159.62)
+//                .lineToY(-35)
+//                .setTangent(159.62)
+//                .lineToY(-60)
+//
+//                .setTangent(159.64)
+//                .lineToY(-35)
+//                .setTangent(159.64)
+//                .lineToY(-60)
+//
+//                .setTangent(159.66)
+//                .lineToY(-35)
+//                .setTangent(159.66)
+//                .lineToY(-60)
+//
+//                .setTangent(159.68)
+//                .lineToY(-35)
+//                .setTangent(159.68)
+//                .lineToY(-60)
                 .build());
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_JUICE_DARK)

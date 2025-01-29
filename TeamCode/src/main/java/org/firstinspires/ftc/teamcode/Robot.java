@@ -10,14 +10,16 @@ public class Robot {
     public static double INTAKE_CLAW_CLOSE = 0.01;
     public static double INTAKE_LEFT_DIFFY_PICK_UP_READY = 0.49;
     public static double INTAKE_RIGHT_DIFFY_PICK_UP_READY = 0.51;
-    public static double INTAKE_LEFT_DIFFY_PICK_UP_VERTICAL = 0.23;
-    public static double INTAKE_RIGHT_DIFFY_PICK_UP_VERTICAL = 0.35;//lowered this one 33-35, 35-31
+    public static double INTAKE_LEFT_DIFFY_PICK_UP_VERTICAL = 0.215;
+    public static double INTAKE_RIGHT_DIFFY_PICK_UP_VERTICAL = 0.365;//lowered this one 33-35, 35-31
     public static double INTAKE_LEFT_DIFFY_PICK_UP =  0.42;
     public static double INTAKE_RIGHT_DIFFY_PICK_UP = 0.58;
     public static double INTAKE_LEFT_DIFFY_PICK_UP_WALL_SAMPLE = 0.325;
     public static double INTAKE_RIGHT_DIFFY_PICK_UP_WALL_SAMPLE = 0.465;
     public static double INTAKE_LEFT_DIFFY_TRANSFER = 0.84;
     public static double INTAKE_RIGHT_DIFFY_TRANSFER = 0.18;
+    public static double INTAKE_LEFT_DIFFY_DROP = 0.63;
+    public static double INTAKE_RIGHT_DIFFY_DROP = 0.38;
     public static double INTAKE_ARM_LEFT_EXTEND = 0.07;
     public static double INTAKE_ARM_RIGHT_EXTEND = 0.93;
     public static double INTAKE_ARM_LEFT_EXTEND_TELEOP = 0.07;
@@ -26,11 +28,11 @@ public class Robot {
     public static double INTAKE_ARM_RIGHT_TRANSFER = 0.37;
     public static double INTAKE_ARM_LEFT_EXTEND_READY = 0.15;
     public static double INTAKE_ARM_RIGHT_EXTEND_READY= 0.85;
-    public static double LINKAGE1_EXTEND = 0.20;
-    public static double LINKAGE2_EXTEND = 0.81  ;
+    public static double LINKAGE1_EXTEND = 0.22;
+    public static double LINKAGE2_EXTEND = 0.79  ;
 
-    public static double LINKAGE1_TRANSFER = 0.04;
-    public static double LINKAGE2_TRANSFER = 0.97;
+    public static double LINKAGE1_TRANSFER = 0.03;
+    public static double LINKAGE2_TRANSFER = 0.98;
 
     //public static double BUCKET_INTAKE_ANGLE = 0.54;
     //public static double BUCKET_TRANSFER_ANGLE = 0.0;
@@ -45,12 +47,13 @@ public class Robot {
     public static double SAMPLE_RECEIVE_ORIENTATION = 0.6;
     public static double SAMPLE_SCORE_ORIENTATION = 0.75;
 
-    public static double ARM_SAMPLE_RECEIVE = 0.86;
+    public static double ARM_SAMPLE_RECEIVE = 0.85;
     public static double ARM_SAMPLE_SCORE = 0.18;
     public static double ARM_SPECIMEN_RECEIVE = 0.1;
+    public static double ARM_SPECIMEN_RECEIVE_AUTO = 0.15;
     public static double ARM_SPECIMEN_SCORE = 0.82;
 
-    public static double SUPPORT_SUPPORT = .66;
+    public static double SUPPORT_SUPPORT = .7;
     public static double SUPPORT_RETRACT = 1.0;
 
 
@@ -84,7 +87,7 @@ public class Robot {
             linkage2.setPosition(LINKAGE2_TRANSFER);
             intakeArmLeft.setPosition(Robot.INTAKE_ARM_LEFT_TRANSFER);
             intakeArmRight.setPosition(Robot.INTAKE_ARM_RIGHT_TRANSFER);
-
+            intakeClaw.setPosition(Robot.INTAKE_CLAW_CLOSE);
 
 
             //bucket.setPosition(BUCKET_TRANSFER_ANGLE);
@@ -135,6 +138,13 @@ public class Robot {
         public static void specimenReceivePosition (Servo outtakeClaw, Servo outtakeWrist, Servo outtakeArm, Servo outtakeArm2){
             outtakeArm.setPosition(ARM_SPECIMEN_RECEIVE);
             outtakeArm2.setPosition(ARM_SPECIMEN_RECEIVE);
+            outtakeClaw.setPosition(OPEN_CLAW);
+            outtakeWrist.setPosition(SPECIMEN_RECEIVE_ORIENTATION);
+        }
+
+        public static void specimenReceivePositionAuto (Servo outtakeClaw, Servo outtakeWrist, Servo outtakeArm, Servo outtakeArm2){
+            outtakeArm.setPosition(ARM_SPECIMEN_RECEIVE_AUTO);
+            outtakeArm2.setPosition(ARM_SPECIMEN_RECEIVE_AUTO);
             outtakeClaw.setPosition(OPEN_CLAW);
             outtakeWrist.setPosition(SPECIMEN_RECEIVE_ORIENTATION);
         }

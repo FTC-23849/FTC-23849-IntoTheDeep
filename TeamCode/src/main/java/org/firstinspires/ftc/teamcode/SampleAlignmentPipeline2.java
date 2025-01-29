@@ -1,5 +1,5 @@
 // Pipeline class for OpenCV processing
-package org.firstinspires.ftc.teamcode.Auto;
+package org.firstinspires.ftc.teamcode;
 
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
@@ -100,6 +100,10 @@ public class SampleAlignmentPipeline2 extends OpenCvPipeline {
                 Imgproc.line(input, boxPoints[i], boxPoints[(i + 1) % 4], new Scalar(255, 0, 0), 2);
             }
         }
+
+//        if (sampleAngle > 0 && sampleAngle < 45){
+//            enum anglePreset
+//        }
 
         return input;
     }
