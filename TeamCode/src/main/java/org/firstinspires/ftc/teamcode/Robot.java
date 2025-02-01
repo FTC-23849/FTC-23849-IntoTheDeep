@@ -11,7 +11,13 @@ public class Robot {
     public static double INTAKE_LEFT_DIFFY_PICK_UP_READY = 0.49;
     public static double INTAKE_RIGHT_DIFFY_PICK_UP_READY = 0.51;
     public static double INTAKE_LEFT_DIFFY_PICK_UP_VERTICAL = 0.215;
-    public static double INTAKE_RIGHT_DIFFY_PICK_UP_VERTICAL = 0.365;//lowered this one 33-35, 35-31
+    public static double INTAKE_RIGHT_DIFFY_PICK_UP_VERTICAL = 0.365;
+    public static double INTAKE_LEFT_DIFFY_PICK_UP_45 = 0.317;
+    public static double INTAKE_RIGHT_DIFFY_PICK_UP_45 = 0.472;
+    public static double INTAKE_LEFT_DIFFY_PICK_UP_135 = 0.522;
+    public static double INTAKE_RIGHT_DIFFY_PICK_UP_135 = 0.687;
+    public static double INTAKE_LEFT_DIFFY_PICK_UP_180 = .625;
+    public static double INTAKE_RIGHT_DIFFY_PICK_UP_180 = .795;
     public static double INTAKE_LEFT_DIFFY_PICK_UP =  0.42;
     public static double INTAKE_RIGHT_DIFFY_PICK_UP = 0.58;
     public static double INTAKE_LEFT_DIFFY_PICK_UP_WALL_SAMPLE = 0.325;
@@ -20,6 +26,8 @@ public class Robot {
     public static double INTAKE_RIGHT_DIFFY_TRANSFER = 0.18;
     public static double INTAKE_LEFT_DIFFY_DROP = 0.63;
     public static double INTAKE_RIGHT_DIFFY_DROP = 0.38;
+    public static double INTAKE_LEFT_DIFFY_0_180 = INTAKE_LEFT_DIFFY_PICK_UP_VERTICAL-INTAKE_LEFT_DIFFY_PICK_UP_180;
+    public static double INTAKE_RIGHT_DIFFY_0_180 = INTAKE_RIGHT_DIFFY_PICK_UP_VERTICAL-INTAKE_RIGHT_DIFFY_PICK_UP_180;
     public static double INTAKE_ARM_LEFT_EXTEND = 0.07;
     public static double INTAKE_ARM_RIGHT_EXTEND = 0.93;
     public static double INTAKE_ARM_LEFT_EXTEND_TELEOP = 0.07;
@@ -28,6 +36,8 @@ public class Robot {
     public static double INTAKE_ARM_RIGHT_TRANSFER = 0.37;
     public static double INTAKE_ARM_LEFT_EXTEND_READY = 0.15;
     public static double INTAKE_ARM_RIGHT_EXTEND_READY= 0.85;
+    public static double INTAKE_ARM_LEFT_EXTEND_CAMERA = 0.21;
+    public static double INTAKE_ARM_RIGHT_EXTEND_CAMERA= 0.79;
     public static double LINKAGE1_EXTEND = 0.22;
     public static double LINKAGE2_EXTEND = 0.79  ;
 

@@ -5,18 +5,17 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.SampleAlignmentPipeline2;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
 
-@TeleOp(name = "SampleAlignmentTeleOp2", group = "FTC")
-public class SampleAlignmentTeleOp2 extends OpMode {
+@TeleOp(name = "SampleAlignmentTeleOp7", group = "FTC")
+public class SampleAlignmentTeleOp7 extends OpMode {
 
     private OpenCvCamera camera;
-    private SampleAlignmentPipeline2 pipeline;
+    private SampleAlignmentPipeline7 pipeline;
 //    private Servo clawServo;
     private boolean isCameraActive = false;
     private double lastServoPosition = -1; // Indicates no initial position
@@ -24,25 +23,20 @@ public class SampleAlignmentTeleOp2 extends OpMode {
 
     @Override
     public void init() {
-        // FTC Dashboard
-        FtcDashboard dashboard = FtcDashboard.getInstance();
-        telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
-        FtcDashboard.getInstance().startCameraStream(camera, 30);
-
         // Initialize camera
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
         // Create and set pipeline
-        pipeline = new SampleAlignmentPipeline2();
+        pipeline = new SampleAlignmentPipeline7();
         camera.setPipeline(pipeline);
 
         // Start camera streaming
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
                 isCameraActive = true;
             }
 
@@ -51,6 +45,11 @@ public class SampleAlignmentTeleOp2 extends OpMode {
                 telemetry.addData("Camera Error", errorCode);
             }
         });
+
+        // FTC Dashboard
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+        telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
+        FtcDashboard.getInstance().startCameraStream(camera, 30);
 
         // Initialize servo
 //        clawServo = hardwareMap.get(Servo.class, "clawServo");

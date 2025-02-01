@@ -3,17 +3,15 @@ package org.firstinspires.ftc.teamcode.Auto;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
-import org.opencv.core.Rect;
 import org.opencv.core.RotatedRect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
@@ -27,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Autonomous
+@TeleOp
 public class BasicSampleTracker extends LinearOpMode {
 
     private OpenCvCamera controlHubCam;  // Use OpenCvCamera class from FTC SDK
@@ -62,16 +60,25 @@ public class BasicSampleTracker extends LinearOpMode {
         @Override
         public Mat processFrame(Mat input) {
 
-            Mat yellowMask = preprocessFrame(input);
+            Mat redMask = createRedMask(input);
+            Mat blueMask = createBlueMask(input);
+            Mat yellowMask = createYellowMask(input);
+
+            Mat combinedMask = new Mat();
+            Core.bitwise_or(redMask, yellowMask, combinedMask); // Combine red and yellow masks
+            Core.bitwise_or(combinedMask, blueMask, combinedMask); // Now combine with blue mask
+
 
             // Find contours of the detected yellow regions
             List<MatOfPoint> contours = new ArrayList<>();
             Mat hierarchy = new Mat();
-            Imgproc.findContours(yellowMask, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+            Imgproc.findContours(combinedMask, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 
-            double focalLength = 395.921; // Approximate focal length in pixels for Logitech C920
-            double realWidth = 8.9; // Real width of the sample in cm
-            double realHeight = 3.8; //Real height of the sample in cm
+            // Calculate the middle point of the frame
+            Point frameCenter = new Point(input.cols() / 2.0, input.rows() / 2.0);
+
+            // Draw a dot at the frame center
+            Imgproc.circle(input, frameCenter, 5, new Scalar(0, 255, 0), -1); // Green dot, 10-pixel diameter
 
             for (MatOfPoint contour : contours) {
 
@@ -84,29 +91,18 @@ public class BasicSampleTracker extends LinearOpMode {
                     Point[] rectPoints = new Point[4];
                     rotatedRect.points(rectPoints);
 
-                    // Calculate distance to the object
-                    double heightInPixels = rotatedRect.size.height;// Height of the rectangle in pixels
-                    double widthInPixels = rotatedRect.size.width;// Width of the rectangle in pixels
-                    double distance = (focalLength * realWidth) / widthInPixels;
-                    double distanceBasedOnHeight = (focalLength * realHeight) / heightInPixels;
-                    double averageDistance = (distance + distanceBasedOnHeight) / 2;
-
-                    // Calculate center point for distance text
-                    Point center = new Point((rectPoints[0].x + rectPoints[2].x) / 2, (rectPoints[0].y + rectPoints[2].y) / 2);
-                    String distanceText = String.format("%.2f cm", averageDistance);
-                    Imgproc.putText(input, distanceText, center, Imgproc.FONT_HERSHEY_SIMPLEX, 0.5, new Scalar(255, 255, 255), 1);
-
                     // Draw the parallelogram on the input image
                     Imgproc.polylines(input, Arrays.asList(new MatOfPoint(rectPoints)), true, new Scalar(0, 255, 0), 2);
-                    telemetry.addData("Pixel Height", rotatedRect.size.height);
-                    telemetry.addData("Pixel Width", rotatedRect.size.width);
-                    telemetry.update();
+
                 }
             }
 
             input.copyTo(outPut);
 
+            redMask.release();
+            blueMask.release();
             yellowMask.release();
+            combinedMask.release();
             hierarchy.release();
 
 
@@ -116,7 +112,7 @@ public class BasicSampleTracker extends LinearOpMode {
 
     }
 
-    private Mat preprocessFrame(Mat frame) {
+    private Mat createRedMask(Mat frame) {
         Mat hsvFrame = new Mat();
         Imgproc.cvtColor(frame, hsvFrame, Imgproc.COLOR_BGR2HSV);
 
@@ -134,6 +130,46 @@ public class BasicSampleTracker extends LinearOpMode {
         kernel.release();
 
         return redMask;
+    }
+
+    private Mat createBlueMask(Mat frame) {
+        Mat hsvFrame = new Mat();
+        Imgproc.cvtColor(frame, hsvFrame, Imgproc.COLOR_RGB2HSV);
+
+        Scalar lowerBlue = new Scalar(100, 150, 150);
+        Scalar upperBlue = new Scalar(130, 255, 255);
+
+        Mat blueMask = new Mat();
+        Core.inRange(hsvFrame, lowerBlue, upperBlue, blueMask);
+
+        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(5, 5));
+        Imgproc.morphologyEx(blueMask, blueMask, Imgproc.MORPH_OPEN, kernel);
+        Imgproc.morphologyEx(blueMask, blueMask, Imgproc.MORPH_CLOSE, kernel);
+
+        hsvFrame.release();
+        kernel.release();
+
+        return blueMask;
+    }
+
+    private Mat createYellowMask(Mat frame) {
+        Mat hsvFrame = new Mat();
+        Imgproc.cvtColor(frame, hsvFrame, Imgproc.COLOR_RGB2HSV);
+
+        Scalar lowerYellow = new Scalar(20, 100, 100);
+        Scalar upperYellow = new Scalar(30, 255, 255);
+
+        Mat yellowMask = new Mat();
+        Core.inRange(hsvFrame, lowerYellow, upperYellow, yellowMask);
+
+        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(5, 5));
+        Imgproc.morphologyEx(yellowMask, yellowMask, Imgproc.MORPH_OPEN, kernel);
+        Imgproc.morphologyEx(yellowMask, yellowMask, Imgproc.MORPH_CLOSE, kernel);
+
+        hsvFrame.release();
+        kernel.release();
+
+        return yellowMask;
     }
 
     private void initOpenCV() {

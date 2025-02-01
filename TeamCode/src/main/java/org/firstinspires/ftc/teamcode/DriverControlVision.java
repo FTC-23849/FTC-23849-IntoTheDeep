@@ -44,9 +44,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
  * Remove a @Disabled the on the next line or two (if present) to add this opmode to the Driver Station OpMode list,
  * or add a @Disabled annotation to prevent this OpMode from being added to the Driver Station
  */
-@TeleOp(name = "DriverControl", group = "stuff")
-
-public class DriverControl extends OpMode {
+@TeleOp
+public class DriverControlVision extends OpMode {
     /* Declare OpMode members. */
     DcMotorEx leftFrontMotor;
     DcMotorEx rightFrontMotor;
@@ -71,6 +70,13 @@ public class DriverControl extends OpMode {
     Servo intakeClaw;
     Servo outtakeSupport;
 
+    enum range{
+        ZERODEG,
+        FORTYFIVEDEG,
+        NINETYDEG,
+        ONETHIRTYFIVEDEG,
+        ONEEIGHTYDEG,
+    }
 
 
     ElapsedTime mStateTime = new ElapsedTime();
@@ -93,7 +99,16 @@ public class DriverControl extends OpMode {
     boolean goingToSpecimenScore = false;
     boolean raiseSupport = false;
     boolean armDown = false;
-    int intakePosition = 0;
+    boolean autoAlign = false;
+
+    //camera initilization
+    private OpenCvCamera camera;
+    private SampleAlignmentPipeline2 pipeline;
+    //    private Servo clawServo;
+    private boolean isCameraActive = false;
+    private double lastServoPosition = -1; // Indicates no initial position
+    private double trueServoPosition = 0.0; // Stores the actual value passed to setPosition
+
 
     @Override
     public void init() {
@@ -143,6 +158,30 @@ public class DriverControl extends OpMode {
         slideMotor_down.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
 
+
+        // Initialize camera
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+
+        // Create and set pipeline
+        pipeline = new SampleAlignmentPipeline2();
+        camera.setPipeline(pipeline);
+
+        // Start camera streaming
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                camera.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+                isCameraActive = true;
+            }
+
+            @Override
+            public void onError(int errorCode) {
+                telemetry.addData("Camera Error", errorCode);
+            }
+        });
+
     }
 
     /*
@@ -164,6 +203,21 @@ public class DriverControl extends OpMode {
         double direction = 0;
         int preciseSpeedDivider = 3;
         boolean preciseDriving;
+
+        double angle = pipeline.getSampleAngle(); // Retrieve the sample angle from the pipeline
+
+        // Control the servo angle using the camera pipeline, but only when gamepad1.dpad_left is pressed
+        if (gamepad1.dpad_left && isCameraActive) {
+//            // Map the sample angle (0-180 degrees) to the servo position (0-300 degrees physical)
+//            trueServoPosition = angle / 300.0; // Normalize to 0-1 based on servo's 300-degree range
+//            trueServoPosition = Math.min(1.0, Math.max(0.0, trueServoPosition)); // Clamp to [0, 1]
+//            clawServo.setPosition(trueServoPosition);
+        }
+
+        // Display telemetry data
+        telemetry.addData("Sample Angle", angle); // Display sample angle
+        telemetry.addData("True Servo Position", trueServoPosition); // True servo position set
+        telemetry.update();
 
 //        telemetry.addData("voltage-leftFrontMotor", leftFrontMotor.getCurrent(CurrentUnit.AMPS));
 //        telemetry.addData("voltage-leftBackMotor", leftBackMotor.getCurrent(CurrentUnit.AMPS));
@@ -194,7 +248,33 @@ public class DriverControl extends OpMode {
 //        if (gamepad1.a) {
 //            Robot.intake.dropBucket(bucket);
 //        }
+        if(autoAlign){
+            if(angle <= 22.5){
+                intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP_VERTICAL);
+                intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP_VERTICAL);
+
+            }
+            else if(angle >22.5 && angle <= 67.5 ){
+                intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP_45);
+                intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP_45);
+
+            }
+            else if (angle >67.5 && angle <= 112.5){
+                intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP);
+                intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP);
+            }
+            else if (angle >112.5 && angle <= 157.5){
+                intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP_135);
+                intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP_135);
+            }
+            else {
+                intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP_VERTICAL);
+                intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP_VERTICAL);
+
+            }
+        }
         if (gamepad1.left_bumper) {
+            autoAlign = false;
             if(leftBumperPressed == false){
                 leftBumperTimes = leftBumperTimes + 1;
             }
@@ -204,6 +284,7 @@ public class DriverControl extends OpMode {
 
                 intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP_VERTICAL);
                 intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP_VERTICAL);
+                //intakeDiffyGoToPosition(135, intakeDiffyLeft, intakeDiffyRight,Robot.INTAKE_LEFT_DIFFY_0_180, Robot.INTAKE_LEFT_DIFFY_0_180,Robot.INTAKE_RIGHT_DIFFY_PICK_UP_VERTICAL_2, Robot.INTAKE_RIGHT_DIFFY_PICK_UP_VERTICAL_2  );
 
             }
             if(leftBumperTimes == 2){
@@ -216,16 +297,17 @@ public class DriverControl extends OpMode {
             leftBumperPressed = false;
         }
         if (gamepad1.right_bumper) {
+            autoAlign=false;
             if(rightBumperPressed == false){
                 rightBumperTimes = rightBumperTimes + 1;
-            //}
-             rightBumperPressed = true;
-            if (rightBumperTimes == 1) {
+                //}
+                rightBumperPressed = true;
+                if (rightBumperTimes == 1) {
                 /*Robot.intake.dropBucket(bucket);
                 intakeRollers.setPower(0);*/
-                intakeArmLeft.setPosition(Robot.INTAKE_ARM_LEFT_EXTEND_TELEOP);
-                intakeArmRight.setPosition(Robot.INTAKE_ARM_RIGHT_EXTEND_TELEOP);
-            }
+                    intakeArmLeft.setPosition(Robot.INTAKE_ARM_LEFT_EXTEND_TELEOP);
+                    intakeArmRight.setPosition(Robot.INTAKE_ARM_RIGHT_EXTEND_TELEOP);
+                }
                 rightBumperPressed = true;
 
 
@@ -250,7 +332,7 @@ public class DriverControl extends OpMode {
 
 
         else{
-        rightBumperPressed = false;
+            rightBumperPressed = false;
         }
 
 //        telemetry.addData("rightBumper", rightBumperTimes);
@@ -260,8 +342,9 @@ public class DriverControl extends OpMode {
 //        telemetry.addData("time", mStateTime.milliseconds());
 //        telemetry.update();
         if (gamepad1.right_trigger > 0.2|| gamepad1.a){
-            intakeArmLeft.setPosition(Robot.INTAKE_ARM_LEFT_EXTEND_READY);
-            intakeArmRight.setPosition(Robot.INTAKE_ARM_RIGHT_EXTEND_READY);
+            autoAlign = true;
+            intakeArmLeft.setPosition(Robot.INTAKE_ARM_LEFT_EXTEND_CAMERA);
+            intakeArmRight.setPosition(Robot.INTAKE_ARM_RIGHT_EXTEND_CAMERA);
             intakeClaw.setPosition(Robot.INTAKE_CLAW_OPEN);
             intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP);
             intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP);
@@ -291,6 +374,7 @@ public class DriverControl extends OpMode {
             }
 
         } else if (gamepad1.left_trigger > 0.2) {
+            autoAlign = false;
             Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
             //Robot.intake.retractIntake(linkage1, linkage2, intakeArmLeft, intakeArmRight);
             intakeExtended = false;
@@ -499,9 +583,9 @@ public class DriverControl extends OpMode {
 
         }
 
-        telemetry.addData("slideMotor_right", slideMotor_right.getCurrentPosition());
-        telemetry.addData("slideMotor_left", slideMotor_left.getCurrentPosition());
-        telemetry.addData("slideMotor_up", slideMotor_up.getCurrentPosition());
+//        telemetry.addData("slideMotor_right", slideMotor_right.getCurrentPosition());
+//        telemetry.addData("slideMotor_left", slideMotor_left.getCurrentPosition());
+//        telemetry.addData("slideMotor_up", slideMotor_up.getCurrentPosition());
 
         if (supportUp.milliseconds() > 800 && raiseSupport == true) {
 
@@ -724,6 +808,16 @@ public class DriverControl extends OpMode {
     @Override
     public void stop() {
         //myRobot.OuttakeArmRest(elbowServo, wristServo, outtakeDoorServo, outtakeWheelServo);
+        if (isCameraActive) {
+            camera.stopStreaming();
+            camera.closeCameraDevice();
+            isCameraActive = false;
+        }
+    }
+    public static void intakeDiffyGoToPosition (double position, Servo intake_diffy_left, Servo intake_diffy_right, double INTAKE_LEFT_DIFFY_0_180, double INTAKE_RIGHT_DIFFY_0_180, double INTAKE_LEFT_DIFFY_PICK_UP_VERTICAL, double INTAKE_RIGHT_DIFFY_PICK_UP_VERTICAL){
+        intake_diffy_left.setPosition(INTAKE_LEFT_DIFFY_PICK_UP_VERTICAL-(INTAKE_LEFT_DIFFY_0_180 /180 * position)  );
+        intake_diffy_right.setPosition(INTAKE_RIGHT_DIFFY_PICK_UP_VERTICAL-(INTAKE_RIGHT_DIFFY_0_180 /180 * position) );
+
     }
     public void drive (double direction, double speed, double leftOffset, double rightOffset){
 //        leftFrontMotor  = hardwareMap.get(DcMotorEx.class,"LF");
@@ -809,10 +903,10 @@ public class DriverControl extends OpMode {
 
 
 
-            leftFrontMotor.setPower(lf);
-            leftBackMotor.setPower(lb);
-            rightFrontMotor.setPower(rf);
-            rightBackMotor.setPower(rb);
+        leftFrontMotor.setPower(lf);
+        leftBackMotor.setPower(lb);
+        rightFrontMotor.setPower(rf);
+        rightBackMotor.setPower(rb);
 
 
     }

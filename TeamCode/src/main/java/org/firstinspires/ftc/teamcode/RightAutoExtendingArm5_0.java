@@ -181,7 +181,7 @@ public class RightAutoExtendingArm5_0 extends LinearOpMode {
         ));
 
         Actions.runBlocking(new SequentialAction(
-                new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 900, 1.0),
+                new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 1000, 1.0),
                 new ParallelAction(
                         new openClaw(outtakeClaw),
                         new restArm(outtakeClaw, outtakeArm, outtakeArm2, outtakeWrist),
