@@ -28,6 +28,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.archive.SampleAlignmentPipeline2;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -86,6 +87,7 @@ public class DriverControlVision extends OpMode {
     ElapsedTime hanging = new ElapsedTime();
     ElapsedTime supportUp = new ElapsedTime();
     ElapsedTime supportDown = new ElapsedTime();
+    ElapsedTime intakeRetract = new ElapsedTime();
 
     boolean outtakeArmUp = false;
     boolean intakeExtended = false;
@@ -100,6 +102,8 @@ public class DriverControlVision extends OpMode {
     boolean raiseSupport = false;
     boolean armDown = false;
     boolean autoAlign = false;
+    boolean intakeRetracted = false;
+
 
     //camera initilization
     private OpenCvCamera camera;
@@ -291,6 +295,7 @@ public class DriverControlVision extends OpMode {
                 leftBumperTimes = 0;
                 intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP);
                 intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP);
+
             }
         }
         else{
@@ -298,6 +303,7 @@ public class DriverControlVision extends OpMode {
         }
         if (gamepad1.right_bumper) {
             autoAlign=false;
+            intakeRetracted=false;
             if(rightBumperPressed == false){
                 rightBumperTimes = rightBumperTimes + 1;
                 //}
@@ -350,8 +356,10 @@ public class DriverControlVision extends OpMode {
             intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP);
             rightBumperTimes = 0;
 
+
         }
         if (gamepad1.right_trigger > 0.2) {
+            intakeRetracted = false;
             /*Robot.intake.fullExtend(linkage1, linkage2);
             intakeExtended = true;*/
 
@@ -375,15 +383,25 @@ public class DriverControlVision extends OpMode {
 
         } else if (gamepad1.left_trigger > 0.2) {
             autoAlign = false;
-            Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
+            //Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
             //Robot.intake.retractIntake(linkage1, linkage2, intakeArmLeft, intakeArmRight);
+            Robot.intake.transferNoRetract(intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
             intakeExtended = false;
             rightBumperTimes = 0;
             leftBumperTimes = 0;
             //intakeRollers.setPower(0);
             lastServoExtend = mStateTime.milliseconds() ;
+            //linkage1Position = Robot.LINKAGE1_TRANSFER;
+            //linkage2Position = Robot.LINKAGE2_TRANSFER;
+            intakeRetracted = true;
+            intakeRetract.reset();
+        }
+        if(intakeRetract.milliseconds()>100 && intakeRetract.milliseconds()<150){
             linkage1Position = Robot.LINKAGE1_TRANSFER;
             linkage2Position = Robot.LINKAGE2_TRANSFER;
+            linkage1.setPosition(Robot.LINKAGE1_TRANSFER);
+            linkage2.setPosition(Robot.LINKAGE2_TRANSFER);
+            intakeRetracted=false;
         }
         if(gamepad1.dpad_down){
             intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_TRANSFER);
@@ -400,6 +418,8 @@ public class DriverControlVision extends OpMode {
             intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_DROP);
             linkage1.setPosition(Robot.LINKAGE1_EXTEND);
             linkage2.setPosition(Robot.LINKAGE2_EXTEND);
+            intakeRetracted = false;
+
         }
 
 
@@ -645,7 +665,7 @@ public class DriverControlVision extends OpMode {
         }
 
         if (supportDown.milliseconds() > 600 && armDown == true) {
-            Robot.outtake.specimenReceivePosition(outtakeClaw, outtakeArm, outtakeArm2, outtakeWrist);
+            Robot.outtake.specimenReceivePosition(outtakeClaw, outtakeWrist, outtakeArm, outtakeArm2);
             armDown = false;
         }
 

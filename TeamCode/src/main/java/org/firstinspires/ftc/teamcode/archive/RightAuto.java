@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.archive;
 
 import androidx.annotation.NonNull;
 
@@ -15,6 +15,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Robot;
 
 
 @Disabled
@@ -79,6 +82,9 @@ public class RightAuto extends LinearOpMode {
 
         Pose2d startPose = new Pose2d(9, -61, Math.toRadians(270));
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
+        drive.localizer.update();
+        Pose2d currentPose = drive.pose;
+
 
         TrajectoryActionBuilder scorePreload = drive.actionBuilder(startPose)
                 .lineToY(-33);

@@ -7,16 +7,20 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 //@Disabled
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
-public class LeftAutoBackup extends LinearOpMode {
+public class PoseTest extends LinearOpMode {
+
+    ElapsedTime time = new ElapsedTime();
 
     @Override
     public void runOpMode() {
@@ -38,6 +42,11 @@ public class LeftAutoBackup extends LinearOpMode {
         Servo intakeArmRight;
         Servo intakeClaw;
 
+        DcMotorEx leftFront;
+        DcMotorEx leftBack;
+        DcMotorEx rightFront;
+        DcMotorEx rightBack;
+
         linkage1 = hardwareMap.get(Servo.class, "linkage1");
         linkage2 = hardwareMap.get(Servo.class, "linkage2");
 
@@ -50,6 +59,19 @@ public class LeftAutoBackup extends LinearOpMode {
         slideMotor_back = hardwareMap.get(DcMotorEx.class, "slideMotor_left");
         slideMotor_front = hardwareMap.get(DcMotorEx.class, "slideMotor_right");
         slideMotor_up = hardwareMap.get(DcMotorEx.class, "slideMotor_up");
+
+        leftFront = hardwareMap.get(DcMotorEx.class, "LF");
+        leftBack = hardwareMap.get(DcMotorEx.class, "LB");
+        rightFront = hardwareMap.get(DcMotorEx.class, "RF");
+        rightBack = hardwareMap.get(DcMotorEx.class, "RB");
+
+        leftFront.setDirection(DcMotorEx.Direction.REVERSE);
+        leftBack.setDirection(DcMotorEx.Direction.REVERSE);
+
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         slideMotor_back.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER); //likely not needed, but sets encoders to 0.
         slideMotor_back.setTargetPosition(0);
@@ -84,19 +106,24 @@ public class LeftAutoBackup extends LinearOpMode {
         Pose2d startPose = new Pose2d(-38, -61, Math.toRadians(0));
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
+        Pose2d currentPose = drive.pose;
+        drive.updatePoseEstimate();
+        drive.localizer.update();
+
         TrajectoryActionBuilder scorePreload = drive.actionBuilder(startPose)
                 .splineToLinearHeading(new Pose2d(-53, -53, Math.toRadians(45)), Math.toRadians(200));
 
-        TrajectoryActionBuilder collectSample1 = drive.actionBuilder(new Pose2d(-57, -57, Math.toRadians(45)))
-                .splineToLinearHeading(new Pose2d(-55.5, -48.5, Math.toRadians(75)), Math.toRadians(250));
 
-        TrajectoryActionBuilder scoreSample1 = drive.actionBuilder(new Pose2d(-57, -57, Math.toRadians(45)))
+        TrajectoryActionBuilder collectSample1 = drive.actionBuilder(new Pose2d(-57, -57, Math.toRadians(45)))
+                .splineToLinearHeading(new Pose2d(-55.5, -48.5, Math.toRadians(76)), Math.toRadians(250));
+
+        TrajectoryActionBuilder scoreSample1 = drive.actionBuilder(new Pose2d(-57, -57, Math.toRadians(46)))
                 .splineToLinearHeading(new Pose2d(-52, -52, Math.toRadians(45)), Math.toRadians(90));
 
         TrajectoryActionBuilder collectSample2 = drive.actionBuilder(new Pose2d(-52, -52, Math.toRadians(45)))
-                .splineToLinearHeading(new Pose2d(-58.5, -50, Math.toRadians(98)), Math.toRadians(90));
+                .splineToLinearHeading(new Pose2d(-57.5, -50, Math.toRadians(98)), Math.toRadians(90));
 
-        TrajectoryActionBuilder scoreSample2 = drive.actionBuilder(new Pose2d(-58, -50, Math.toRadians(100)))
+        TrajectoryActionBuilder scoreSample2 = drive.actionBuilder(new Pose2d(-57, -50, Math.toRadians(100)))
                 .splineToLinearHeading(new Pose2d(-52, -52, Math.toRadians(45)), Math.toRadians(90));
 
         TrajectoryActionBuilder collectSample3 = drive.actionBuilder(new Pose2d(-52, -52, Math.toRadians(45)))
@@ -125,123 +152,61 @@ public class LeftAutoBackup extends LinearOpMode {
 //                        .build())
 //        ));
 
-        Actions.runBlocking(new ParallelAction(
-                new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 3000, 1.0),
-                scorePreload.build()
-                ));
+        telemetry.addData("initial Vector2d", drive.pose.position);
+        telemetry.addData("initial heading", drive.pose.heading);
+        telemetry.update();
 
-        Robot.outtake.scoreSample(outtakeArm, outtakeArm2, outtakeWrist);
-        sleep(500);
-        Robot.outtake.openClaw(outtakeClaw);
-        sleep(200);
+        sleep(10000);
 
-        Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeArm2, outtakeWrist);
-        Actions.runBlocking(new ParallelAction(
-                new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 0, 1.0),
-                collectSample1.build()
-                ));
+        Actions.runBlocking(scorePreload.build());
 
-        intakeClaw.setPosition(Robot.INTAKE_CLAW_OPEN);
-        linkage1.setPosition(0.22/*0.15*/);
-        linkage2.setPosition(0.78/*0.83*/);
-        intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP);
-        intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP);
-        sleep(500);
-        intakeArmLeft.setPosition(Robot.INTAKE_ARM_LEFT_EXTEND);
-        intakeArmRight.setPosition(Robot.INTAKE_ARM_RIGHT_EXTEND);
-        sleep(700);
-        intakeClaw.setPosition(Robot.INTAKE_CLAW_CLOSE);
-        sleep(650);
-        Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
-        sleep(800);
-        Robot.outtake.closeClaw(outtakeClaw);
-        sleep(100);
-        intakeClaw.setPosition(Robot.OPEN_CLAW);
+        drive.updatePoseEstimate();
+        drive.localizer.update();
 
-        Actions.runBlocking(new ParallelAction(
-                new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 3000, 1.0),
-                scoreSample1.build()
-                ));
+        telemetry.addData("TargetEstimate", "new Pose2d(-53, -53, Math.toRadians(45))");
+        telemetry.addData("Vector2d", drive.pose.position);
+        telemetry.addData("Heading", drive.pose.heading);
+        telemetry.update();
 
-        Robot.outtake.scoreSample(outtakeArm, outtakeArm2, outtakeWrist);
-        sleep(500);
-        Robot.outtake.openClaw(outtakeClaw);
-        sleep(200);
+        sleep(10000);
 
-        Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeArm2, outtakeWrist);
-        Actions.runBlocking(new ParallelAction(
-                new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 0, 1.0),
-                collectSample2.build()
-                ));
+        time.reset();
+        while (time.milliseconds() < 700) {
+            drive.updatePoseEstimate();
+            drive.localizer.update();
+            leftFront.setPower(0.3);
+            leftBack.setPower(0.3);
+            rightFront.setPower(0.3);
+            rightBack.setPower(0.3);
+        }
 
-        intakeClaw.setPosition(Robot.INTAKE_CLAW_OPEN);
-        linkage1.setPosition(0.22/*0.16*/);
-        linkage2.setPosition(0.78/*0.84*/);
-        intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP);
-        intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP);
-        sleep(500);
-        intakeArmLeft.setPosition(Robot.INTAKE_ARM_LEFT_EXTEND);
-        intakeArmRight.setPosition(Robot.INTAKE_ARM_RIGHT_EXTEND);
-        sleep(600);
-        intakeClaw.setPosition(Robot.INTAKE_CLAW_CLOSE);
-        sleep(650);
-        Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
-        sleep(800);
-        Robot.outtake.closeClaw(outtakeClaw);
-        sleep(100);
-        intakeClaw.setPosition(Robot.OPEN_CLAW);
+        leftFront.setPower(0);
+        leftBack.setPower(0);
+        rightFront.setPower(0);
+        rightBack.setPower(0);
 
-        Actions.runBlocking(new ParallelAction(
-                new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 3000, 1.0),
-                scoreSample2.build()
-        ));
+        drive.updatePoseEstimate();
+        drive.localizer.update();
+        telemetry.addData("Vector2d", drive.pose.position);
+        telemetry.addData("Heading", drive.pose.heading);
+        telemetry.update();
 
-        Robot.outtake.scoreSample(outtakeArm, outtakeArm2, outtakeWrist);
-        sleep(500);
-        Robot.outtake.openClaw(outtakeClaw);
-        sleep(200);
+        sleep(10000);
 
-        Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeArm2, outtakeWrist);
-        Actions.runBlocking(new ParallelAction(
-                new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 0, 1.0),
-                collectSample3.build()
-        ));
+        TrajectoryActionBuilder backtobasket = drive.actionBuilder(drive.pose)
+                .strafeTo(new Vector2d(-53, -53));
 
-        intakeClaw.setPosition(Robot.INTAKE_CLAW_OPEN);
-        linkage1.setPosition(0.22/*0.15*/);
-        linkage2.setPosition(0.78/*0.85*/);
-        intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP_WALL_SAMPLE);
-        intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP_WALL_SAMPLE);
-        sleep(500);
-        intakeArmLeft.setPosition(Robot.INTAKE_ARM_LEFT_EXTEND);
-        intakeArmRight.setPosition(Robot.INTAKE_ARM_RIGHT_EXTEND);
-        sleep(700);
-        intakeClaw.setPosition(Robot.INTAKE_CLAW_CLOSE);
-        sleep(650);
-        Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
-        sleep(800);
-        Robot.outtake.closeClaw(outtakeClaw);
-        sleep(100);
-        intakeClaw.setPosition(Robot.OPEN_CLAW);
+        Actions.runBlocking(backtobasket.build());
 
-        Actions.runBlocking(new ParallelAction(
-                new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 3000, 1.0),
-                scoreSample3.build()
-        ));
+        drive.updatePoseEstimate();
+        drive.localizer.update();
 
-        Robot.outtake.scoreSample(outtakeArm, outtakeArm2, outtakeWrist);
-        sleep(500);
-        Robot.outtake.openClaw(outtakeClaw);
-        sleep(200);
+        telemetry.addData("AfterStrafeTo", "new Pose2d(-53, -53, Math.toRadians(45))");
+        telemetry.addData("Vector2d", drive.pose.position);
+        telemetry.addData("Heading", drive.pose.heading);
+        telemetry.update();
 
-        Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeArm2, outtakeWrist);
-        Actions.runBlocking(new ParallelAction(
-                new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 850, 1.0),
-                park.build()
-        ));
-
-        sleep(5000);
-
+        sleep(10000);
 
     }
 

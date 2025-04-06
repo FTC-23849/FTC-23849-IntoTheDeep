@@ -102,6 +102,15 @@ public class Robot {
 
             //bucket.setPosition(BUCKET_TRANSFER_ANGLE);
         }
+        public static void transferNoRetract(Servo intakeArmLeft, Servo intakeArmRight, Servo intakeDiffyLeft, Servo intakeDiffyRight, Servo intakeClaw){
+            intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_TRANSFER);
+            intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_TRANSFER);
+            intakeArmLeft.setPosition(Robot.INTAKE_ARM_LEFT_TRANSFER);
+            intakeArmRight.setPosition(Robot.INTAKE_ARM_RIGHT_TRANSFER);
+            intakeClaw.setPosition(Robot.INTAKE_CLAW_CLOSE);
+
+
+        }
 
         public static void runIntake(/*CRServo intakeRollers*/){
             //intakeRollers.setPower(INTAKE_SPEED);

@@ -12,18 +12,16 @@ import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
-
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
-public class RightAutoExtendingArm5_0Backup extends LinearOpMode {
+public class RightAutoExtendingArm4_0 extends LinearOpMode {
 
-    public static final int PUSHING_VEL_ACC = 120;
+    public static final int PUSHING_VEL_ACC = 85;
     public static final int SPECIMEN_SCORE_TICKS = 1550;
 
     @Override
@@ -99,12 +97,12 @@ public class RightAutoExtendingArm5_0Backup extends LinearOpMode {
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
         TrajectoryActionBuilder scorePreload = drive.actionBuilder(startPose)
-                .lineToY(-29, new TranslationalVelConstraint(80)/*Originally 70*/, new ProfileAccelConstraint(-80, 80));
+                .lineToY(-29, new TranslationalVelConstraint(70)/*Originally 70*/, new ProfileAccelConstraint(-70, 70));
 
         TrajectoryActionBuilder pushSamples = drive.actionBuilder(new Pose2d(9, -31, Math.toRadians(270)))
                 .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(31, -40, Math.toRadians(90)), Math.toRadians(10), new TranslationalVelConstraint(70), new ProfileAccelConstraint(-70, 70))
-                .splineToConstantHeading(new Vector2d(50, -14/*originally-10*/), Math.toRadians(10), new TranslationalVelConstraint(70), new ProfileAccelConstraint(-70, 70))
+                .splineToLinearHeading(new Pose2d(31, -40, Math.toRadians(90)), Math.toRadians(10), new TranslationalVelConstraint(60), new ProfileAccelConstraint(-60, 60))
+                .splineToConstantHeading(new Vector2d(50, -14/*originally-10*/), Math.toRadians(10), new TranslationalVelConstraint(60), new ProfileAccelConstraint(-60, 60))
                 .setTangent(Math.toRadians(270))
                 .lineToY(-52/*originally-53*/, new TranslationalVelConstraint(PUSHING_VEL_ACC), new ProfileAccelConstraint(-PUSHING_VEL_ACC, PUSHING_VEL_ACC))
                 .setTangent(Math.toRadians(270))
@@ -241,27 +239,6 @@ public class RightAutoExtendingArm5_0Backup extends LinearOpMode {
                         new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 1650/*originally 1600*/, 1.0),
                         new scoreSpecimen(outtakeArm, outtakeArm2, outtakeWrist, outtakeClaw),
                         scoreSpecimen3.build()
-                ),
-                new raiseSupport(outtakeSupport)
-        ));
-
-        Actions.runBlocking(new SequentialAction(
-                new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 750, 1.0),
-                new dropSupport(outtakeSupport),
-                new ParallelAction(
-                        new openClaw(outtakeClaw),
-                        new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 10, 1.0),
-                        new receiveSpecimen(outtakeClaw, outtakeWrist, outtakeArm, outtakeArm2),
-                        collectSpecimen4.build()
-                )
-        ));
-
-        Actions.runBlocking(new SequentialAction(
-                new closeClaw(outtakeClaw),
-                new ParallelAction(
-                        new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 1650/*originally 1600*/, 1.0),
-                        new scoreSpecimen(outtakeArm, outtakeArm2, outtakeWrist, outtakeClaw),
-                        scoreSpecimen4.build()
                 ),
                 new raiseSupport(outtakeSupport)
         ));

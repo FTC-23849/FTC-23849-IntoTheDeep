@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.archive;
 
 import androidx.annotation.NonNull;
 
@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.Robot;
 
 //@Disabled
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
-public class LeftAuto extends LinearOpMode {
+public class LeftAutoBackup extends LinearOpMode {
 
     @Override
     public void runOpMode() {
@@ -100,9 +100,9 @@ public class LeftAuto extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(-52, -52, Math.toRadians(45)), Math.toRadians(90));
 
         TrajectoryActionBuilder collectSample2 = drive.actionBuilder(new Pose2d(-52, -52, Math.toRadians(45)))
-                .splineToLinearHeading(new Pose2d(-57.5, -50, Math.toRadians(98)), Math.toRadians(90));
+                .splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(98)), Math.toRadians(90));
 
-        TrajectoryActionBuilder scoreSample2 = drive.actionBuilder(new Pose2d(-57, -50, Math.toRadians(100)))
+        TrajectoryActionBuilder scoreSample2 = drive.actionBuilder(new Pose2d(-57.5, -50, Math.toRadians(100)))
                 .splineToLinearHeading(new Pose2d(-52, -52, Math.toRadians(45)), Math.toRadians(90));
 
         TrajectoryActionBuilder collectSample3 = drive.actionBuilder(new Pose2d(-52, -52, Math.toRadians(45)))
@@ -134,7 +134,7 @@ public class LeftAuto extends LinearOpMode {
         Actions.runBlocking(new ParallelAction(
                 new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 3000, 1.0),
                 scorePreload.build()
-                ));
+        ));
 
         Robot.outtake.scoreSample(outtakeArm, outtakeArm2, outtakeWrist);
         sleep(500);
@@ -145,7 +145,7 @@ public class LeftAuto extends LinearOpMode {
         Actions.runBlocking(new ParallelAction(
                 new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 0, 1.0),
                 collectSample1.build()
-                ));
+        ));
 
         intakeClaw.setPosition(Robot.INTAKE_CLAW_OPEN);
         linkage1.setPosition(0.22/*0.15*/);
@@ -159,8 +159,6 @@ public class LeftAuto extends LinearOpMode {
         intakeClaw.setPosition(Robot.INTAKE_CLAW_CLOSE);
         sleep(650);
         Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
-        linkage1.setPosition(0.04);
-        linkage2.setPosition(0.97);
         sleep(800);
         Robot.outtake.closeClaw(outtakeClaw);
         sleep(100);
@@ -169,7 +167,7 @@ public class LeftAuto extends LinearOpMode {
         Actions.runBlocking(new ParallelAction(
                 new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 3000, 1.0),
                 scoreSample1.build()
-                ));
+        ));
 
         Robot.outtake.scoreSample(outtakeArm, outtakeArm2, outtakeWrist);
         sleep(500);
@@ -180,7 +178,7 @@ public class LeftAuto extends LinearOpMode {
         Actions.runBlocking(new ParallelAction(
                 new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 0, 1.0),
                 collectSample2.build()
-                ));
+        ));
 
         intakeClaw.setPosition(Robot.INTAKE_CLAW_OPEN);
         linkage1.setPosition(0.24/*0.16*/);
@@ -194,8 +192,6 @@ public class LeftAuto extends LinearOpMode {
         intakeClaw.setPosition(Robot.INTAKE_CLAW_CLOSE);
         sleep(650);
         Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
-        linkage1.setPosition(0.04);
-        linkage2.setPosition(0.97);
         sleep(800);
         Robot.outtake.closeClaw(outtakeClaw);
         sleep(100);

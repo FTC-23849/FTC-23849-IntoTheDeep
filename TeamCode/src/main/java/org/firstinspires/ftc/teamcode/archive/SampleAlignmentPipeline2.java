@@ -1,5 +1,5 @@
 // Pipeline class for OpenCV processing
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.archive;
 
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
