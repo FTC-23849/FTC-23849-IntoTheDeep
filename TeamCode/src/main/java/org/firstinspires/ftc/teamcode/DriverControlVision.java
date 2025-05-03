@@ -103,6 +103,7 @@ public class DriverControlVision extends OpMode {
     boolean armDown = false;
     boolean autoAlign = false;
     boolean intakeRetracted = false;
+    boolean xButton = false;
 
 
     //camera initilization
@@ -381,7 +382,7 @@ public class DriverControlVision extends OpMode {
                 linkage2Position = Robot.LINKAGE2_EXTEND;
             }
 
-        } else if (gamepad1.left_trigger > 0.2) {
+        } else if (gamepad1.left_trigger > 0.2|| gamepad1.x) {
             autoAlign = false;
             //Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
             //Robot.intake.retractIntake(linkage1, linkage2, intakeArmLeft, intakeArmRight);
@@ -395,6 +396,12 @@ public class DriverControlVision extends OpMode {
             //linkage2Position = Robot.LINKAGE2_TRANSFER;
             intakeRetracted = true;
             intakeRetract.reset();
+            if(gamepad1.x){
+                xButton = true;
+            }
+            else{
+                xButton = false;
+            }
         }
         if(intakeRetract.milliseconds()>100 && intakeRetract.milliseconds()<150){
             linkage1Position = Robot.LINKAGE1_TRANSFER;
@@ -402,6 +409,13 @@ public class DriverControlVision extends OpMode {
             linkage1.setPosition(Robot.LINKAGE1_TRANSFER);
             linkage2.setPosition(Robot.LINKAGE2_TRANSFER);
             intakeRetracted=false;
+        }
+        if(intakeRetract.milliseconds()> 1000 && intakeRetract.milliseconds()<1050 && xButton == true){
+            outtakeClaw.setPosition(Robot.CLOSE_CLAW);
+
+        }
+        if(intakeRetract.milliseconds()> 1100 && intakeRetract.milliseconds()<1150 && xButton == true){
+            intakeClaw.setPosition((Robot.INTAKE_CLAW_OPEN));
         }
         if(gamepad1.dpad_down){
             intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_TRANSFER);
