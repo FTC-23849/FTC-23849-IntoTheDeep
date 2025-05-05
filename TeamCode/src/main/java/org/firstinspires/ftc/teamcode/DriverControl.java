@@ -240,6 +240,7 @@ public class DriverControl extends OpMode {
 
                 if (rightBumperTimes == 2) {
                     intakeClaw.setPosition(Robot.INTAKE_CLAW_CLOSE);
+                    outtakeClaw.setPosition(Robot.OPEN_CLAW);
                     //Robot.intake.runIntake(intakeRollers);
                 }
                 if (rightBumperTimes == 3) {
@@ -353,6 +354,7 @@ public class DriverControl extends OpMode {
             intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_DROP);
             linkage1.setPosition(Robot.LINKAGE1_EXTEND);
             linkage2.setPosition(Robot.LINKAGE2_EXTEND);
+            intakeRetracted = false;
 
         }
 
@@ -679,7 +681,7 @@ public class DriverControl extends OpMode {
             raiseSupport = false;
 //            linkage1.setPosition(0.05);
 //            linkage2.setPosition(0.95);
-            Robot.outtake.scoreSample(outtakeArm, outtakeArm2, outtakeWrist);
+            Robot.outtake.scoreSampleTeleop(outtakeArm, outtakeArm2, outtakeWrist);
 //            outtakeTimer.reset();
 //            intakeSmallExtend = true;
         }

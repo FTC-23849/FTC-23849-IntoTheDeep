@@ -54,11 +54,14 @@ public class Robot {
     public static double CLOSE_CLAW = 0.0;
     public static double SPECIMEN_RECEIVE_ORIENTATION = 0.6;
     public static double SPECIMEN_SCORE_ORIENTATION = 1;
+
     public static double SAMPLE_RECEIVE_ORIENTATION = 0.6;
     public static double SAMPLE_SCORE_ORIENTATION = 0.75;
+    public static double SAMPLE_SCORE_ORIENTATION_TELEOP = 0.65;
 
     public static double ARM_SAMPLE_RECEIVE = 0.85;
     public static double ARM_SAMPLE_SCORE = 0.18;
+
     public static double ARM_SPECIMEN_RECEIVE = 0.1;
     public static double ARM_SPECIMEN_RECEIVE_AUTO = 0.15;
     public static double ARM_SPECIMEN_SCORE = 0.82;
@@ -172,6 +175,11 @@ public class Robot {
             outtakeArm.setPosition(ARM_SAMPLE_SCORE);
             outtakeArm2.setPosition(ARM_SAMPLE_SCORE);
             outtakeWrist.setPosition(SAMPLE_SCORE_ORIENTATION);
+        }
+        public static void scoreSampleTeleop(Servo outtakeArm, Servo outtakeArm2, Servo outtakeWrist){
+            outtakeArm.setPosition(ARM_SAMPLE_SCORE);
+            outtakeArm2.setPosition(ARM_SAMPLE_SCORE);
+            outtakeWrist.setPosition(SAMPLE_SCORE_ORIENTATION_TELEOP);
         }
 
         public static void scoreSpecimen(Servo outtakeArm, Servo outtakeArm2, Servo outtakeWrist, Servo outtakeClaw){

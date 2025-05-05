@@ -303,38 +303,36 @@ public class DriverControlVision extends OpMode {
             leftBumperPressed = false;
         }
         if (gamepad1.right_bumper) {
-            autoAlign=false;
-            intakeRetracted=false;
-            if(rightBumperPressed == false){
-                rightBumperTimes = rightBumperTimes + 1;
-                //}
-                rightBumperPressed = true;
-                if (rightBumperTimes == 1) {
+            autoAlign = false;
+            if (intakeRetracted == false) {
+                if (rightBumperPressed == false) {
+                    rightBumperTimes = rightBumperTimes + 1;
+                    //}
+                    rightBumperPressed = true;
+                    if (rightBumperTimes == 1) {
                 /*Robot.intake.dropBucket(bucket);
                 intakeRollers.setPower(0);*/
-                    intakeArmLeft.setPosition(Robot.INTAKE_ARM_LEFT_EXTEND_TELEOP);
-                    intakeArmRight.setPosition(Robot.INTAKE_ARM_RIGHT_EXTEND_TELEOP);
+                        intakeArmLeft.setPosition(Robot.INTAKE_ARM_LEFT_EXTEND_TELEOP);
+                        intakeArmRight.setPosition(Robot.INTAKE_ARM_RIGHT_EXTEND_TELEOP);
+                    }
+                    rightBumperPressed = true;
+
+
                 }
-                rightBumperPressed = true;
 
+                if (rightBumperTimes == 2) {
+                    intakeClaw.setPosition(Robot.INTAKE_CLAW_CLOSE);
+                    outtakeClaw.setPosition(Robot.OPEN_CLAW);
+                    //Robot.intake.runIntake(intakeRollers);
+                }
+                if (rightBumperTimes == 3) {
+                    intakeClaw.setPosition(Robot.INTAKE_CLAW_OPEN);
+                    rightBumperTimes = 1;
+                }
 
-
+            } else {
+                outtakeClaw.setPosition(Robot.OPEN_CLAW);
             }
-
-            if (rightBumperTimes == 2) {
-                intakeClaw.setPosition(Robot.INTAKE_CLAW_CLOSE);
-                //Robot.intake.runIntake(intakeRollers);
-            }
-            if (rightBumperTimes == 3){
-                intakeClaw.setPosition(Robot.INTAKE_CLAW_OPEN);
-                rightBumperTimes = 1;
-            }
-
-        } else if (gamepad1.left_bumper) {
-            //Robot.intake.reverseIntake(intakeRollers);
-
-        }else if (gamepad1.a){
-            //intakeRollers.setPower(0.0);
         }
 
 
@@ -356,6 +354,7 @@ public class DriverControlVision extends OpMode {
             intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP);
             intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP);
             rightBumperTimes = 0;
+            intakeRetracted = false;
 
 
         }
@@ -408,7 +407,7 @@ public class DriverControlVision extends OpMode {
             linkage2Position = Robot.LINKAGE2_TRANSFER;
             linkage1.setPosition(Robot.LINKAGE1_TRANSFER);
             linkage2.setPosition(Robot.LINKAGE2_TRANSFER);
-            intakeRetracted=false;
+
         }
         if(intakeRetract.milliseconds()> 1000 && intakeRetract.milliseconds()<1050 && xButton == true){
             outtakeClaw.setPosition(Robot.CLOSE_CLAW);
@@ -759,7 +758,7 @@ public class DriverControlVision extends OpMode {
             raiseSupport = false;
 //            linkage1.setPosition(0.05);
 //            linkage2.setPosition(0.95);
-            Robot.outtake.scoreSample(outtakeArm, outtakeArm2, outtakeWrist);
+            Robot.outtake.scoreSampleTeleop(outtakeArm, outtakeArm2, outtakeWrist);
 //            outtakeTimer.reset();
 //            intakeSmallExtend = true;
         }
