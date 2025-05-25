@@ -53,7 +53,7 @@ public class Robot {
     public static double OPEN_CLAW = 0.5;
     public static double CLOSE_CLAW = 0.0;
     public static double SPECIMEN_RECEIVE_ORIENTATION = 0.6;
-    public static double SPECIMEN_SCORE_ORIENTATION = 1;
+    public static double SPECIMEN_SCORE_ORIENTATION = 0.925;
 
     public static double SAMPLE_RECEIVE_ORIENTATION = 0.6;
     public static double SAMPLE_SCORE_ORIENTATION = 0.75;
