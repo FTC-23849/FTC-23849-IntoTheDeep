@@ -189,8 +189,8 @@ public class RightAutoExtendingArm5_0shortarm extends LinearOpMode {
 
         TrajectoryActionBuilder pushSamples = drive.actionBuilder(drive.pose)
                 .setTangent(Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(28.5, -40), Math.toRadians(10)) //all 70   70, -70
-                .splineToConstantHeading(new Vector2d(50, -9/*originally-10*/), Math.toRadians(0))  //all 70   70, -70
+                .splineToConstantHeading(new Vector2d(28.5, -40), Math.toRadians(10), new TranslationalVelConstraint(50), new ProfileAccelConstraint(-50, 50)) //all 70   70, -70
+                .splineToConstantHeading(new Vector2d(50, -9/*originally-10*/), Math.toRadians(0), new TranslationalVelConstraint(50), new ProfileAccelConstraint(-50, 50))  //all 70   70, -70
                 .setTangent(Math.toRadians(270))
                 .lineToY(-53/*originally-53*/, new TranslationalVelConstraint(PUSHING_VEL_ACC), new ProfileAccelConstraint(-PUSHING_VEL_ACC, PUSHING_VEL_ACC))
                 .setTangent(Math.toRadians(270))
