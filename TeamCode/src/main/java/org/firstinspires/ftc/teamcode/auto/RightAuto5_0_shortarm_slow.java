@@ -186,13 +186,13 @@ public class RightAuto5_0_shortarm_slow extends LinearOpMode {
                 new raiseSupport(outtakeSupport)
         ));
 
-
+        sleep(1000);
         drive.updatePoseEstimate();
         drive.localizer.update();
-        telemetry.addData("Expected", "x=6", "y=-27");
-        telemetry.addData("Pose2d", drive.pose);
-        telemetry.update();
-        sleep(5000);
+        Pose2d preloadScoringPosition = drive.pose;
+        telemetry.addLine("Expected preloadScoringPosition x=6 ,y=-27");
+        telemetry.addData("Actual", "x =" + preloadScoringPosition.position.x + ", y=" + preloadScoringPosition.position.y );
+        sleep(1000);
 
         TrajectoryActionBuilder pushSamples = drive.actionBuilder(drive.pose)
                 .setTangent(Math.toRadians(0))
@@ -223,15 +223,26 @@ public class RightAuto5_0_shortarm_slow extends LinearOpMode {
                 )
         ));
 
+        sleep(1000);
         drive.updatePoseEstimate();
         drive.localizer.update();
-        telemetry.addData("Pose2d", drive.pose);
-        telemetry.update();
+        Pose2d BeforePushing3rdSample = drive.pose;
+        telemetry.addLine("Expected preloadScoringPosition x=68 ,y=-11");
+        telemetry.addData("Actual", "x =" + BeforePushing3rdSample.position.x + ", y=" + BeforePushing3rdSample.position.y );
+        sleep(1000);
 
         TrajectoryActionBuilder collectSpecimen1 = drive.actionBuilder(drive.pose)
                 .setTangent(Math.toRadians(270))
                 .strafeTo(new Vector2d(65, -61));
                 //.lineToY(-60.5/*originally-53*/);
+
+        sleep(1000);
+        drive.updatePoseEstimate();
+        drive.localizer.update();
+        Pose2d BeforeCollectingSpecimen1 = drive.pose;
+        telemetry.addLine("Expected preloadScoringPosition x=65 ,y=-61");
+        telemetry.addData("Actual", "x =" + BeforeCollectingSpecimen1.position.x + ", y=" + BeforeCollectingSpecimen1.position.y );
+        sleep(1000);
 
         //collect specimen 1 from wall
         Actions.runBlocking(new SequentialAction(
@@ -265,11 +276,13 @@ public class RightAuto5_0_shortarm_slow extends LinearOpMode {
                 )
         );
 
+        sleep(1000);
         drive.updatePoseEstimate();
         drive.localizer.update();
-        //should show (6, -28)
-        telemetry.addData("Pose2d", drive.pose);
-        telemetry.update();
+        Pose2d BeforeScoringSpecimen1 = drive.pose;
+        telemetry.addLine("Expected preloadScoringPosition x=2 ,y=-26");
+        telemetry.addData("Actual", "x =" + BeforeScoringSpecimen1.position.x + ", y=" + BeforeScoringSpecimen1.position.y );
+        sleep(1000);
 
 
         TrajectoryActionBuilder collectSpecimen2 = drive.actionBuilder(drive.pose)
@@ -291,8 +304,14 @@ public class RightAuto5_0_shortarm_slow extends LinearOpMode {
                 )
         ));
 
+        sleep(1000);
         drive.updatePoseEstimate();
         drive.localizer.update();
+        Pose2d BeforeCollectingSpecimen2 = drive.pose;
+        telemetry.addLine("Expected preloadScoringPosition x=36 ,y=-50");
+        telemetry.addData("Actual", "x =" + BeforeCollectingSpecimen2.position.x + ", y=" + BeforeScoringSpecimen1.position.y );
+        telemetry.update();
+        sleep(5000);
 
         ///////Trajectory to go to sub to score specimen2
         TrajectoryActionBuilder scoreSpecimen2 = drive.actionBuilder(drive.pose)
