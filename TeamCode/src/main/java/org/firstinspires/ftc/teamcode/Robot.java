@@ -62,8 +62,8 @@ public class Robot {
     public static double ARM_SAMPLE_RECEIVE = 0.85;
     public static double ARM_SAMPLE_SCORE = 0.18;
 
-    public static double ARM_SPECIMEN_RECEIVE = 0.1;
-    public static double ARM_SPECIMEN_RECEIVE_AUTO = 0.15;
+    public static double ARM_SPECIMEN_RECEIVE = 0.14;
+    //public static double ARM_SPECIMEN_RECEIVE_AUTO = 0.15;
     public static double ARM_SPECIMEN_SCORE = 0.82;
 
     public static double SUPPORT_SUPPORT = .7;
@@ -164,12 +164,12 @@ public class Robot {
             outtakeWrist.setPosition(SPECIMEN_RECEIVE_ORIENTATION);
         }
 
-        public static void specimenReceivePositionAuto (Servo outtakeClaw, Servo outtakeWrist, Servo outtakeArm, Servo outtakeArm2){
-            outtakeArm.setPosition(ARM_SPECIMEN_RECEIVE_AUTO);
-            outtakeArm2.setPosition(ARM_SPECIMEN_RECEIVE_AUTO);
-            outtakeClaw.setPosition(OPEN_CLAW);
-            outtakeWrist.setPosition(SPECIMEN_RECEIVE_ORIENTATION);
-        }
+//        public static void specimenReceivePositionAuto (Servo outtakeClaw, Servo outtakeWrist, Servo outtakeArm, Servo outtakeArm2){
+//            outtakeArm.setPosition(ARM_SPECIMEN_RECEIVE_AUTO);
+//            outtakeArm2.setPosition(ARM_SPECIMEN_RECEIVE_AUTO);
+//            outtakeClaw.setPosition(OPEN_CLAW);
+//            outtakeWrist.setPosition(SPECIMEN_RECEIVE_ORIENTATION);
+//        }
 
         public static void scoreSample(Servo outtakeArm, Servo outtakeArm2, Servo outtakeWrist){
             outtakeArm.setPosition(ARM_SAMPLE_SCORE);

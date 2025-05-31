@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.archive;
+package org.firstinspires.ftc.teamcode.auto;
 
 import androidx.annotation.NonNull;
 
@@ -7,7 +7,6 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -18,9 +17,9 @@ import org.firstinspires.ftc.teamcode.rrfiles.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Robot;
 
 
-@Disabled
+//@Disabled
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
-public class LeftAutoBackup extends LinearOpMode {
+public class LeftAutoVision extends LinearOpMode {
 
     @Override
     public void runOpMode() {
@@ -98,9 +97,9 @@ public class LeftAutoBackup extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(-52, -52, Math.toRadians(45)), Math.toRadians(90));
 
         TrajectoryActionBuilder collectSample2 = drive.actionBuilder(new Pose2d(-52, -52, Math.toRadians(45)))
-                .splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(98)), Math.toRadians(90));
+                .splineToLinearHeading(new Pose2d(-57.5, -50, Math.toRadians(98)), Math.toRadians(90));
 
-        TrajectoryActionBuilder scoreSample2 = drive.actionBuilder(new Pose2d(-57.5, -50, Math.toRadians(100)))
+        TrajectoryActionBuilder scoreSample2 = drive.actionBuilder(new Pose2d(-57, -50, Math.toRadians(100)))
                 .splineToLinearHeading(new Pose2d(-52, -52, Math.toRadians(45)), Math.toRadians(90));
 
         TrajectoryActionBuilder collectSample3 = drive.actionBuilder(new Pose2d(-52, -52, Math.toRadians(45)))
@@ -157,6 +156,8 @@ public class LeftAutoBackup extends LinearOpMode {
         intakeClaw.setPosition(Robot.INTAKE_CLAW_CLOSE);
         sleep(650);
         Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
+        linkage1.setPosition(0.04);
+        linkage2.setPosition(0.97);
         sleep(800);
         Robot.outtake.closeClaw(outtakeClaw);
         sleep(100);
@@ -190,6 +191,8 @@ public class LeftAutoBackup extends LinearOpMode {
         intakeClaw.setPosition(Robot.INTAKE_CLAW_CLOSE);
         sleep(650);
         Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
+        linkage1.setPosition(0.04);
+        linkage2.setPosition(0.97);
         sleep(800);
         Robot.outtake.closeClaw(outtakeClaw);
         sleep(100);

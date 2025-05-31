@@ -20,7 +20,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Robot;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
+@Disabled
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
 public class stopAction extends LinearOpMode {
 

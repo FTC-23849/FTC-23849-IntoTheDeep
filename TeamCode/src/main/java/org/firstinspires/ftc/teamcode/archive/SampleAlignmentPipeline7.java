@@ -6,7 +6,9 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
+@Disabled
 public class SampleAlignmentPipeline7 extends OpenCvPipeline {
 
     private double sampleAngle = 0.0;

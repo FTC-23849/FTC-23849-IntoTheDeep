@@ -12,6 +12,7 @@ import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -20,11 +21,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.rrfiles.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Robot;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 @Disabled
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
-public class RightAutoExtendingArmBackUp extends LinearOpMode {
+public class RightAutoExtendingArm5_0Backup extends LinearOpMode {
+
+    public static final int PUSHING_VEL_ACC = 120;
+    public static final int SPECIMEN_SCORE_TICKS = 1550;
 
     @Override
     public void runOpMode() {
@@ -87,8 +90,9 @@ public class RightAutoExtendingArmBackUp extends LinearOpMode {
         Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeArm2, outtakeWrist);
         Robot.outtake.closeClaw(outtakeClaw);
         intakeClaw.setPosition(Robot.INTAKE_CLAW_OPEN);
-        intakeDiffyLeft.setPosition(0.72);
-        intakeDiffyRight.setPosition(0.30);
+        intakeDiffyLeft.setPosition(0.65);
+        intakeDiffyRight.setPosition(0.37);
+        Robot.outtake.retractSupport(outtakeSupport);
 //
 //        ElapsedTime outtakeTimer = new ElapsedTime();
 
@@ -98,59 +102,73 @@ public class RightAutoExtendingArmBackUp extends LinearOpMode {
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
         TrajectoryActionBuilder scorePreload = drive.actionBuilder(startPose)
-                .lineToY(-31);
+                .lineToY(-29, new TranslationalVelConstraint(80)/*Originally 70*/, new ProfileAccelConstraint(-80, 80));
 
         TrajectoryActionBuilder pushSamples = drive.actionBuilder(new Pose2d(9, -31, Math.toRadians(270)))
                 .setTangent(Math.toRadians(0))
                 .splineToLinearHeading(new Pose2d(31, -40, Math.toRadians(90)), Math.toRadians(10), new TranslationalVelConstraint(70), new ProfileAccelConstraint(-70, 70))
-                .splineToConstantHeading(new Vector2d(50, -10), Math.toRadians(10), new TranslationalVelConstraint(70), new ProfileAccelConstraint(-70, 70))
+                .splineToConstantHeading(new Vector2d(50, -14/*originally-10*/), Math.toRadians(10), new TranslationalVelConstraint(70), new ProfileAccelConstraint(-70, 70))
                 .setTangent(Math.toRadians(270))
-                .lineToY(-53, new TranslationalVelConstraint(100), new ProfileAccelConstraint(-100, 100))
+                .lineToY(-52/*originally-53*/, new TranslationalVelConstraint(PUSHING_VEL_ACC), new ProfileAccelConstraint(-PUSHING_VEL_ACC, PUSHING_VEL_ACC))
                 .setTangent(Math.toRadians(270))
-                .lineToY(-10, new TranslationalVelConstraint(100), new ProfileAccelConstraint(-100, 100))
+                .lineToY(-14/*originally-10*/, new TranslationalVelConstraint(PUSHING_VEL_ACC), new ProfileAccelConstraint(-PUSHING_VEL_ACC, PUSHING_VEL_ACC))
                 .setTangent(Math.toRadians(0))
-                .lineToX(59, new TranslationalVelConstraint(100), new ProfileAccelConstraint(-100, 100))
+                .lineToX(59, new TranslationalVelConstraint(PUSHING_VEL_ACC), new ProfileAccelConstraint(-PUSHING_VEL_ACC, PUSHING_VEL_ACC))
                 .setTangent(Math.toRadians(270))
-                .lineToY(-53, new TranslationalVelConstraint(100), new ProfileAccelConstraint(-100, 100));
+                .lineToY(-52/*originally-53*/, new TranslationalVelConstraint(PUSHING_VEL_ACC), new ProfileAccelConstraint(-PUSHING_VEL_ACC, PUSHING_VEL_ACC))
+                .setTangent(Math.toRadians(273))
+                .lineToY(-14/*originally-10*/, new TranslationalVelConstraint(PUSHING_VEL_ACC), new ProfileAccelConstraint(-PUSHING_VEL_ACC, PUSHING_VEL_ACC))
+                .setTangent(Math.toRadians(0))
+                .lineToX(66.5, new TranslationalVelConstraint(PUSHING_VEL_ACC), new ProfileAccelConstraint(-PUSHING_VEL_ACC, PUSHING_VEL_ACC))
+                .setTangent(Math.toRadians(270))
+                .lineToY(-52/*originally-53*/, new TranslationalVelConstraint(PUSHING_VEL_ACC), new ProfileAccelConstraint(-PUSHING_VEL_ACC, PUSHING_VEL_ACC));
 
-        TrajectoryActionBuilder collectSpecimen1 = drive.actionBuilder(new Pose2d(60, -53, Math.toRadians(90)))
-                .lineToY(-62, new TranslationalVelConstraint(15), new ProfileAccelConstraint(-15, 15));
+        TrajectoryActionBuilder collectSpecimen1 = drive.actionBuilder(new Pose2d(66.5, -52, Math.toRadians(90)))
+                .lineToY(-64/*originally-62*/, new TranslationalVelConstraint(30), new ProfileAccelConstraint(-30, 30));
 
-        TrajectoryActionBuilder scoreSpecimen1 = drive.actionBuilder(new Pose2d(47, -62, Math.toRadians(90)))
-                .setTangent(15)
-                .splineToConstantHeading(new Vector2d(3, -28), Math.toRadians(90), new TranslationalVelConstraint(50), new ProfileAccelConstraint(-30, 50));
+        TrajectoryActionBuilder scoreSpecimen1 = drive.actionBuilder(new Pose2d(66.5, -64/*originally-62*/, Math.toRadians(90)))
+                .strafeTo(new Vector2d(6, -31), new TranslationalVelConstraint(120), new ProfileAccelConstraint(-50, 100));
 
-        TrajectoryActionBuilder collectSpecimen2 = drive.actionBuilder(new Pose2d(0, -28, Math.toRadians(90)))
+        TrajectoryActionBuilder collectSpecimen2 = drive.actionBuilder(new Pose2d(6, -32, Math.toRadians(90)))
                 .setTangent(Math.toRadians(90))
-                .lineToY(-32)
-                .splineToConstantHeading(new Vector2d(47, -50), Math.toRadians(0), new TranslationalVelConstraint(60), new ProfileAccelConstraint(-40, 40))
+                .lineToY(-32, new TranslationalVelConstraint(140), new ProfileAccelConstraint(-140, 140))
+                .strafeTo(new Vector2d(35, -50), new TranslationalVelConstraint(140), new ProfileAccelConstraint(-140, 140))
                 .setTangent(Math.toRadians(90))
-                .lineToY(-60);
+                .lineToY(-61/*originally-60*/, new TranslationalVelConstraint(40), new ProfileAccelConstraint(-40, 40));
 
-        TrajectoryActionBuilder scoreSpecimen2 = drive.actionBuilder(new Pose2d(47, -60, Math.toRadians(90)))
-                .setTangent(15)
-                .splineToConstantHeading(new Vector2d(-1, -27), Math.toRadians(90), new TranslationalVelConstraint(50), new ProfileAccelConstraint(-30, 50));
+        TrajectoryActionBuilder scoreSpecimen2 = drive.actionBuilder(new Pose2d(35, -61/*originally-60*/, Math.toRadians(90)))
+                .strafeTo(new Vector2d(4, -31), new TranslationalVelConstraint(120), new ProfileAccelConstraint(-50, 100));
 
-        TrajectoryActionBuilder collectSpecimen3 = drive.actionBuilder(new Pose2d(-2, -28, Math.toRadians(90)))
+        TrajectoryActionBuilder collectSpecimen3 = drive.actionBuilder(new Pose2d(4, -32, Math.toRadians(90)))
                 .setTangent(Math.toRadians(90))
-                .lineToY(-32)
-                .splineToConstantHeading(new Vector2d(47, -52), Math.toRadians(0), new TranslationalVelConstraint(60), new ProfileAccelConstraint(-40, 40))
+                .lineToY(-32, new TranslationalVelConstraint(140), new ProfileAccelConstraint(-140, 140))
+                .strafeTo(new Vector2d(35, -52), new TranslationalVelConstraint(140), new ProfileAccelConstraint(-140, 140))
                 .setTangent(Math.toRadians(90))
-                .lineToY(-61);
+                .lineToY(-62/*originally-61*/, new TranslationalVelConstraint(40), new ProfileAccelConstraint(-40, 40));
 
-        TrajectoryActionBuilder scoreSpecimen3 = drive.actionBuilder(new Pose2d(47, -59, Math.toRadians(90)))
-                .setTangent(15)
-                .splineToConstantHeading(new Vector2d(-3, -27), Math.toRadians(90), new TranslationalVelConstraint(50), new ProfileAccelConstraint(-30, 50));
+        TrajectoryActionBuilder scoreSpecimen3 = drive.actionBuilder(new Pose2d(35, -60/*originally-59*/, Math.toRadians(90)))
+                .strafeTo(new Vector2d(2, -31), new TranslationalVelConstraint(120), new ProfileAccelConstraint(-50, 100));
 
-        TrajectoryActionBuilder park = drive.actionBuilder(new Pose2d(-5, -29, Math.toRadians(90)))
+        TrajectoryActionBuilder collectSpecimen4 = drive.actionBuilder(new Pose2d(2, -32, Math.toRadians(90)))
+                .setTangent(Math.toRadians(90))
+                .lineToY(-32, new TranslationalVelConstraint(140), new ProfileAccelConstraint(-140, 140))
+                .strafeTo(new Vector2d(35, -52), new TranslationalVelConstraint(140), new ProfileAccelConstraint(-140, 140))
+                .setTangent(Math.toRadians(90))
+                .lineToY(-62/*originally-61*/, new TranslationalVelConstraint(40), new ProfileAccelConstraint(-40, 40));
+
+        TrajectoryActionBuilder scoreSpecimen4 = drive.actionBuilder(new Pose2d(35, -60/*originally-59*/, Math.toRadians(90)))
+                .strafeTo(new Vector2d(0,-31), new TranslationalVelConstraint(120), new ProfileAccelConstraint(-50, 100));
+
+        TrajectoryActionBuilder park = drive.actionBuilder(new Pose2d(0, -32, Math.toRadians(90)))
                 .splineToLinearHeading(new Pose2d(50, -55, Math.toRadians(90)), Math.toRadians(90), new TranslationalVelConstraint(70), new ProfileAccelConstraint(-70, 70));
 
         Robot.intake.transfer(linkage1, linkage2, intakeArmLeft, intakeArmRight, intakeDiffyLeft, intakeDiffyRight, intakeClaw);
         Robot.outtake.sampleReceivePosition(outtakeClaw, outtakeArm, outtakeArm2, outtakeWrist);
         Robot.outtake.closeClaw(outtakeClaw);
         intakeClaw.setPosition(Robot.INTAKE_CLAW_OPEN);
-        intakeDiffyLeft.setPosition(0.72);
-        intakeDiffyRight.setPosition(0.30);
+        intakeDiffyLeft.setPosition(0.65);
+        intakeDiffyRight.setPosition(0.37);
+        Robot.outtake.retractSupport(outtakeSupport);
 
         waitForStart();
 
@@ -166,7 +184,7 @@ public class RightAutoExtendingArmBackUp extends LinearOpMode {
         ));
 
         Actions.runBlocking(new SequentialAction(
-                new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 950, 1.0),
+                new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 1000, 1.0),
                 new ParallelAction(
                         new openClaw(outtakeClaw),
                         new restArm(outtakeClaw, outtakeArm, outtakeArm2, outtakeWrist),
@@ -181,7 +199,7 @@ public class RightAutoExtendingArmBackUp extends LinearOpMode {
                         collectSpecimen1.build()),
                 new closeClaw(outtakeClaw),
                 new ParallelAction(
-                        new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 1550, 1.0),
+                        new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 1650, 1.0),
                         new scoreSpecimen(outtakeArm, outtakeArm2, outtakeWrist, outtakeClaw),
                         scoreSpecimen1.build()
                 ),
@@ -189,7 +207,7 @@ public class RightAutoExtendingArmBackUp extends LinearOpMode {
         ));
 
         Actions.runBlocking(new SequentialAction(
-                new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 760, 1.0),
+                new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 800, 1.0),
                 new dropSupport(outtakeSupport),
                 new ParallelAction(
                         new openClaw(outtakeClaw),
@@ -202,7 +220,7 @@ public class RightAutoExtendingArmBackUp extends LinearOpMode {
         Actions.runBlocking(new SequentialAction(
                 new closeClaw(outtakeClaw),
                 new ParallelAction(
-                        new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 1550, 1.0),
+                        new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 1650/*originally 1600*/, 1.0),
                         new scoreSpecimen(outtakeArm, outtakeArm2, outtakeWrist, outtakeClaw),
                         scoreSpecimen2.build()
                 ),
@@ -214,7 +232,7 @@ public class RightAutoExtendingArmBackUp extends LinearOpMode {
                 new dropSupport(outtakeSupport),
                 new ParallelAction(
                         new openClaw(outtakeClaw),
-                        new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 10, 1.0),
+                        new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 0, 1.0),
                         new receiveSpecimen(outtakeClaw, outtakeWrist, outtakeArm, outtakeArm2),
                         collectSpecimen3.build()
                 )
@@ -223,7 +241,7 @@ public class RightAutoExtendingArmBackUp extends LinearOpMode {
         Actions.runBlocking(new SequentialAction(
                 new closeClaw(outtakeClaw),
                 new ParallelAction(
-                        new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 1550, 1.0),
+                        new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 1650/*originally 1600*/, 1.0),
                         new scoreSpecimen(outtakeArm, outtakeArm2, outtakeWrist, outtakeClaw),
                         scoreSpecimen3.build()
                 ),
@@ -231,19 +249,42 @@ public class RightAutoExtendingArmBackUp extends LinearOpMode {
         ));
 
         Actions.runBlocking(new SequentialAction(
+                new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 750, 1.0),
                 new dropSupport(outtakeSupport),
-                new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 760, 1.0),
                 new ParallelAction(
                         new openClaw(outtakeClaw),
-                        new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 0, 1.0)
+                        new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 10, 1.0),
+                        new receiveSpecimen(outtakeClaw, outtakeWrist, outtakeArm, outtakeArm2),
+                        collectSpecimen4.build()
                 )
         ));
 
-        Actions.runBlocking(new ParallelAction(
-                new restArm(outtakeClaw, outtakeArm, outtakeArm2, outtakeWrist),
-                new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 0, 1.0),
-                park.build()
+        Actions.runBlocking(new SequentialAction(
+                new closeClaw(outtakeClaw),
+                new ParallelAction(
+                        new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 1650/*originally 1600*/, 1.0),
+                        new scoreSpecimen(outtakeArm, outtakeArm2, outtakeWrist, outtakeClaw),
+                        scoreSpecimen4.build()
+                ),
+                new raiseSupport(outtakeSupport)
         ));
+
+        Actions.runBlocking(new SequentialAction(
+                new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 770, 1.0),
+                new dropSupport(outtakeSupport),
+                new ParallelAction(
+                        new restArm(outtakeClaw, outtakeArm, outtakeArm2, outtakeWrist),
+                        new openClaw(outtakeClaw),
+                        new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 0, 1.0),
+                        park.build()
+                )
+        ));
+
+//        Actions.runBlocking(new ParallelAction(
+//                new restArm(outtakeClaw, outtakeArm, outtakeArm2, outtakeWrist),
+//                new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 0, 1.0),
+//                park.build()
+//        ));
 
         sleep(1000);
 
@@ -278,7 +319,7 @@ public class RightAutoExtendingArmBackUp extends LinearOpMode {
             slideMotor_back.setPower(-p);
             slideMotor_up.setPower(p);
 
-            return slideMotor_front.isBusy() || slideMotor_back.isBusy() || slideMotor_up.isBusy();
+            return slideMotor_front.isBusy() && slideMotor_back.isBusy() && slideMotor_up.isBusy();
         }
     }
 

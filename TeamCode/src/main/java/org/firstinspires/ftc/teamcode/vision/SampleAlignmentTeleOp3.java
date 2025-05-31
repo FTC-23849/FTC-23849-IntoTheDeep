@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode.archive;
+package org.firstinspires.ftc.teamcode.vision;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -10,14 +11,12 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-
 @Disabled
-@TeleOp(name = "SampleAlignmentTeleOp7", group = "FTC")
-public class SampleAlignmentTeleOp7 extends OpMode {
+@TeleOp(name = "SampleAlignmentTeleOp3", group = "FTC")
+public class SampleAlignmentTeleOp3 extends OpMode {
 
     private OpenCvCamera camera;
-    private SampleAlignmentPipeline7 pipeline;
+    private SampleAlignmentPipeline3 pipeline;
 //    private Servo clawServo;
     private boolean isCameraActive = false;
     private double lastServoPosition = -1; // Indicates no initial position
@@ -31,14 +30,14 @@ public class SampleAlignmentTeleOp7 extends OpMode {
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
         // Create and set pipeline
-        pipeline = new SampleAlignmentPipeline7();
+        pipeline = new SampleAlignmentPipeline3();
         camera.setPipeline(pipeline);
 
         // Start camera streaming
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                camera.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
                 isCameraActive = true;
             }
 
@@ -71,6 +70,7 @@ public class SampleAlignmentTeleOp7 extends OpMode {
 
         // Display telemetry data
         telemetry.addData("Sample Angle", angle); // Display sample angle
+        telemetry.addData("Sample Color", pipeline.getSampleColor()); // Display sample color
         telemetry.addData("True Servo Position", trueServoPosition); // True servo position set
         telemetry.update();
     }
