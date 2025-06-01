@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.rrfiles.MecanumDrive;
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
 public class RightAuto5_0_shortarm_slow extends LinearOpMode {
 
-    public static final int PUSHING_VEL_ACC = 120;
+    public static final int PUSHING_VEL_ACC = 90;
     public static final int SPECIMEN_SCORE_TICKS = 1550;
 
     @Override
@@ -102,7 +102,7 @@ public class RightAuto5_0_shortarm_slow extends LinearOpMode {
         Pose2d currentPose = drive.pose;
 
         TrajectoryActionBuilder scorePreload = drive.actionBuilder(startPose)
-                .strafeToConstantHeading(new Vector2d(5, -27));
+                .strafeToConstantHeading(new Vector2d(5, -27), new TranslationalVelConstraint(60), new ProfileAccelConstraint(-60, 60));
 
 //        TrajectoryActionBuilder pushSamples = drive.actionBuilder(new Pose2d(9, -31, Math.toRadians(270)))
 //                .setTangent(Math.toRadians(0))
@@ -186,31 +186,28 @@ public class RightAuto5_0_shortarm_slow extends LinearOpMode {
                 new raiseSupport(outtakeSupport)
         ));
 
-        sleep(1000);
         drive.updatePoseEstimate();
         drive.localizer.update();
         Pose2d preloadScoringPosition = drive.pose;
         telemetry.addLine("Expected preloadScoringPosition x=6 ,y=-27");
         telemetry.addData("Actual", "x =" + preloadScoringPosition.position.x + ", y=" + preloadScoringPosition.position.y );
-        sleep(1000);
 
         TrajectoryActionBuilder pushSamples = drive.actionBuilder(drive.pose)
                 .setTangent(Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(28.5, -40), Math.toRadians(10)) //all 70   70, -70
-                .splineToConstantHeading(new Vector2d(50, -9/*originally-10*/), Math.toRadians(0))  //all 70   70, -70
+                .splineToConstantHeading(new Vector2d(28.5, -40), Math.toRadians(10), new TranslationalVelConstraint(40), new ProfileAccelConstraint(-40, 40)) //all 70   70, -70
+                .splineToConstantHeading(new Vector2d(48, -9/*originally-10*/), Math.toRadians(0), new TranslationalVelConstraint(40), new ProfileAccelConstraint(-40, 40))  //all 70   70, -70
                 .setTangent(Math.toRadians(270))
-                .lineToY(-53/*originally-53*/)
+                .lineToY(-53/*originally-53*/, new TranslationalVelConstraint(PUSHING_VEL_ACC), new ProfileAccelConstraint(-PUSHING_VEL_ACC, PUSHING_VEL_ACC))
                 .setTangent(Math.toRadians(270))
-                .lineToY(-11/*originally-10*/)
+                .lineToY(-11/*originally-10*/, new TranslationalVelConstraint(PUSHING_VEL_ACC), new ProfileAccelConstraint(-PUSHING_VEL_ACC, PUSHING_VEL_ACC))
                 .setTangent(Math.toRadians(0))
-                .lineToX(59)
+                .lineToX(59, new TranslationalVelConstraint(PUSHING_VEL_ACC), new ProfileAccelConstraint(-PUSHING_VEL_ACC, PUSHING_VEL_ACC))
                 .setTangent(Math.toRadians(270))
-                .lineToY(-53/*originally-53*/)
+                .lineToY(-53/*originally-53*/, new TranslationalVelConstraint(PUSHING_VEL_ACC), new ProfileAccelConstraint(-PUSHING_VEL_ACC, PUSHING_VEL_ACC))
                 .setTangent(Math.toRadians(273))
-                .lineToY(-11/*originally-10*/)
+                .lineToY(-11/*originally-10*/, new TranslationalVelConstraint(PUSHING_VEL_ACC), new ProfileAccelConstraint(-PUSHING_VEL_ACC, PUSHING_VEL_ACC))
                 .setTangent(Math.toRadians(0))
-                .lineToX(68);
-
+                .lineToX(68, new TranslationalVelConstraint(PUSHING_VEL_ACC), new ProfileAccelConstraint(-PUSHING_VEL_ACC, PUSHING_VEL_ACC));
         //score preload and push
         Actions.runBlocking(new SequentialAction(
                 new setOuttakeSlidesPatient(slideMotor_back, slideMotor_front, slideMotor_up, 700, 1.0),
@@ -223,26 +220,22 @@ public class RightAuto5_0_shortarm_slow extends LinearOpMode {
                 )
         ));
 
-        sleep(1000);
         drive.updatePoseEstimate();
         drive.localizer.update();
         Pose2d BeforePushing3rdSample = drive.pose;
         telemetry.addLine("Expected preloadScoringPosition x=68 ,y=-11");
         telemetry.addData("Actual", "x =" + BeforePushing3rdSample.position.x + ", y=" + BeforePushing3rdSample.position.y );
-        sleep(1000);
 
         TrajectoryActionBuilder collectSpecimen1 = drive.actionBuilder(drive.pose)
                 .setTangent(Math.toRadians(270))
-                .strafeTo(new Vector2d(65, -61));
+                .strafeTo(new Vector2d(65, -61), new TranslationalVelConstraint(70), new ProfileAccelConstraint(-70, 70));
                 //.lineToY(-60.5/*originally-53*/);
 
-        sleep(1000);
         drive.updatePoseEstimate();
         drive.localizer.update();
         Pose2d BeforeCollectingSpecimen1 = drive.pose;
         telemetry.addLine("Expected preloadScoringPosition x=65 ,y=-61");
         telemetry.addData("Actual", "x =" + BeforeCollectingSpecimen1.position.x + ", y=" + BeforeCollectingSpecimen1.position.y );
-        sleep(1000);
 
         //collect specimen 1 from wall
         Actions.runBlocking(new SequentialAction(
@@ -260,7 +253,7 @@ public class RightAuto5_0_shortarm_slow extends LinearOpMode {
 
         //Trajectory for travelling to sub after collecting specimen1
         TrajectoryActionBuilder scoreSpecimen1 = drive.actionBuilder(drive.pose)
-                .strafeTo(new Vector2d(2, -26));
+                .strafeTo(new Vector2d(1.5, -26), new TranslationalVelConstraint(55), new ProfileAccelConstraint(-55, 55));
 
 
 
@@ -276,19 +269,17 @@ public class RightAuto5_0_shortarm_slow extends LinearOpMode {
                 )
         );
 
-        sleep(1000);
         drive.updatePoseEstimate();
         drive.localizer.update();
         Pose2d BeforeScoringSpecimen1 = drive.pose;
         telemetry.addLine("Expected preloadScoringPosition x=2 ,y=-26");
         telemetry.addData("Actual", "x =" + BeforeScoringSpecimen1.position.x + ", y=" + BeforeScoringSpecimen1.position.y );
-        sleep(1000);
 
 
         TrajectoryActionBuilder collectSpecimen2 = drive.actionBuilder(drive.pose)
                 .setTangent(Math.toRadians(90))
                 .lineToY(-32)
-                .strafeTo(new Vector2d(36, -50))
+                .strafeTo(new Vector2d(36, -50), new TranslationalVelConstraint(80), new ProfileAccelConstraint(-80, 80))
                 .setTangent(Math.toRadians(90))
                 .lineToY(-60.5/*originally-60*/);
 
@@ -304,18 +295,16 @@ public class RightAuto5_0_shortarm_slow extends LinearOpMode {
                 )
         ));
 
-        sleep(1000);
         drive.updatePoseEstimate();
         drive.localizer.update();
         Pose2d BeforeCollectingSpecimen2 = drive.pose;
         telemetry.addLine("Expected preloadScoringPosition x=36 ,y=-50");
         telemetry.addData("Actual", "x =" + BeforeCollectingSpecimen2.position.x + ", y=" + BeforeScoringSpecimen1.position.y );
         telemetry.update();
-        sleep(5000);
 
         ///////Trajectory to go to sub to score specimen2
         TrajectoryActionBuilder scoreSpecimen2 = drive.actionBuilder(drive.pose)
-                .strafeTo(new Vector2d(0, -28));
+                .strafeTo(new Vector2d(0, -28), new TranslationalVelConstraint(55), new ProfileAccelConstraint(-55, 55));
 
 
         Actions.runBlocking(new SequentialAction(
@@ -338,7 +327,7 @@ public class RightAuto5_0_shortarm_slow extends LinearOpMode {
         TrajectoryActionBuilder collectSpecimen3 = drive.actionBuilder(drive.pose)
                 .setTangent(Math.toRadians(90))
                 .lineToY(-32)
-                .strafeTo(new Vector2d(36, -52))
+                .strafeTo(new Vector2d(36, -52), new TranslationalVelConstraint(80), new ProfileAccelConstraint(-80, 80))
                 .setTangent(Math.toRadians(90))
                 .lineToY(-60.5/*originally-61*/);
 
@@ -357,7 +346,7 @@ public class RightAuto5_0_shortarm_slow extends LinearOpMode {
         drive.localizer.update();
 
         TrajectoryActionBuilder scoreSpecimen3 = drive.actionBuilder(drive.pose)
-                .strafeTo(new Vector2d(-2, -28));
+                .strafeTo(new Vector2d(-2, -28), new TranslationalVelConstraint(55), new ProfileAccelConstraint(-55, 55));
 
 
         Actions.runBlocking(new SequentialAction(
@@ -376,7 +365,7 @@ public class RightAuto5_0_shortarm_slow extends LinearOpMode {
         TrajectoryActionBuilder collectSpecimen4 = drive.actionBuilder(drive.pose)
                 .setTangent(Math.toRadians(90))
                 .lineToY(-32)
-                .strafeTo(new Vector2d(36, -52))
+                .strafeTo(new Vector2d(36, -52), new TranslationalVelConstraint(80), new ProfileAccelConstraint(-80, 80))
                 .setTangent(Math.toRadians(90))
                 .lineToY(-60.5/*originally-61*/);
 
@@ -396,7 +385,7 @@ public class RightAuto5_0_shortarm_slow extends LinearOpMode {
         drive.localizer.update();
 
         TrajectoryActionBuilder scoreSpecimen4 = drive.actionBuilder(drive.pose)
-                .strafeTo(new Vector2d(-4,-29));
+                .strafeTo(new Vector2d(-4,-26), new TranslationalVelConstraint(35), new ProfileAccelConstraint(-35, 35));
 
 
         Actions.runBlocking(new SequentialAction(

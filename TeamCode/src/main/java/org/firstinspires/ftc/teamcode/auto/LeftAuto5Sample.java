@@ -347,8 +347,8 @@ public class LeftAuto5Sample extends LinearOpMode {
                                 DcMotorEx rightFront, DcMotorEx rightBack, Servo linkage1, Servo linkage2,
                                 Servo intakeArmLeft, Servo intakeArmRight, Servo intakeDiffyLeft,
                                 Servo intakeDiffyRight, Servo intakeClaw, MecanumDrive drive) {
-        intakeArmLeft.setPosition(0.39);
-        intakeArmRight.setPosition(0.62);
+        intakeArmLeft.setPosition(0.35); //decrease to lower arm detection position
+        intakeArmRight.setPosition(0.66);
         delay.reset();
         while (delay.milliseconds() < 700) {
 

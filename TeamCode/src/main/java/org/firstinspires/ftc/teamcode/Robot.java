@@ -22,8 +22,8 @@ public class Robot {
     public static double INTAKE_RIGHT_DIFFY_PICK_UP = 0.58;
     public static double INTAKE_LEFT_DIFFY_PICK_UP_WALL_SAMPLE = 0.325;
     public static double INTAKE_RIGHT_DIFFY_PICK_UP_WALL_SAMPLE = 0.465;
-    public static double INTAKE_LEFT_DIFFY_TRANSFER = 0.84;
-    public static double INTAKE_RIGHT_DIFFY_TRANSFER = 0.18;
+    public static double INTAKE_LEFT_DIFFY_TRANSFER = 0.82;
+    public static double INTAKE_RIGHT_DIFFY_TRANSFER = 0.20;
     public static double INTAKE_LEFT_DIFFY_DROP = 0.63;
     public static double INTAKE_RIGHT_DIFFY_DROP = 0.38;
     public static double INTAKE_LEFT_DIFFY_0_180 = INTAKE_LEFT_DIFFY_PICK_UP_VERTICAL-INTAKE_LEFT_DIFFY_PICK_UP_180;
