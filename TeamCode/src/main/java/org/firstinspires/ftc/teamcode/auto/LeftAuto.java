@@ -91,13 +91,13 @@ public class LeftAuto extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(-53, -53, Math.toRadians(45)), Math.toRadians(200));
 
         TrajectoryActionBuilder collectSample1 = drive.actionBuilder(new Pose2d(-57, -57, Math.toRadians(45)))
-                .splineToLinearHeading(new Pose2d(-55.5, -48.5, Math.toRadians(76)), Math.toRadians(250));
+                .splineToLinearHeading(new Pose2d(-55.5, -48.5, Math.toRadians(78)), Math.toRadians(250));
 
         TrajectoryActionBuilder scoreSample1 = drive.actionBuilder(new Pose2d(-57, -57, Math.toRadians(46)))
                 .splineToLinearHeading(new Pose2d(-52, -52, Math.toRadians(45)), Math.toRadians(90));
 
         TrajectoryActionBuilder collectSample2 = drive.actionBuilder(new Pose2d(-52, -52, Math.toRadians(45)))
-                .splineToLinearHeading(new Pose2d(-57.5, -50, Math.toRadians(98)), Math.toRadians(90));
+                .splineToLinearHeading(new Pose2d(-58, -50, Math.toRadians(98)), Math.toRadians(90));
 
         TrajectoryActionBuilder scoreSample2 = drive.actionBuilder(new Pose2d(-57, -50, Math.toRadians(100)))
                 .splineToLinearHeading(new Pose2d(-52, -52, Math.toRadians(45)), Math.toRadians(90));
@@ -145,8 +145,8 @@ public class LeftAuto extends LinearOpMode {
                 ));
 
         intakeClaw.setPosition(Robot.INTAKE_CLAW_OPEN);
-        linkage1.setPosition(0.22/*0.15*/);
-        linkage2.setPosition(0.78/*0.83*/);
+        linkage1.setPosition(0.20/*0.15*/);
+        linkage2.setPosition(0.80/*0.83*/);
         intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP);
         intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP);
         sleep(500);
@@ -180,8 +180,8 @@ public class LeftAuto extends LinearOpMode {
                 ));
 
         intakeClaw.setPosition(Robot.INTAKE_CLAW_OPEN);
-        linkage1.setPosition(0.24/*0.16*/);
-        linkage2.setPosition(0.76/*0.84*/);
+        linkage1.setPosition(0.22/*0.16*/);
+        linkage2.setPosition(0.78/*0.84*/);
         intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP);
         intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP);
         sleep(500);
