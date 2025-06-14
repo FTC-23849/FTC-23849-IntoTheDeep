@@ -34,8 +34,8 @@ public class Robot {
     public static double INTAKE_ARM_RIGHT_EXTEND_TELEOP = 0.93;
     public static double INTAKE_ARM_LEFT_TRANSFER = 0.63;
     public static double INTAKE_ARM_RIGHT_TRANSFER = 0.37;
-    public static double INTAKE_ARM_LEFT_EXTEND_READY = 0.15;
-    public static double INTAKE_ARM_RIGHT_EXTEND_READY= 0.85;
+    public static double INTAKE_ARM_LEFT_EXTEND_READY = 0.20;
+    public static double INTAKE_ARM_RIGHT_EXTEND_READY= 0.80;
     public static double INTAKE_ARM_LEFT_EXTEND_CAMERA = 0.21;
     public static double INTAKE_ARM_RIGHT_EXTEND_CAMERA= 0.79;
     public static double LINKAGE1_EXTEND = 0.22;

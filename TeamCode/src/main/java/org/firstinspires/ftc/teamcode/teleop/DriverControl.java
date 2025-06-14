@@ -96,8 +96,14 @@ public class DriverControl extends OpMode {
     boolean raiseSupport = false;
     boolean armDown = false;
     int intakePosition = 0;
-    boolean intakeRetracted = false;
+    boolean intakeRetracted = true;
     boolean xButton = false;
+    boolean backPressed = false;
+    int backTimes = 0;
+    boolean scoringSpec = true;
+    int scoringCycle = 0;
+    double dpadUp = 0;
+    double dpadDown =0;
 
     @Override
     public void init() {
@@ -201,26 +207,51 @@ public class DriverControl extends OpMode {
 //            Robot.intake.dropBucket(bucket);
 //        }
         if (gamepad1.left_bumper) {
-            if(leftBumperPressed == false){
-                leftBumperTimes = leftBumperTimes + 1;
+
+
+            if(intakeRetracted == false) {
+                if(leftBumperPressed == false){
+                    leftBumperTimes = leftBumperTimes + 1;
+                }
+                if (leftBumperTimes == 1) {
+
+                    intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP_VERTICAL);
+                    intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP_VERTICAL);
+
+                }
+                if (leftBumperTimes == 2) {
+                    leftBumperTimes = 0;
+                    intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP);
+                    intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP);
+                }
             }
+
 
             leftBumperPressed = true;
-            if(leftBumperTimes == 1){
-
-                intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP_VERTICAL);
-                intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP_VERTICAL);
-
-            }
-            if(leftBumperTimes == 2){
-                leftBumperTimes = 0;
-                intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_PICK_UP);
-                intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP);
-            }
         }
         else{
             leftBumperPressed = false;
         }
+        telemetry.addData("scoringCycle", scoringCycle);
+
+        if(gamepad1.back){
+            if(backPressed == false){
+                backTimes = backTimes + 1;
+            }
+            backPressed = true;
+            if(backTimes == 1){
+                scoringSpec = false;
+            }
+            if(backTimes == 2){
+                scoringSpec = true;
+                backTimes = 0;
+            }
+        }
+        else{
+            backPressed = false;
+        }
+        telemetry.addData("spec/sample", scoringSpec);
+
         if (gamepad1.right_bumper) {
             if (intakeRetracted == false) {
 
@@ -249,13 +280,31 @@ public class DriverControl extends OpMode {
                     rightBumperTimes = 1;
                 }
             }
-            else{
-                outtakeClaw.setPosition(Robot.OPEN_CLAW);
+            if(intakeRetracted == true && scoringSpec == true){
+                if(rightBumperPressed == false){
+                    scoringCycle = scoringCycle +1;
+                }
+                if(scoringCycle == 1){
 
-        }
+                }
+                if(scoringCycle == 2){
+
+                }
+                if(scoringCycle == 3){
+
+                }
+                if(scoringCycle == 4){
+
+                }
+                if(scoringCycle == 5){
+                    scoringCycle = 0;
+
+                }
+                rightBumperPressed = true;
 
 
 
+            }
         }
         else {
             rightBumperPressed = false;
@@ -272,7 +321,7 @@ public class DriverControl extends OpMode {
 //        telemetry.addData("lastServoExtend", lastServoExtend);
 //        telemetry.addData("time", mStateTime.milliseconds());
 //        telemetry.update();
-        if (gamepad1.right_trigger > 0.2|| gamepad1.a){
+        if (gamepad1.right_trigger > 0.2/*|| (gamepad1.right_stick_button)*/){
             intakeArmLeft.setPosition(Robot.INTAKE_ARM_LEFT_EXTEND_READY);
             intakeArmRight.setPosition(Robot.INTAKE_ARM_RIGHT_EXTEND_READY);
             intakeClaw.setPosition(Robot.INTAKE_CLAW_OPEN);
@@ -280,6 +329,7 @@ public class DriverControl extends OpMode {
             intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_PICK_UP);
             rightBumperTimes = 0;
             intakeRetracted = false;
+            scoringCycle = 0;
 
         }
         if (gamepad1.right_trigger > 0.2) {
@@ -340,7 +390,7 @@ public class DriverControl extends OpMode {
         if(intakeRetract.milliseconds()> 1100 && intakeRetract.milliseconds()<1150 && xButton == true){
             intakeClaw.setPosition((Robot.INTAKE_CLAW_OPEN));
         }
-        if(gamepad1.dpad_down){
+        if(gamepad1.right_stick_button){
             intakeDiffyLeft.setPosition(Robot.INTAKE_LEFT_DIFFY_TRANSFER);
             intakeDiffyRight.setPosition(Robot.INTAKE_RIGHT_DIFFY_TRANSFER);
             linkage1.setPosition(Robot.LINKAGE1_TRANSFER);
@@ -358,10 +408,22 @@ public class DriverControl extends OpMode {
             intakeRetracted = false;
 
         }
+        if(gamepad1.dpad_up){
+            dpadUp = -1;
+        }
+        else{
+            dpadUp = 0;
+        }
+        if(gamepad1.dpad_down){
+            dpadDown = 1;
+        }
+        else{
+            dpadDown = 0;
+        }
 
 
         //Control the outtake slides with the joystick
-        if (gamepad2.right_stick_y < 0 && slideMotor_right.getCurrentPosition() > slideMaxPosition) {
+        if ((gamepad2.right_stick_y < 0 && slideMotor_right.getCurrentPosition() > slideMaxPosition)||gamepad1.dpad_up||gamepad1.dpad_down) {
 
             goingDown = false;
             goingToSpecimen = false;
@@ -372,12 +434,12 @@ public class DriverControl extends OpMode {
             slideMotor_right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             slideMotor_up.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             slideMotor_down.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            slideMotor_left.setPower(gamepad2.right_stick_y);
-            slideMotor_right.setPower(gamepad2.right_stick_y);
-            slideMotor_up.setPower(gamepad2.right_stick_y);
-            slideMotor_down.setPower(gamepad2.right_stick_y);
+            slideMotor_left.setPower(gamepad2.right_stick_y+dpadUp+dpadDown);
+            slideMotor_right.setPower(gamepad2.right_stick_y+dpadUp+dpadDown);
+            slideMotor_up.setPower(gamepad2.right_stick_y+dpadUp+dpadDown);
+            slideMotor_down.setPower(gamepad2.right_stick_y+dpadUp+dpadDown);
 
-        } else if (gamepad2.right_stick_y > 0) {
+        } else if ((gamepad2.right_stick_y > 0)||gamepad1.dpad_up||gamepad1.dpad_down) {
 
             goingDown = false;
             goingToSpecimen = false;
@@ -386,10 +448,10 @@ public class DriverControl extends OpMode {
             slideMotor_right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             slideMotor_up.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             slideMotor_down.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            slideMotor_left.setPower(gamepad2.right_stick_y);
-            slideMotor_right.setPower(gamepad2.right_stick_y);
-            slideMotor_up.setPower(gamepad2.right_stick_y);
-            slideMotor_down.setPower(gamepad2.right_stick_y);
+            slideMotor_left.setPower(gamepad2.right_stick_y+dpadUp+dpadDown);
+            slideMotor_right.setPower(gamepad2.right_stick_y+dpadUp+dpadDown);
+            slideMotor_up.setPower(gamepad2.right_stick_y+dpadUp+dpadDown);
+            slideMotor_down.setPower(gamepad2.right_stick_y+dpadUp+dpadDown);
 
         } else {
 
@@ -409,7 +471,7 @@ public class DriverControl extends OpMode {
 
 
 
-        if (gamepad2.right_bumper) {
+        if (gamepad2.right_bumper ||(gamepad1.right_bumper && scoringCycle == 2 &&scoringSpec == true)) {
             outtakeClaw.setPosition(Robot.CLOSE_CLAW);
             transferTimer.reset();
             intakeClawOpened = false;
@@ -420,7 +482,7 @@ public class DriverControl extends OpMode {
             intakeClaw.setPosition(Robot.INTAKE_CLAW_OPEN);
             intakeClawOpened = true;
         }
-        if (gamepad2.left_bumper) {
+        if (gamepad2.left_bumper||(gamepad1.right_bumper &&scoringCycle == 0 && scoringSpec == true)) {
             outtakeClaw.setPosition(Robot.OPEN_CLAW);
         }
 
@@ -476,7 +538,7 @@ public class DriverControl extends OpMode {
 //
 //        }
 
-        if (gamepad2.dpad_down) {
+        if (gamepad2.dpad_down||gamepad1.right_trigger>0.02) {
 
             raiseSupport = false;
 
@@ -518,7 +580,7 @@ public class DriverControl extends OpMode {
 //            outtakeArm2.setPosition(0.12);
 //        }
 
-        if (gamepad2.y) {
+        if (gamepad2.y||(gamepad1.right_bumper &&scoringCycle == 3 && scoringSpec == true)) {
 
             slideMotor_right.setTargetPosition(-1500);
             slideMotor_left.setTargetPosition(-1500);
@@ -552,7 +614,7 @@ public class DriverControl extends OpMode {
             Robot.outtake.retractSupport(outtakeSupport);
         }
 
-        if (gamepad2.a) {
+        if (gamepad2.a||(gamepad1.right_bumper &&scoringCycle == 4 && scoringSpec == true)) {
 
             slideMotor_right.setTargetPosition(-800);
             slideMotor_left.setTargetPosition(-800);
@@ -575,7 +637,7 @@ public class DriverControl extends OpMode {
             goingToSpecimenScore = false;
         }
 
-        if (gamepad2.b) {
+        if (gamepad2.b||(gamepad1.right_bumper && scoringCycle == 1 && scoringSpec == true)) {
 
             Robot.outtake.specimenReceivePosition(outtakeClaw, outtakeWrist, outtakeArm, outtakeArm2);
 
@@ -661,14 +723,14 @@ public class DriverControl extends OpMode {
 //        }
 
 
-        if (gamepad2.dpad_right && gamepad2.left_bumper) {
+        if ((gamepad2.dpad_right && gamepad2.left_bumper) ||(gamepad1.right_stick_button && gamepad1.left_stick_button)) {
             hanging.reset();
 
 
             while (hanging.milliseconds() < 4000) {
-                slideMotor_right.setPower(0.6);
-                slideMotor_left.setPower(0.6);
-                slideMotor_up.setPower(0.6);
+                slideMotor_right.setPower(0.7);
+                slideMotor_left.setPower(0.7);
+                slideMotor_up.setPower(0.7);
             }
 
             while (hanging.milliseconds() > 4000 && hanging.milliseconds() < 13000 ) {
@@ -744,11 +806,11 @@ public class DriverControl extends OpMode {
 
         double joystickDriftTolerance = 0.05;
         if(Math.abs(speed) > joystickDriftTolerance) {
-            drive(direction, speed, gamepad1.right_stick_x * speed, -gamepad1.right_stick_x * speed);
+            drive(direction, speed, gamepad1.right_stick_x * speed, -gamepad1.right_stick_x * speed, true);//intakeRetracted);
         }
         else {
             double turningSpeed = gamepad1.right_stick_x / 1.2;
-            turn(turningSpeed);
+            turn(turningSpeed, true/*intakeRetracted*/);
         }
 
         telemetry.update();
@@ -766,7 +828,7 @@ public class DriverControl extends OpMode {
     public void stop() {
         //myRobot.OuttakeArmRest(elbowServo, wristServo, outtakeDoorServo, outtakeWheelServo);
     }
-    public void drive (double direction, double speed, double leftOffset, double rightOffset){
+    public void drive (double direction, double speed, double leftOffset, double rightOffset, boolean intakeRetracted){
 //        leftFrontMotor  = hardwareMap.get(DcMotorEx.class,"LF");
 //        rightFrontMotor = hardwareMap.get(DcMotorEx.class, "RF");
 //        leftBackMotor = hardwareMap.get(DcMotorEx.class,"LB");
@@ -849,15 +911,24 @@ public class DriverControl extends OpMode {
 
 
 
+    if(intakeRetracted == false){
 
-            leftFrontMotor.setPower(lf);
-            leftBackMotor.setPower(lb);
-            rightFrontMotor.setPower(rf);
-            rightBackMotor.setPower(rb);
+        leftFrontMotor.setPower(lf*0.5);
+        leftBackMotor.setPower(lb*0.5);
+        rightFrontMotor.setPower(rf*0.5);
+        rightBackMotor.setPower(rb*0.5);
+    }
+    else {
+
+        leftFrontMotor.setPower(lf);
+        leftBackMotor.setPower(lb);
+        rightFrontMotor.setPower(rf);
+        rightBackMotor.setPower(rb);
+    }
 
 
     }
-    public void turn ( double speed){
+    public void turn ( double speed, boolean intakeRetracted){
         if (intakeExtended == true){
             speed = speed*0.5;
         }
@@ -868,10 +939,19 @@ public class DriverControl extends OpMode {
         rightBackMotor = hardwareMap.get(DcMotorEx.class,"RB");
         leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
         leftBackMotor.setDirection(DcMotor.Direction.REVERSE);
-        leftFrontMotor.setPower(speed);
-        leftBackMotor.setPower(speed);
-        rightFrontMotor.setPower(speed*-1);
-        rightBackMotor.setPower(speed*-1);
+        if(intakeRetracted == false) {
+            leftFrontMotor.setPower(speed*0.75);
+            leftBackMotor.setPower(speed*0.75);
+            rightFrontMotor.setPower(speed * -0.75);
+            rightBackMotor.setPower(speed * -0.75);
+        }
+        else{
+            leftFrontMotor.setPower(speed);
+            leftBackMotor.setPower(speed);
+            rightFrontMotor.setPower(speed * -1);
+            rightBackMotor.setPower(speed * -1);
+
+        }
 
     }
 }
